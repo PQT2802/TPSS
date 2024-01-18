@@ -5,9 +5,9 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPSS.API", "Test_1\TPSS.API.csproj", "{4B841D1D-CA65-4C6A-92F1-57399911436A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPSS.Business", "TPSS.Business\TPSS.Business.csproj", "{212A95C6-1D88-4F62-B32E-59A7273302E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPSS.Business", "TPSS.Business\TPSS.Business.csproj", "{212A95C6-1D88-4F62-B32E-59A7273302E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPSS.Data", "TPSS.Data\TPSS.Data.csproj", "{F2506F4C-7F4F-4D21-B35A-360C6179D99A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TPSS.Data", "TPSS.Data\TPSS.Data.csproj", "{F2506F4C-7F4F-4D21-B35A-360C6179D99A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

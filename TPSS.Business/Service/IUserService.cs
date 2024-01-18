@@ -11,8 +11,9 @@ namespace TPSS.Business.Service
     public interface IUserService
     {
         public  Task<User> GetUserById(String id);
-        public  Task<int>  CreateUser(UserDTO user);
+        public  Task<int> CreateUserAsync(UserDTO user);
         public Task<int> UpdateUser(UserDTO user);
         public Task<int> DeleteUser(String id);
+        Task<int> UpdateUser(User user);
     }
 }

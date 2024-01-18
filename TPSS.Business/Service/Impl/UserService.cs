@@ -18,20 +18,21 @@ namespace TPSS.Business.Service.Impl
             _userRepository = userRepository;
         }
 
-        public async Task<int> IUserService.CreateUser(UserDTO userDTO)
+         public async Task<int> CreateUserAsync(UserDTO userDTO)
         {
             try
             {
-                User user = new User();
-                user.UserId = userDTO.UserId;//generate
-                user.Username = userDTO.Username;
-                user.Password = userDTO.Password;
-                user.Email = userDTO.Email;
-                user.Phone = userDTO.Phone;
-                user.FirstName = userDTO.FirstName;
-                user.LastName = userDTO.LastName;
-                int result = await _userRepository.CreateUser(user);
-                return result;
+                //User user = new User();
+                //user.UserId = userDTO.UserId;//generate
+                //user.Username = userDTO.Username;
+                //user.Password = userDTO.Password;
+                //user.Email = userDTO.Email;
+                //user.Phone = userDTO.Phone;
+                //user.FirstName = userDTO.FirstName;
+                //user.LastName = userDTO.LastName;
+                //int result = await _userRepository.CreateUserAsync(user);
+                //return result;
+                return 1;
             }
             catch (Exception e)
             {
@@ -40,17 +41,22 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        Task<int> IUserService.DeleteUser(string id)
+        public Task<int> DeleteUser(string id)
         {
             throw new NotImplementedException();
         }
 
-        Task<User> IUserService.GetUserById(string id)
+        public Task<User> GetUserById(string id)
         {
             throw new NotImplementedException();
         }
 
-        Task<int> IUserService.UpdateUser(User user)
+        public Task<int> UpdateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> UpdateUser(UserDTO user)
         {
             throw new NotImplementedException();
         }

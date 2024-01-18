@@ -20,17 +20,25 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
     public virtual DbSet<LikeList> LikeLists { get; set; }
 
+    public virtual DbSet<Payment> Payments { get; set; }
+
     public virtual DbSet<Project> Projects { get; set; }
 
+    public virtual DbSet<ProjectDetail> ProjectDetails { get; set; }
+
     public virtual DbSet<Property> Properties { get; set; }
+
+    public virtual DbSet<PropertyDetail> PropertyDetails { get; set; }
 
     public virtual DbSet<Reservation> Reservations { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
-    public virtual DbSet<TransactionProcessing> TransactionProcessings { get; set; }
+    public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserDetail> UserDetails { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -43,6 +51,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.HasKey(e => e.ContractId).HasName("PK__Contract__C90D34099AA800A1");
 
             entity.ToTable("Contract");
+
+            entity.HasIndex(e => e.ReservationId, "IX_Contract_ReservationID");
 
             entity.Property(e => e.ContractId)
                 .HasMaxLength(15)
@@ -64,7 +74,11 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.ToTable("LikeList");
 
-            entity.HasIndex(e => new { e.UserId, e.PropertyId }, "UQ_UserProperty").IsUnique();
+            entity.HasIndex(e => e.PropertyId, "IX_LikeList_PropertyID");
+
+            entity.HasIndex(e => new { e.UserId, e.PropertyId }, "UQ_UserProperty")
+                .IsUnique()
+                .HasFilter("([UserID] IS NOT NULL AND [PropertyID] IS NOT NULL)");
 
             entity.Property(e => e.LikeId)
                 .ValueGeneratedNever()
@@ -85,6 +99,25 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasConstraintName("FK__LikeList__UserID__3A81B327");
         });
 
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Payment");
+
+            entity.Property(e => e.PaymentId)
+                .HasMaxLength(15)
+                .HasColumnName("PaymentID");
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(15)
+                .HasColumnName("TransactionID");
+
+            entity.HasOne(d => d.Transaction).WithMany()
+                .HasForeignKey(d => d.TransactionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Payment_Transaction");
+        });
+
         modelBuilder.Entity<Project>(entity =>
         {
             entity.HasKey(e => e.ProjectId).HasName("PK__Project__761ABED0232A2A0E");
@@ -98,28 +131,68 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.Status).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<ProjectDetail>(entity =>
+        {
+            entity.ToTable("ProjectDetail");
+
+            entity.Property(e => e.ProjectDetailId)
+                .HasMaxLength(15)
+                .HasColumnName("ProjectDetailID");
+            entity.Property(e => e.ProjectDescription).HasColumnType("text");
+            entity.Property(e => e.ProjectId)
+                .HasMaxLength(15)
+                .HasColumnName("ProjectID");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.ProjectDetails)
+                .HasForeignKey(d => d.ProjectId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProjectDetail_Project");
+        });
+
         modelBuilder.Entity<Property>(entity =>
         {
             entity.HasKey(e => e.PropertyId).HasName("PK__Property__70C9A755F657A2CD");
 
             entity.ToTable("Property");
 
+            entity.HasIndex(e => e.ProjectId, "IX_Property_ProjectID");
+
             entity.Property(e => e.PropertyId)
                 .HasMaxLength(15)
                 .HasColumnName("PropertyID");
-            entity.Property(e => e.Owner).HasMaxLength(15);
             entity.Property(e => e.ProjectId)
                 .HasMaxLength(15)
                 .HasColumnName("ProjectID");
-            entity.Property(e => e.PropertyName).HasMaxLength(200);
-
-            entity.HasOne(d => d.OwnerNavigation).WithMany(p => p.Properties)
-                .HasForeignKey(d => d.Owner)
-                .HasConstraintName("FK__Property__Owner__2C3393D0");
 
             entity.HasOne(d => d.Project).WithMany(p => p.Properties)
                 .HasForeignKey(d => d.ProjectId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Property__Projec__2B3F6F97");
+        });
+
+        modelBuilder.Entity<PropertyDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("PropertyDetail");
+
+            entity.Property(e => e.CreateBy).HasMaxLength(15);
+            entity.Property(e => e.Description).HasColumnType("ntext");
+            entity.Property(e => e.OwnerId)
+                .HasMaxLength(15)
+                .HasColumnName("OwnerID");
+            entity.Property(e => e.PropertyDetailId)
+                .HasMaxLength(15)
+                .HasColumnName("PropertyDetailID");
+            entity.Property(e => e.PropertyId)
+                .HasMaxLength(15)
+                .HasColumnName("PropertyID");
+            entity.Property(e => e.UpdateBy).HasMaxLength(15);
+            entity.Property(e => e.VerifyBy).HasMaxLength(15);
+
+            entity.HasOne(d => d.Property).WithMany()
+                .HasForeignKey(d => d.PropertyId)
+                .HasConstraintName("FK_PropertyDetail_Property");
         });
 
         modelBuilder.Entity<Reservation>(entity =>
@@ -127,6 +200,12 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.HasKey(e => e.ReservationId).HasName("PK__Reservat__B7EE5F04AD628F07");
 
             entity.ToTable("Reservation");
+
+            entity.HasIndex(e => e.BuyerId, "IX_Reservation_BuyerID");
+
+            entity.HasIndex(e => e.PropertyId, "IX_Reservation_PropertyID");
+
+            entity.HasIndex(e => e.SellerId, "IX_Reservation_SellerID");
 
             entity.Property(e => e.ReservationId)
                 .HasMaxLength(15)
@@ -157,39 +236,33 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.Role1 }).HasName("PK__Role__FA2998BF699973A0");
-
             entity.ToTable("Role");
 
-            entity.Property(e => e.UserId)
-                .HasMaxLength(15)
-                .HasColumnName("UserID");
-            entity.Property(e => e.Role1)
-                .HasMaxLength(15)
-                .HasColumnName("Role");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Roles)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Role__UserID__267ABA7A");
+            entity.Property(e => e.RoleId)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("RoleID");
+            entity.Property(e => e.RoleName).HasMaxLength(15);
         });
 
-        modelBuilder.Entity<TransactionProcessing>(entity =>
+        modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.ProcessId).HasName("PK__Transact__1B39A9762989D08C");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__1B39A9762989D08C");
 
-            entity.ToTable("Transaction_Processing");
+            entity.ToTable("Transaction");
 
-            entity.Property(e => e.ProcessId)
+            entity.HasIndex(e => e.ContractId, "IX_Transaction_Processing_ContractID");
+
+            entity.Property(e => e.TransactionId)
                 .HasMaxLength(15)
-                .HasColumnName("ProcessID");
+                .HasColumnName("TransactionID");
             entity.Property(e => e.CommissionCalculation).HasColumnName("Commission_Calculation");
             entity.Property(e => e.ContractId)
                 .HasMaxLength(15)
                 .HasColumnName("ContractID");
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.TransactionProcessings)
+            entity.HasOne(d => d.Contract).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.ContractId)
                 .HasConstraintName("FK__Transacti__Contr__36B12243");
         });
@@ -203,17 +276,45 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
-            entity.Property(e => e.DigitalSignature)
-                .HasMaxLength(30)
-                .HasColumnName("Digital_signature");
-            entity.Property(e => e.Email).HasMaxLength(100);
-            entity.Property(e => e.FirstName).HasMaxLength(30);
-            entity.Property(e => e.LastName).HasMaxLength(30);
-            entity.Property(e => e.Password).HasMaxLength(50);
-            entity.Property(e => e.Phone)
+            entity.Property(e => e.Email)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Password)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.RoleId)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("RoleID");
+            entity.Property(e => e.Username)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Verify)
+                .HasMaxLength(10)
+                .IsFixedLength();
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_User_Role");
+
+            entity.HasOne(d => d.UserNavigation).WithOne(p => p.User)
+                .HasForeignKey<User>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_UserDetail");
+        });
+
+        modelBuilder.Entity<UserDetail>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("PK__UserDeta__1788CCAC0F790C30");
+
+            entity.ToTable("UserDetail");
+
+            entity.Property(e => e.UserId)
                 .HasMaxLength(15)
-                .IsUnicode(false);
-            entity.Property(e => e.Username).HasMaxLength(50);
+                .HasColumnName("UserID");
+            entity.Property(e => e.CreateBy).HasMaxLength(20);
+            entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
+            entity.Property(e => e.UpdateBy).HasMaxLength(20);
         });
 
         OnModelCreatingPartial(modelBuilder);

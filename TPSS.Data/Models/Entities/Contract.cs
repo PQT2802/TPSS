@@ -19,5 +19,5 @@ public partial class Contract
 
     public virtual Reservation? Reservation { get; set; }
 
-    public virtual ICollection<TransactionProcessing> TransactionProcessings { get; set; } = new List<TransactionProcessing>();
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
