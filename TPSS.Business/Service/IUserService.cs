@@ -14,6 +14,6 @@ namespace TPSS.Business.Service
         public  Task<int> CreateUserAsync(UserDTO user);
         public Task<int> UpdateUserAsync(UserDTO user);
         public Task<int> DeleteUserAsync(String id);
-        Task<int> UpdateUserAsync(User user);
+        
     }
 }

@@ -11,13 +11,13 @@ using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository.Impl
 {
-    public class UserRepository : BaseRepository, IUserRepository 
+    public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(IConfiguration configuration) : base(configuration)
         {
         }
 
-         public async Task<int> CreateUserAsync(User newUser)
+        public async Task<int> CreateUserAsync(User newUser)
         {
             try
             {
@@ -36,11 +36,18 @@ namespace TPSS.Data.Repository.Impl
 
                 //using var connection = CreateConnection();
                 //return await connection.ExecuteAsync(query, parameters);
-                var query = "INSERT INTO User (UserId, Email, Password, Username, Phone)" +
+
+
+                var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone) " +
                     "VALUES(@UserId, @Email, @Password, @Username, @Phone)";
                 var parameter = new DynamicParameters();
-                return 1;
-                
+                parameter.Add("UserId", newUser.UserId, DbType.String);
+                parameter.Add("Email", newUser.Email, DbType.String);
+                parameter.Add("Password", newUser.Password, DbType.String);
+                parameter.Add("Username", newUser.Username, DbType.String);
+                parameter.Add("Phone", newUser.Phone, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
             }
             catch (Exception e)
             {
@@ -49,19 +56,59 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        Task<int> IUserRepository.DeleteUserByIdAsync(string id)
+        public async Task<int> DeleteUserByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "DELETE FROM User" +
+                    "WHERE UserId = @UserId";
+                var parameter = new DynamicParameters();
+                parameter.Add("UserId", id, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<User> IUserRepository.GetUserByIdAsync(string id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                var query = "SELECT *" +
+                    "FROM User" +
+                    "WHERE UserId = @UserId";
+                var parameter = new DynamicParameters();
+                parameter.Add("UserId", id, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<User>(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<int> IUserRepository.UpdateUserAsync(User updateUser)
+        public async Task<int> UpdateUserAsync(User updateUser)
         {
-            throw new NotImplementedException();
+            var query = "UPDATE User" +
+                "SET Email = @Email, Password = @Password, Username = @Username, Phone = @Phone" +
+                "WHERE UserId = @UserId";
+
+            var parameter = new DynamicParameters();
+            parameter.Add("Email", updateUser.Email, DbType.String);
+            parameter.Add("Password", updateUser.Password, DbType.String);
+            parameter.Add("Username", updateUser.Username, DbType.String);
+            parameter.Add("Phone", updateUser.Phone, DbType.String);
+            parameter.Add("UserId", updateUser.UserId, DbType.String);
+            using var connection = CreateConnection();
+            return await connection.ExecuteAsync(query, parameter);
         }
     }
 }

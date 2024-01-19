@@ -1,4 +1,6 @@
 
+using TPSS.API.Helper;
+
 namespace Test_1
 {
     public class Program
@@ -13,6 +15,7 @@ namespace Test_1
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddServicesConfiguration();
 
             var app = builder.Build();
 
@@ -23,6 +26,7 @@ namespace Test_1
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("CorsPolicy");  
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPSS.Data.Context;
-using TPSS.Data.Models.Entities;
 
 #nullable disable
 
@@ -224,6 +223,11 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
                 {
+                    b.Property<string>("PropertyDetailId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("PropertyDetailID");
+
                     b.Property<string>("CreateBy")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
@@ -242,11 +246,6 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("OwnerID");
-
-                    b.Property<string>("PropertyDetailId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("PropertyDetailID");
 
                     b.Property<string>("PropertyId")
                         .HasMaxLength(15)
@@ -273,6 +272,8 @@ namespace TPSS.Data.Migrations
 
                     b.Property<DateOnly?>("VerifyDate")
                         .HasColumnType("date");
+
+                    b.HasKey("PropertyDetailId");
 
                     b.HasIndex("PropertyId");
 
@@ -398,10 +399,11 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.UserDetail", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("UserID");
+                    b.Property<string>("UserDetailId")
+                        .HasMaxLength(10)
+                        .HasColumnType("nchar(10)")
+                        .HasColumnName("UserDetailID")
+                        .IsFixedLength();
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -453,10 +455,18 @@ namespace TPSS.Data.Migrations
                     b.Property<DateOnly?>("UpdateDate")
                         .HasColumnType("date");
 
-                    b.HasKey("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("UserID");
+
+                    b.HasKey("UserDetailId")
                         .HasName("PK__UserDeta__1788CCAC0F790C30");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserDetail", (string)null);
                 });
@@ -481,7 +491,7 @@ namespace TPSS.Data.Migrations
                     b.HasOne("TPSS.Data.Models.Entities.User", "User")
                         .WithMany("LikeLists")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("FK__LikeList__UserID__3A81B327");
+                        .HasConstraintName("FK_LikeList_User");
 
                     b.Navigation("Property");
 
@@ -524,7 +534,7 @@ namespace TPSS.Data.Migrations
             modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
-                        .WithMany()
+                        .WithMany("PropertyDetails")
                         .HasForeignKey("PropertyId")
                         .HasConstraintName("FK_PropertyDetail_Property");
 
@@ -533,26 +543,12 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Reservation", b =>
                 {
-                    b.HasOne("TPSS.Data.Models.Entities.User", "Buyer")
-                        .WithMany("ReservationBuyers")
-                        .HasForeignKey("BuyerId")
-                        .HasConstraintName("FK__Reservati__Buyer__30F848ED");
-
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
                         .WithMany("Reservations")
                         .HasForeignKey("PropertyId")
                         .HasConstraintName("FK__Reservati__Prope__2F10007B");
 
-                    b.HasOne("TPSS.Data.Models.Entities.User", "Seller")
-                        .WithMany("ReservationSellers")
-                        .HasForeignKey("SellerId")
-                        .HasConstraintName("FK__Reservati__Selle__300424B4");
-
-                    b.Navigation("Buyer");
-
                     b.Navigation("Property");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Transaction", b =>
@@ -565,17 +561,6 @@ namespace TPSS.Data.Migrations
                     b.Navigation("Contract");
                 });
 
-            modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>
-                {
-                    b.HasOne("TPSS.Data.Models.Entities.UserDetail", "UserNavigation")
-                        .WithOne("User")
-                        .HasForeignKey("TPSS.Data.Models.Entities.User", "UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_User_UserDetail");
-
-                    b.Navigation("UserNavigation");
-                });
-
             modelBuilder.Entity("TPSS.Data.Models.Entities.UserDetail", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Role", "Role")
@@ -583,7 +568,15 @@ namespace TPSS.Data.Migrations
                         .HasForeignKey("RoleId")
                         .HasConstraintName("FK_UserDetail_Role");
 
+                    b.HasOne("TPSS.Data.Models.Entities.User", "User")
+                        .WithMany("UserDetails")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserDetail_User");
+
                     b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Contract", b =>
@@ -602,6 +595,8 @@ namespace TPSS.Data.Migrations
                 {
                     b.Navigation("LikeLists");
 
+                    b.Navigation("PropertyDetails");
+
                     b.Navigation("Reservations");
                 });
 
@@ -619,14 +614,7 @@ namespace TPSS.Data.Migrations
                 {
                     b.Navigation("LikeLists");
 
-                    b.Navigation("ReservationBuyers");
-
-                    b.Navigation("ReservationSellers");
-                });
-
-            modelBuilder.Entity("TPSS.Data.Models.Entities.UserDetail", b =>
-                {
-                    b.Navigation("User");
+                    b.Navigation("UserDetails");
                 });
 #pragma warning restore 612, 618
         }

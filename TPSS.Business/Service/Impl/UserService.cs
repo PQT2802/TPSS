@@ -32,7 +32,14 @@ namespace TPSS.Business.Service.Impl
                 //user.LastName = userDTO.LastName;
                 //int result = await _userRepository.CreateUserAsync(user);
                 //return result;
-                return 1;
+                User user = new User();
+                user.UserId = userDTO.UserId;
+                user.Username = userDTO.Username;
+                user.Email = userDTO.Email;
+                user.Password = userDTO.Password;
+                user.Phone = userDTO.Phone;
+                int result = await _userRepository.CreateUserAsync(user);
+                return result;
             }
             catch (Exception e)
             {
@@ -61,4 +68,5 @@ namespace TPSS.Business.Service.Impl
             throw new NotImplementedException();
         }
     }
+
 }
