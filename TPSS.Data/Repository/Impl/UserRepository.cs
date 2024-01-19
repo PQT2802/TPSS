@@ -55,12 +55,12 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
-
+        //Delete = Update IsDelete
         public async Task<int> DeleteUserByIdAsync(string id)
         {
             try
             {
-                var query = "DELETE FROM User" +
+                var query = "DELETE FROM [User] " +
                     "WHERE UserId = @UserId";
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", id, DbType.String);
@@ -94,7 +94,7 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
-
+        
         public async Task<int> UpdateUserAsync(User updateUser)
         {
             var query = "UPDATE User" +

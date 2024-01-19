@@ -48,9 +48,19 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public Task<int> DeleteUserAsync(string id)
+        public async Task<int> DeleteUserAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int result = await _userRepository.DeleteUserByIdAsync(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+
         }
 
         public Task<User> GetUserByIdAsync(string id)

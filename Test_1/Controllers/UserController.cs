@@ -26,6 +26,13 @@ namespace TPSS.API.Controllers
             var result = await _userService.CreateUserAsync(newUser);
             return Ok(result);//tra ve respone(status:200,body:result)
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserAsync(String id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+            return Ok(result);
+        }
     }
         
     }
