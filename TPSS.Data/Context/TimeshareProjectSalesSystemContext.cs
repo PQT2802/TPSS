@@ -239,10 +239,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.ToTable("Role");
 
             entity.Property(e => e.RoleId)
-                .HasMaxLength(10)
-                .IsFixedLength()
+                .HasMaxLength(15)
                 .HasColumnName("RoleID");
-            entity.Property(e => e.RoleName).HasMaxLength(15);
         });
 
         modelBuilder.Entity<Transaction>(entity =>
@@ -276,26 +274,6 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
-            entity.Property(e => e.Email)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.Password)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.RoleId)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("RoleID");
-            entity.Property(e => e.Username)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.Verify)
-                .HasMaxLength(10)
-                .IsFixedLength();
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Users)
-                .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK_User_Role");
 
             entity.HasOne(d => d.UserNavigation).WithOne(p => p.User)
                 .HasForeignKey<User>(d => d.UserId)
@@ -314,7 +292,14 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasColumnName("UserID");
             entity.Property(e => e.CreateBy).HasMaxLength(20);
             entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
+            entity.Property(e => e.RoleId)
+                .HasMaxLength(15)
+                .HasColumnName("RoleID");
             entity.Property(e => e.UpdateBy).HasMaxLength(20);
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserDetails)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_UserDetail_Role");
         });
 
         OnModelCreatingPartial(modelBuilder);

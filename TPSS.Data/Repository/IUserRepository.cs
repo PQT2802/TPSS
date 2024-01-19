@@ -9,9 +9,9 @@ namespace TPSS.Data.Repository
 {
     public interface IUserRepository
     {
-        public Task<User> GetUserById(string id);
+        public Task<User> GetUserByIdAsync(string id);
         public Task<int> CreateUserAsync(User newUser);
-        public Task<int> UpdateUser(User updateUser);
-        public Task<int> DeleteUserById(string id);
+        public Task<int> UpdateUserAsync(User updateUser);
+        public Task<int> DeleteUserByIdAsync(string id);
     }
 }

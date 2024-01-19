@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TPSS.Data.Context;
+//using TPSS.Data.Context;
 
 #nullable disable
 
 namespace TPSS.Data.Migrations
 {
-    [DbContext(typeof(TimeshareProjectSalesSystemContext))]
+    //[DbContext(typeof(TimeshareProjectSalesSystemContext))]
     [Migration("20240116131528_init")]
     partial class init
     {

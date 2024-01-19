@@ -21,7 +21,7 @@ namespace TPSS.API.Controllers
         }
         [HttpPost]
         
-        public async Task<IActionResult> CreateUser (UserDTO newUser)
+        public async Task<IActionResult> CreateUserAsync(UserDTO newUser)
         {
             var result = await _userService.CreateUserAsync(newUser);
             return Ok(result);//tra ve respone(status:200,body:result)

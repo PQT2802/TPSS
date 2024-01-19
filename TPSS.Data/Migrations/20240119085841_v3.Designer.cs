@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-//using TPSS.Data.Context;
+using TPSS.Data.Models.Entities;
 
 #nullable disable
 
 namespace TPSS.Data.Migrations
 {
-    //[DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240118143958_v2")]
-    partial class v2
+    [DbContext(typeof(TimeshareProjectSalesSystemContext))]
+    [Migration("20240119085841_v3")]
+    partial class v3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -328,15 +328,13 @@ namespace TPSS.Data.Migrations
             modelBuilder.Entity("TPSS.Data.Models.Entities.Role", b =>
                 {
                     b.Property<string>("RoleId")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .HasColumnName("RoleID")
-                        .IsFixedLength();
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("RoleID");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RoleId");
 
@@ -379,35 +377,23 @@ namespace TPSS.Data.Migrations
                         .HasColumnName("UserID");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .IsFixedLength();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .IsFixedLength();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .HasColumnName("RoleID")
-                        .IsFixedLength();
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .IsFixedLength();
-
-                    b.Property<string>("Verify")
-                        .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
-                        .IsFixedLength();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId")
                         .HasName("PK__User__1788CCAC2A7756CD");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -454,6 +440,11 @@ namespace TPSS.Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("RoleID");
+
                     b.Property<string>("TaxIdentificationNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -466,6 +457,8 @@ namespace TPSS.Data.Migrations
 
                     b.HasKey("UserId")
                         .HasName("PK__UserDeta__1788CCAC0F790C30");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("UserDetail", (string)null);
                 });
@@ -576,20 +569,23 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>
                 {
-                    b.HasOne("TPSS.Data.Models.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .HasConstraintName("FK_User_Role");
-
                     b.HasOne("TPSS.Data.Models.Entities.UserDetail", "UserNavigation")
                         .WithOne("User")
                         .HasForeignKey("TPSS.Data.Models.Entities.User", "UserId")
                         .IsRequired()
                         .HasConstraintName("FK_User_UserDetail");
 
-                    b.Navigation("Role");
-
                     b.Navigation("UserNavigation");
+                });
+
+            modelBuilder.Entity("TPSS.Data.Models.Entities.UserDetail", b =>
+                {
+                    b.HasOne("TPSS.Data.Models.Entities.Role", "Role")
+                        .WithMany("UserDetails")
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_UserDetail_Role");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Contract", b =>
@@ -618,7 +614,7 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Role", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("UserDetails");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>

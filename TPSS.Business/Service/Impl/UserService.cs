@@ -41,22 +41,22 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public Task<int> DeleteUser(string id)
+        public Task<int> DeleteUserAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> GetUserById(string id)
+        public Task<User> GetUserByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateUser(User user)
+        public Task<int> UpdateUserAsync(User user)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateUser(UserDTO user)
+        public Task<int> UpdateUserAsync(UserDTO user)
         {
             throw new NotImplementedException();
         }

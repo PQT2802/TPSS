@@ -10,10 +10,10 @@ namespace TPSS.Business.Service
 {
     public interface IUserService
     {
-        public  Task<User> GetUserById(String id);
+        public  Task<User> GetUserByIdAsync(String id);
         public  Task<int> CreateUserAsync(UserDTO user);
-        public Task<int> UpdateUser(UserDTO user);
-        public Task<int> DeleteUser(String id);
-        Task<int> UpdateUser(User user);
+        public Task<int> UpdateUserAsync(UserDTO user);
+        public Task<int> DeleteUserAsync(String id);
+        Task<int> UpdateUserAsync(User user);
     }
 }

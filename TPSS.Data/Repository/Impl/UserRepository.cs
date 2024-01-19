@@ -36,6 +36,9 @@ namespace TPSS.Data.Repository.Impl
 
                 //using var connection = CreateConnection();
                 //return await connection.ExecuteAsync(query, parameters);
+                var query = "INSERT INTO User (UserId, RoleId, Email,Password,Username)" +
+                    "";
+
                 return 1;
             }
             catch (Exception e)
@@ -45,17 +48,17 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        Task<int> IUserRepository.DeleteUserById(string id)
+        Task<int> IUserRepository.DeleteUserByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        Task<User> IUserRepository.GetUserById(string id)
+        Task<User> IUserRepository.GetUserByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        Task<int> IUserRepository.UpdateUser(User updateUser)
+        Task<int> IUserRepository.UpdateUserAsync(User updateUser)
         {
             throw new NotImplementedException();
         }
