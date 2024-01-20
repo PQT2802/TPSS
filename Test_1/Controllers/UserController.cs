@@ -19,21 +19,29 @@ namespace TPSS.API.Controllers
         {
             _userService = userService;
         }
-        [HttpPost]
-        
+
+        [HttpPost]        
         public async Task<IActionResult> CreateUserAsync(UserDTO newUser)
         {
             var result = await _userService.CreateUserAsync(newUser);
             return Ok(result);//tra ve respone(status:200,body:result)
         }
 
-        [HttpDelete]
+        [HttpPut]
         public async Task<IActionResult> DeleteUserAsync(String id)
         {
             var result = await _userService.DeleteUserAsync(id);
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetUserByIdAsync(String id)
+        {
+            var result = await _userService.GetUserByIdAsync(id);
+            return Ok(result);
+        }
+
+
     }
-        
-    }
+
+}
 

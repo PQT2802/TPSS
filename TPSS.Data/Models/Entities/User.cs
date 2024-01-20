@@ -15,6 +15,8 @@ public partial class User
 
     public string Phone { get; set; } = null!;
 
+    public bool? IsDelete { get; set; }
+
     public virtual ICollection<LikeList> LikeLists { get; set; } = new List<LikeList>();
 
     public virtual ICollection<UserDetail> UserDetails { get; set; } = new List<UserDetail>();

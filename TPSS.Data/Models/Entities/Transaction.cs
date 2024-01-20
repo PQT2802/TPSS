@@ -13,5 +13,7 @@ public partial class Transaction
 
     public double? CommissionCalculation { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual Contract? Contract { get; set; }
 }

@@ -17,5 +17,7 @@ namespace TPSS.Data.Models.DTO
         public string Username { get; set; } = null!;
 
         public string Phone { get; set; } = null!;
+
+        public bool? IsDelete { get; set; }
     }
 }
