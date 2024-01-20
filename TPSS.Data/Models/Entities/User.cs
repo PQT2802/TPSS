@@ -17,9 +17,5 @@ public partial class User
 
     public virtual ICollection<LikeList> LikeLists { get; set; } = new List<LikeList>();
 
-    public virtual ICollection<Reservation> ReservationBuyers { get; set; } = new List<Reservation>();
-
-    public virtual ICollection<Reservation> ReservationSellers { get; set; } = new List<Reservation>();
-
-    public virtual UserDetail UserNavigation { get; set; } = null!;
+    public virtual ICollection<UserDetail> UserDetails { get; set; } = new List<UserDetail>();
 }

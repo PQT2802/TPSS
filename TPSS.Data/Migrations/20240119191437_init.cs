@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TPSS.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class v3 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,21 @@ namespace TPSS.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.RoleID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    UserID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__User__1788CCAC2A7756CD", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,13 +106,14 @@ namespace TPSS.Data.Migrations
                 name: "UserDetail",
                 columns: table => new
                 {
-                    UserID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    UserDetailID = table.Column<string>(type: "nchar(10)", fixedLength: true, maxLength: 10, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PersonalID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -110,58 +126,16 @@ namespace TPSS.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__UserDeta__1788CCAC0F790C30", x => x.UserID);
+                    table.PrimaryKey("PK__UserDeta__1788CCAC0F790C30", x => x.UserDetailID);
                     table.ForeignKey(
                         name: "FK_UserDetail_Role",
                         column: x => x.RoleID,
                         principalTable: "Role",
                         principalColumn: "RoleID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PropertyDetail",
-                columns: table => new
-                {
-                    PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    PropertyTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "ntext", nullable: true),
-                    CreateDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    UpdateDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    CreateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    UpdateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Service = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VerifyBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    VerifyDate = table.Column<DateOnly>(type: "date", nullable: true)
-                },
-                constraints: table =>
-                {
                     table.ForeignKey(
-                        name: "FK_PropertyDetail_Property",
-                        column: x => x.PropertyID,
-                        principalTable: "Property",
-                        principalColumn: "PropertyID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__User__1788CCAC2A7756CD", x => x.UserID);
-                    table.ForeignKey(
-                        name: "FK_User_UserDetail",
+                        name: "FK_UserDetail_User",
                         column: x => x.UserID,
-                        principalTable: "UserDetail",
+                        principalTable: "User",
                         principalColumn: "UserID");
                 });
 
@@ -177,15 +151,43 @@ namespace TPSS.Data.Migrations
                 {
                     table.PrimaryKey("PK__LikeList__A2922CF437D78B83", x => x.LikeID);
                     table.ForeignKey(
+                        name: "FK_LikeList_User",
+                        column: x => x.UserID,
+                        principalTable: "User",
+                        principalColumn: "UserID");
+                    table.ForeignKey(
                         name: "FK__LikeList__Proper__3B75D760",
                         column: x => x.PropertyID,
                         principalTable: "Property",
                         principalColumn: "PropertyID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PropertyDetail",
+                columns: table => new
+                {
+                    PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PropertyTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "ntext", nullable: true),
+                    CreateDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    UpdateDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    CreateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UpdateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Service = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VerifyBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    VerifyDate = table.Column<DateOnly>(type: "date", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PropertyDetail", x => x.PropertyDetailID);
                     table.ForeignKey(
-                        name: "FK__LikeList__UserID__3A81B327",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
+                        name: "FK_PropertyDetail_Property",
+                        column: x => x.PropertyID,
+                        principalTable: "Property",
+                        principalColumn: "PropertyID");
                 });
 
             migrationBuilder.CreateTable(
@@ -204,20 +206,10 @@ namespace TPSS.Data.Migrations
                 {
                     table.PrimaryKey("PK__Reservat__B7EE5F04AD628F07", x => x.ReservationID);
                     table.ForeignKey(
-                        name: "FK__Reservati__Buyer__30F848ED",
-                        column: x => x.BuyerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
                         name: "FK__Reservati__Prope__2F10007B",
                         column: x => x.PropertyID,
                         principalTable: "Property",
                         principalColumn: "PropertyID");
-                    table.ForeignKey(
-                        name: "FK__Reservati__Selle__300424B4",
-                        column: x => x.SellerID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateTable(
@@ -339,6 +331,11 @@ namespace TPSS.Data.Migrations
                 name: "IX_UserDetail_RoleID",
                 table: "UserDetail",
                 column: "RoleID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserDetail_UserID",
+                table: "UserDetail",
+                column: "UserID");
         }
 
         /// <inheritdoc />
@@ -357,7 +354,16 @@ namespace TPSS.Data.Migrations
                 name: "PropertyDetail");
 
             migrationBuilder.DropTable(
+                name: "UserDetail");
+
+            migrationBuilder.DropTable(
                 name: "Transaction");
+
+            migrationBuilder.DropTable(
+                name: "Role");
+
+            migrationBuilder.DropTable(
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Contract");
@@ -366,19 +372,10 @@ namespace TPSS.Data.Migrations
                 name: "Reservation");
 
             migrationBuilder.DropTable(
-                name: "User");
-
-            migrationBuilder.DropTable(
                 name: "Property");
 
             migrationBuilder.DropTable(
-                name: "UserDetail");
-
-            migrationBuilder.DropTable(
                 name: "Project");
-
-            migrationBuilder.DropTable(
-                name: "Role");
         }
     }
 }

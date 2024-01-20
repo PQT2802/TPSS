@@ -31,5 +31,7 @@ public partial class Property
 
     public virtual Project Project { get; set; } = null!;
 
+    public virtual ICollection<PropertyDetail> PropertyDetails { get; set; } = new List<PropertyDetail>();
+
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }
