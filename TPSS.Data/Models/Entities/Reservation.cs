@@ -19,6 +19,8 @@ public partial class Reservation
 
     public int? Priority { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 
     public virtual Property? Property { get; set; }

@@ -17,6 +17,8 @@ public partial class Contract
 
     public string? ContractStatus { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual Reservation? Reservation { get; set; }
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

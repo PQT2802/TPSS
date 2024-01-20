@@ -13,5 +13,7 @@ public partial class Payment
 
     public bool? Status { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual Transaction Transaction { get; set; } = null!;
 }

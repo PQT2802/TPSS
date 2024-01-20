@@ -22,16 +22,6 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                //User user = new User();
-                //user.UserId = userDTO.UserId;//generate
-                //user.Username = userDTO.Username;
-                //user.Password = userDTO.Password;
-                //user.Email = userDTO.Email;
-                //user.Phone = userDTO.Phone;
-                //user.FirstName = userDTO.FirstName;
-                //user.LastName = userDTO.LastName;
-                //int result = await _userRepository.CreateUserAsync(user);
-                //return result;
                 User user = new User();
                 user.UserId = userDTO.UserId;
                 user.Username = userDTO.Username;
@@ -57,25 +47,41 @@ namespace TPSS.Business.Service.Impl
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message, e);
             }
 
         }
 
-        public Task<User> GetUserByIdAsync(string id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {                
+                User result = await _userRepository.GetUserByIdAsync(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        public Task<int> UpdateUserAsync(User user)
+        public async Task<int> UpdateUserAsync(UserDTO userdto)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> UpdateUserAsync(UserDTO user)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                User user = new User();
+                user.Username = userdto.Username;
+                user.Email = userdto.Email;
+                user.Password = userdto.Password;
+                user.Phone = userdto.Phone;
+                int result = await _userRepository.UpdateUserAsync(user);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
         }
     }
 

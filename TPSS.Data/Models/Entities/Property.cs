@@ -27,6 +27,8 @@ public partial class Property
 
     public string? Street { get; set; }
 
+    public bool? IsDelete { get; set; }
+
     public virtual ICollection<LikeList> LikeLists { get; set; } = new List<LikeList>();
 
     public virtual Project Project { get; set; } = null!;
