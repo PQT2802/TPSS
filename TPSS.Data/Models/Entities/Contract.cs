@@ -11,9 +11,9 @@ public partial class Contract
 
     public DateOnly? ContractDate { get; set; }
 
-    public string? ContractTerms { get; set; }
+    public string? ContractTerms { get; set; } // dieu khoan 
 
-    public double? Deposit { get; set; }
+    public double? Deposit { get; set; } // tien dat coc 
 
     public string? ContractStatus { get; set; }
 
