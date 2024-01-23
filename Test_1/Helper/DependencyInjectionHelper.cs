@@ -12,9 +12,10 @@ namespace TPSS.API.Helper
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
 
-
             //Service
+            
             services.AddTransient<IUserService, UserService>();
+            //services.AddTransient<IUserService, UserService2>();
 
 
 

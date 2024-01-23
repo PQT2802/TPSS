@@ -27,7 +27,7 @@ namespace TPSS.API.Controllers
             return Ok(result);//tra ve respone(status:200,body:result)
         }
 
-        [HttpPut]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUserAsync(String id)
         {
             var result = await _userService.DeleteUserAsync(id);
@@ -40,6 +40,7 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
+ 
 
     }
 
