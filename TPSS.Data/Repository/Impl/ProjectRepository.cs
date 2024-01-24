@@ -38,19 +38,66 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        Task<int> IProjectRepository.DeleteProjectAsync(string projectId)
+        public async Task<int> DeleteProjectAsync(string projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "UPDATE Project " +
+                    "SET IsDelete = true" +
+                    "WHERE ProjectId = @ProjectId";
+                var parameter = new DynamicParameters();
+                parameter.Add("ProjectId", projectId, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<Project> IProjectRepository.GetProjectByIdAsync(string projectId)
+        public async Task<Project> GetProjectByIdAsync(string projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "SELECT *" +
+                    "FROM Project" +
+                    "WHERE ProjectId = @ProjectId";
+                var parameter = new DynamicParameters();
+                parameter.Add("ProjectId", projectId, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<Project>(query, parameter);
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<int> IProjectRepository.UpdateProjectAsync(Project updateProject)
+        public async Task<int> UpdateProjectAsync(Project updateProject)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "UPDATE Project" +
+                 "SET ProjectId = @ProjectId, ProjectName = @ProjectName, Status = @Status" +
+                 "WHERE ProjectId = @ProjectId";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("Email", updateProject.ProjectId, DbType.String);
+                parameter.Add("Password", updateProject.ProjectName, DbType.String);
+                parameter.Add("Username", updateProject.Status, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
     }
 }

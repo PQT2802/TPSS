@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
+using TPSS.Data.Repository.Impl;
 
 namespace TPSS.Business.Service.Impl
 {
@@ -36,19 +37,47 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        Task<int> IProjectService.DeleteProjectAsync(string projectId)
+        public async Task<int> DeleteProjectAsync(string projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int result = await _projectRepository.DeleteProjectAsync(projectId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<Project> IProjectService.GetProjectByIdAsync(string projectId)
+        public async Task<Project> GetProjectByIdAsync(string projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Project result = await _projectRepository.GetProjectByIdAsync(projectId);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
 
-        Task<int> IProjectService.UpdateProjectAsync(ProjectDTO updateProject)
+        public async Task<int> UpdateProjectAsync(ProjectDTO projectDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Project project = new Project();
+                project.ProjectName = projectDTO.ProjectName;
+                project.Status = projectDTO.Status;
+                int result = await _projectRepository.UpdateProjectAsync(project);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
         }
     }
 }
