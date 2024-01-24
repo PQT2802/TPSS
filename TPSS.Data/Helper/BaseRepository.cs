@@ -20,7 +20,11 @@ namespace TPSS.Data.Helper
 
         protected IDbConnection CreateConnection()
         {
+<<<<<<< HEAD
             return new SqlConnection(_configuration.GetConnectionString("DEV_NGOO"));
+=======
+            return new SqlConnection(_configuration.GetConnectionString("DEV_HUNG"));
+>>>>>>> master
             
         }
     }
