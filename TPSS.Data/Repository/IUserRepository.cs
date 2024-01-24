@@ -11,9 +11,19 @@ namespace TPSS.Data.Repository
     public interface IUserRepository
     {
         public Task<User> GetUserByIdAsync(string id);
+<<<<<<< HEAD
         public Task<String> GetLatestUserIdAsync();
+=======
+        public Task<string> GetLatestUserIdAsync();
+        public Task<string> GetUserNameAsync(string username);
+        public Task<string> GetEmailAsync(string email);
+        public Task<string> GetPhoneAsync(string phone);
+>>>>>>> DEV_THANG
         public Task<int> CreateUserAsync(User newUser);
         public Task<int> UpdateUserAsync(User updateUser);
         public Task<int> DeleteUserByIdAsync(string id);
+
+        
+
     }
 }
