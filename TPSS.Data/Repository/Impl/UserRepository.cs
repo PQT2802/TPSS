@@ -92,5 +92,10 @@ namespace TPSS.Data.Repository.Impl
             using var connection = CreateConnection();
             return await connection.ExecuteAsync(query, parameter);
         }
+
+        Task<string> IUserRepository.GetLatestUserIdAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
