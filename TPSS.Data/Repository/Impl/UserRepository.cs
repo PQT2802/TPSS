@@ -63,7 +63,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT *" +
+                var query = "SELECT *" + 
                     "FROM [User]" +
                     "WHERE UserId = @UserId";
                 var parameter = new DynamicParameters();
