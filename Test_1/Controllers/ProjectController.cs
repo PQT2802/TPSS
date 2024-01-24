@@ -7,7 +7,7 @@ using TPSS.Data.Models.DTO;
 namespace TPSS.API.Controllers
 {
     [ApiController]
-    [Route("api/v1.0/users")]
+    [Route("api/v1.0/projects")]
     [EnableCors]
     public class ProjectController : ControllerBase
     {

@@ -93,12 +93,7 @@ namespace TPSS.Data.Repository.Impl
             return await connection.ExecuteAsync(query, parameter);
         }
 
-<<<<<<< HEAD
-        Task<string> IUserRepository.GetLatestUserIdAsync()
-        {
-            throw new NotImplementedException();
-        }
-=======
+
         public async Task<string> GetLatestUserIdAsync()
         {
             try
@@ -173,7 +168,7 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
->>>>>>> DEV_THANG
+
     }
 
 

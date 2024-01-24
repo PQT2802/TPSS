@@ -20,7 +20,7 @@ namespace TPSS.API.Controllers
             _userService = userService;
         }
 
-        [HttpPost]        
+        [HttpPost]
         public async Task<IActionResult> CreateUserAsync(UserDTO newUser)
         {
             var result = await _userService.CreateUserAsync(newUser);
@@ -40,7 +40,7 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
- 
+
 
     }
 
