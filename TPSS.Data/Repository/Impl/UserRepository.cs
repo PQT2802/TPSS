@@ -23,6 +23,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone) " +
                     "VALUES(@UserId, @Email, @Password, @Username, @Phone)";
+
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", newUser.UserId, DbType.String);
                 parameter.Add("Email", newUser.Email, DbType.String);
@@ -30,6 +31,7 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("Username", newUser.Username, DbType.String);
                 parameter.Add("Phone", newUser.Phone, DbType.String);
                 using var connection = CreateConnection();
+
                 return await connection.ExecuteAsync(query, parameter);
             }
             catch (Exception e)
