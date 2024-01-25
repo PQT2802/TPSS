@@ -11,7 +11,7 @@ using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository.Impl
 {
-    internal class ContractRepository : BaseRepository, IContractRepository
+    public class ContractRepository : BaseRepository, IContractRepository
     {
         public ContractRepository(IConfiguration configuration) : base(configuration)
         {

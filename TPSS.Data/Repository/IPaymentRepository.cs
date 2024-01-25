@@ -7,7 +7,7 @@ using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository
 {
-    internal interface IPaymentRepository
+    public interface IPaymentRepository
     {
         public Task<Payment> GetPaymentByIdAsync(string PaymentID);
 

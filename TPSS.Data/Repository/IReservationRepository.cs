@@ -7,7 +7,7 @@ using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository
 {
-    internal interface IReservationRepository
+    public interface IReservationRepository
     {
         public Task<Reservation> GetReservationByIdAsync(string reservationId);
 

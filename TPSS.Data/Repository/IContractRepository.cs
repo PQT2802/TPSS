@@ -7,7 +7,7 @@ using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository
 {
-    internal interface IContractRepository
+    public interface IContractRepository
     {
         public Task<Contract> GetContractByIdAsync(string contractId);
         public Task<int> CreateContractAsync(Contract Createcontract);

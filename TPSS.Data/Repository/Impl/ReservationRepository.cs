@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
-using System.Data
+using System.Data;
 using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository.Impl
 {
-    internal class ReservationRepository : BaseRepository, IReservationRepository
+    public class ReservationRepository : BaseRepository, IReservationRepository
     {
         public ReservationRepository(IConfiguration configuration) : base(configuration)
         {
