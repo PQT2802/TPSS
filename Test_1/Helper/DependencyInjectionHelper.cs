@@ -18,6 +18,9 @@ namespace TPSS.API.Helper
             //Service
             
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IContractService, ContractService>();
+
             //services.AddTransient<IUserService, UserService2>();
 
 
