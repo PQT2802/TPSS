@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Business.Common;
+using TPSS.Business.Exceptions.ErrorHandler;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
 
 namespace TPSS.Business.Service.Impl
 {
-    public class UserService : IUserService
+    public sealed class UserService : IUserService
     {
         //DI
         private readonly IUserRepository _userRepository;
@@ -20,25 +21,26 @@ namespace TPSS.Business.Service.Impl
             _userRepository = userRepository;
         }
 
-        private string AutoGenerateUserId()
-        {
-            string latestUserId = _userRepository.GetLatestUserIdAsync().Result;
-            // giả sử định dạng user id của bạn là "USxxxxxxx"
-            // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-            int numericpart = int.Parse(latestUserId.Substring(2));
-            int newnumericpart = numericpart + 1;
-
-            // tạo ra user id mới
-            //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-            string newuserid = $"US{newnumericpart:d8}";
-            return newuserid;
-        }
-
-        public async Task<int> CreateUserAsync(UserDTO userDTO)
+        public Task<dynamic> RegisterUser(RegisterDTO registerDTO)
         {
             try
             {
-                User user = new User();               
+
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<dynamic> CreateUserAsync(UserDTO userDTO)
+        {
+            try
+            {
+                User user = new User();            
+                if(userDTO.Username.Equals("0"))
+                {
+                    return Result.Failure(UserErrors.UserAlreadyExist(userDTO.Username));
+                }
                 user.UserId = AutoGenerateUserId();
                 user.Username = userDTO.Username;
                 user.Email = userDTO.Email;
@@ -56,22 +58,6 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
-
-        //public async Task<int> RegistUserAccount(RegisterDTO registerDTO)
-        //{
-        //    try
-        //    {
-        //        if (CheckUserName(registerDTO.Username))
-        //        {
-
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
 
         //ma hoa password
         public bool CheckUserName(string userName)
@@ -133,6 +119,22 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        private string AutoGenerateUserId()
+        {
+            string latestUserId = _userRepository.GetLatestUserIdAsync().Result;
+            // giả sử định dạng user id của bạn là "USxxxxxxx"
+            // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
+            int numericpart = int.Parse(latestUserId.Substring(2));
+            int newnumericpart = numericpart + 1;
+
+            // tạo ra user id mới
+            //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
+            string newuserid = $"US{newnumericpart:d8}";
+            return newuserid;
+        }
+
+
     }
 
 }

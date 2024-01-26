@@ -1,5 +1,6 @@
 
 using TPSS.API.Helper;
+using TPSS.Business.Exceptions;
 
 namespace Test_1
 {
@@ -16,7 +17,7 @@ namespace Test_1
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddServicesConfiguration();
-            //builder.Services.AddExceptionHandler<>;
+            builder.Services.AddProblemDetails();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,7 +31,7 @@ namespace Test_1
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseExceptionHandler();
 
             app.MapControllers();
 
