@@ -14,13 +14,13 @@ namespace TPSS.Business.Service.Impl
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
+
         public PropertyService(IPropertyRepository propertyRepository)
         {
             _propertyRepository = propertyRepository;
         }
 
-
-        public async Task<int> CreatePropertyAsync(PropertyDTO propertyDTO)
+        public async Task<int> CreatePropertyAsync(Property propertyDTO)
         {
             try
             {
@@ -36,6 +36,7 @@ namespace TPSS.Business.Service.Impl
                 property.District = propertyDTO.District;
                 property.Ward = propertyDTO.Ward;
                 property.Street = propertyDTO.Street;
+                property.IsDelete = propertyDTO.IsDelete;
 
                 int result = await _propertyRepository.CreatePropertyAsync(property);
                 return result;
@@ -72,7 +73,7 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<int> UpdatePropertyAsync(PropertyDTO property)
+        public async Task<int> UpdatePropertyAsync(Property property)
         {
             //update soon
             throw new NotImplementedException();

@@ -1,12 +1,13 @@
-
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TPSS.Data.Helper;
 using TPSS.Data.Models.Entities;
-
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -49,10 +50,6 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public Task<int> DeleteContractAsync(string PropertyId)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<int> DeletePropertyAsync(string id)
         {
@@ -77,11 +74,6 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public Task<Microsoft.EntityFrameworkCore.Metadata.Internal.Property> GetContractByIdAsync(string PropertyId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Property> GetPropertyByIdAsync(string id)
         {
             try
@@ -103,15 +95,9 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public Task<int> UpdateContractAsync(Microsoft.EntityFrameworkCore.Metadata.Internal.Property updateProperty)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<int> UpdatePropertyAsync(Property property)
         {
             //update soon
-
             throw new NotImplementedException();
         }
     }

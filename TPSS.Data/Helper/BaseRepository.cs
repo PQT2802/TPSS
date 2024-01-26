@@ -6,7 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
 
 namespace TPSS.Data.Helper
 
@@ -21,7 +20,11 @@ namespace TPSS.Data.Helper
 
         protected IDbConnection CreateConnection()
         {
+<<<<<<< HEAD
+            return new SqlConnection(_configuration.GetConnectionString("DEV_TRONG"));
+=======
             return new SqlConnection(_configuration.GetConnectionString("DEV_HUNG"));
+>>>>>>> 3e0e4aad604d3b787cf464e314033106a70d10b4
             
         }
     }
