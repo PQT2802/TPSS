@@ -16,7 +16,7 @@ namespace Test_1
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddServicesConfiguration();
-
+            //builder.Services.AddExceptionHandler<>;
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

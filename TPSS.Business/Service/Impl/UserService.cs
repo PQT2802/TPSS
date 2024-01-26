@@ -42,8 +42,11 @@ namespace TPSS.Business.Service.Impl
                 user.UserId = AutoGenerateUserId();
                 user.Username = userDTO.Username;
                 user.Email = userDTO.Email;
-                user.Password = userDTO.Password;
+                user.Password = Encryption.Encrypt(userDTO.Password);
                 user.Phone = userDTO.Phone;
+                user.RoleId = "R1";
+                user.IsDelete = false;
+                user.IsDelete = false;
                 int result = await _userRepository.CreateUserAsync(user);
                 return result;
             }

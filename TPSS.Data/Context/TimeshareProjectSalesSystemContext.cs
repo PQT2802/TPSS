@@ -264,6 +264,15 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
+            entity.Property(e => e.RoleId)
+                .HasMaxLength(15)
+                .HasColumnName("RoleID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_Role");
         });
 
         modelBuilder.Entity<UserDetail>(entity =>
@@ -278,17 +287,10 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasColumnName("UserDetailID");
             entity.Property(e => e.CreateBy).HasMaxLength(20);
             entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
-            entity.Property(e => e.RoleId)
-                .HasMaxLength(15)
-                .HasColumnName("RoleID");
             entity.Property(e => e.UpdateBy).HasMaxLength(20);
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.UserDetails)
-                .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK_UserDetail_Role");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserDetails)
                 .HasForeignKey(d => d.UserId)
