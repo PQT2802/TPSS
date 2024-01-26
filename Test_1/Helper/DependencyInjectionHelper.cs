@@ -1,4 +1,5 @@
-﻿using TPSS.Business.Service;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using TPSS.Business.Service;
 using TPSS.Business.Service.Impl;
 using TPSS.Data.Repository;
 using TPSS.Data.Repository.Impl;
@@ -12,9 +13,15 @@ namespace TPSS.API.Helper
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
 
+            services.AddTransient<IPropertyRepository, PropertyRepository>();
 
             //Service
+            
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IContractService, ContractService>();
+
+            //services.AddTransient<IUserService, UserService2>();
 
 
 

@@ -10,9 +10,10 @@ namespace TPSS.Business.Service
 {
     public interface IPropertyService
     {
-        public Task<Property> GetPropertyByIdAsync(string id);
-        public Task<int> CreatePropertyAsync(Property property);
-        public Task<int> UpdatePropertyAsync(Property property);
-        public Task<int> DeletePropertyAsync(string id);
+        public Task<Property> GetPropertyByIdAsync(String id);
+        public Task<int> CreatePropertyAsync(PropertyDTO user);
+        public Task<int> UpdatePropertyAsync(PropertyDTO user);
+        public Task<int> DeletePropertyAsync(String id);
+
     }
 }

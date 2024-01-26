@@ -65,7 +65,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT *" +
+                var query = "SELECT *" + 
                     "FROM [User]" +
                     "WHERE UserId = @UserId";
                 var parameter = new DynamicParameters();
@@ -94,5 +94,82 @@ namespace TPSS.Data.Repository.Impl
             using var connection = CreateConnection();
             return await connection.ExecuteAsync(query, parameter);
         }
+
+        public async Task<string> GetLatestUserIdAsync()
+        {
+            try
+            {
+                var query = "SELECT TOP 1 UserId " +
+                    "FROM [User] " +
+                    "ORDER BY " +
+                    "CAST(SUBSTRING(UserId, 8, LEN(UserId)) AS INT) DESC, " +
+                    "UserId DESC";
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<string> GetUserNameAsync(string username)
+        {
+            try
+            {
+                var query = "SELECT Username " +
+                    "FROM [User] " +
+                    "WHERE Username = @Username";
+                var parameter = new DynamicParameters();
+                parameter.Add("Username", username, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<string> GetEmailAsync(string email)
+        {
+            try
+            {
+                var query = "SELECT Email " +
+                    "FROM [User] " +
+                    "WHERE Email = @Email";
+                var parameter = new DynamicParameters();
+                parameter.Add("Email", email, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<string> GetPhoneAsync(string phone)
+        {
+            try
+            {
+                var query = "SELECT Phone " +
+                    "FROM [User] " +
+                    "WHERE Phone = @Phone";
+                var parameter = new DynamicParameters();
+                parameter.Add("Phone", phone, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
     }
+
+
 }
