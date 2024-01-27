@@ -21,12 +21,69 @@ namespace TPSS.Business.Service.Impl
             _userRepository = userRepository;
         }
 
-        public Task<dynamic> RegisterUser(RegisterDTO registerDTO)
+        public async Task<dynamic> RegisterUser(RegisterDTO registerDTO)
         {
             try
             {
+                User user = new User();
+                //USERNAME//////
+                if (Validator.IsValidUsername(registerDTO.Username))
+                {
+                    return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Username));
+                    
+                }
+                else if (CheckUserName(registerDTO.Username))
+                {
+                    return Result.Failure(RegisterErrors.UserAlreadyExist(registerDTO.Username));
+                }
+                else
+                {
+                    user.Username = registerDTO.Username;
+                }
+                //PHONE//
+                if(Validator.IsValidPhone(registerDTO.Phone))
+                {
+                    return Result.Failure(RegisterErrors.PhoneIsInvalid(registerDTO.Phone));
+                }
+                else if (CheckPhone(registerDTO.Phone))
+                {
+                    return Result.Failure(RegisterErrors.PhoneAlreadyUsed(registerDTO.Phone));
+                }
+                else
+                {
+                    user.Phone = registerDTO.Phone;
+                }
+                //Email///
+                if (Validator.IsValidEmail(registerDTO.Email))
+                {
+                    return Result.Failure(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+                }
+                else if (CheckEmail(registerDTO.Email))
+                {
+                    return Result.Failure(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+                }
+                else { user.Email = registerDTO.Email;}
+                //PASSWORD///
+                if (Validator.IsValidPassword(registerDTO.Password))
+                {
+                    return Result.Failure(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+                }
+                else if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
+                {
+                    return Result.Failure(RegisterErrors.ConfirmPasswordIsInvalid);
+                }
+                else
+                {
+                    user.Password = Encryption.Encrypt(registerDTO.Password);
+                }
+                user.IsActive = false;
+                user.IsDelete = false;
+                user.RoleId = "R1";
+                int result = await _userRepository.CreateUserAsync(user);
+                return result;
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
