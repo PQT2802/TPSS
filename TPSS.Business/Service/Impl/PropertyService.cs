@@ -19,6 +19,20 @@ namespace TPSS.Business.Service.Impl
             _propertyRepository = propertyRepository;
         }
 
+        private string AutoGenerateUserId()
+        {
+            string latestUserId = _userRepository.GetLatestUserIdAsync().Result;
+            // giả sử định dạng user id của bạn là "USxxxxxxx"
+            // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
+            int numericpart = int.Parse(latestUserId.Substring(2));
+            int newnumericpart = numericpart + 1;
+
+            // tạo ra user id mới
+            //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
+            string newuserid = $"US{newnumericpart:d8}";
+            return newuserid;
+        }
+
 
         public async Task<int> CreatePropertyAsync(PropertyDTO propertyDTO)
         {
