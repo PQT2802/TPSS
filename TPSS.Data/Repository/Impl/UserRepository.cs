@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
@@ -21,14 +22,17 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone) " +
-                    "VALUES(@UserId, @Email, @Password, @Username, @Phone)";
+                var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone, RoleId, IsActive, IsDelete) " +
+                    "VALUES(@UserId, @Email, @Password, @Username, @Phone, @RoleId, @IsActive, @IsDelete)";
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", newUser.UserId, DbType.String);
                 parameter.Add("Email", newUser.Email, DbType.String);
                 parameter.Add("Password", newUser.Password, DbType.String);
                 parameter.Add("Username", newUser.Username, DbType.String);
                 parameter.Add("Phone", newUser.Phone, DbType.String);
+                parameter.Add("RoleId", newUser.RoleId, DbType.String);
+                parameter.Add("IsActive", newUser.IsActive, DbType.Boolean);
+                parameter.Add("IsDelete", newUser.IsDelete, DbType.Boolean);
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
             }
@@ -69,7 +73,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", id, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<User>(query, parameter);
+                return await connection.QuerySingleOrDefaultAsync<User>(query, parameter);
             }
             catch (Exception e)
             {
@@ -103,7 +107,7 @@ namespace TPSS.Data.Repository.Impl
                     "CAST(SUBSTRING(UserId, 8, LEN(UserId)) AS INT) DESC, " +
                     "UserId DESC";
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleOrDefaultAsync<string>(query);
             }
             catch (Exception e)
             {
@@ -122,7 +126,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Username", username, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleOrDefaultAsync<string>(query,parameter);
             }
             catch (Exception e)
             {
@@ -140,7 +144,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Email", email, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleOrDefaultAsync<string>(query,parameter);
             }
             catch (Exception e)
             {
@@ -158,13 +162,46 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Phone", phone, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
             }
             catch (Exception e)
             {
 
                 throw new Exception(e.Message, e);
             }
+        }
+
+
+        public async Task<User> GetUserAccountAsync(string usenameOrPhoneOrEmail, string password, string columnName)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM [User] " +
+                    $"WHERE {columnName} = @columnName, Password = @Password";
+                var parameter = new DynamicParameters();
+                parameter.Add($"{columnName}", usenameOrPhoneOrEmail, DbType.String);
+                parameter.Add("Password", password, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<User>(query, parameter);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<User> GetUserAccountAsync(string username, string password)
+        {
+            var query = "SELECT * " +
+                "FROM [User] " +
+                "WHERE Username = @Username AND Password = @Password";
+            var parameter = new DynamicParameters();
+            parameter.Add("Username", username, DbType.String);
+            parameter.Add("Password", password, DbType.String);
+            using var connection = CreateConnection();
+            return await connection.QuerySingleOrDefaultAsync<User>(query, parameter);
         }
 
     }
