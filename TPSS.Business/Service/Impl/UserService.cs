@@ -20,17 +20,25 @@ namespace TPSS.Business.Service.Impl
             _userRepository = userRepository;
         }
 
-        private string AutoGenerateUserId()
+        private async Task<string> AutoGenerateUserId()
         {
-            string latestUserId = _userRepository.GetLatestUserIdAsync().Result;
+            string newuserid;
+            string latestUserId = await _userRepository.GetLatestUserIdAsync();
             // giả sử định dạng user id của bạn là "USxxxxxxx"
             // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-            int numericpart = int.Parse(latestUserId.Substring(2));
-            int newnumericpart = numericpart + 1;
-
+            if(latestUserId != null)
+            {
+                int numericpart = int.Parse(latestUserId[2..]);
+                int newnumericpart = numericpart + 1;
+                newuserid = $"US{newnumericpart:d8}";
+            }
+            else
+            {
+                newuserid = "US00000001";
+            }
             // tạo ra user id mới
             //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-            string newuserid = $"US{newnumericpart:d8}";
+            
             return newuserid;
         }
 
@@ -38,12 +46,15 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                User user = new User();               
-                user.UserId = AutoGenerateUserId();
-                user.Username = userDTO.Username;
-                user.Email = userDTO.Email;
-                user.Password = userDTO.Password;
-                user.Phone = userDTO.Phone;
+                User user = new()
+                {
+                    UserId = await AutoGenerateUserId(),
+                    Username = userDTO.Username,
+                    Email = userDTO.Email,
+                    Password = userDTO.Password,
+                    Phone = userDTO.Phone,
+                    IsDelete = false
+                };
                 int result = await _userRepository.CreateUserAsync(user);
                 return result;
             }
@@ -117,11 +128,13 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                User user = new User();
-                user.Username = userdto.Username;
-                user.Email = userdto.Email;
-                user.Password = userdto.Password;
-                user.Phone = userdto.Phone;
+                User user = new()
+                {
+                    Username = userdto.Username,
+                    Email = userdto.Email,
+                    Password = userdto.Password,
+                    Phone = userdto.Phone
+                };
                 int result = await _userRepository.UpdateUserAsync(user);
                 return result;
             }

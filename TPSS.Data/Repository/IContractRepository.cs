@@ -13,5 +13,7 @@ namespace TPSS.Data.Repository
         public Task<int> CreateContractAsync(Contract Createcontract);
         public Task<int> UpdateContractAsync(Contract updateContract);
         public Task<int> DeleteContractAsync(string contractId);
+        public Task<string> GetLatestContractIdAsync();
+        public Task<DateOnly> GetDateContractByIdAsync(string ContractId);
     }
 }

@@ -12,9 +12,9 @@ namespace TPSS.Data.Models.DTO
 
         public string? ReservationId { get; set; }
 
-        public DateOnly? ContractDate { get; set; }
+        public DateOnly ContractDate { get; set; }
 
-        public string? ContractTerms { get; set; } // dieu khoan 
+        public string? ContractTerms { get; set; } // dieu khoan, dieu kien cua hop dong 
 
         public double? Deposit { get; set; } // tien dat coc 
 

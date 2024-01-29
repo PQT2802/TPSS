@@ -21,8 +21,8 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone) " +
-                    "VALUES(@UserId, @Email, @Password, @Username, @Phone)";
+                var query = "INSERT INTO [User](UserId, Email, Password, Username, Phone, isDelete) " +
+                    "VALUES(@UserId, @Email, @Password, @Username, @Phone, @isDelete)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", newUser.UserId, DbType.String);
@@ -30,6 +30,7 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("Password", newUser.Password, DbType.String);
                 parameter.Add("Username", newUser.Username, DbType.String);
                 parameter.Add("Phone", newUser.Phone, DbType.String);
+                parameter.Add("isDelete", newUser.IsDelete, DbType.Boolean);
                 using var connection = CreateConnection();
 
                 return await connection.ExecuteAsync(query, parameter);
@@ -46,17 +47,15 @@ namespace TPSS.Data.Repository.Impl
             try
             {
                 var query = "UPDATE [User] " +
-                    "SET IsDelete = true" +
-                    "WHERE UserId = @UserId";
+                    "SET IsDelete = 1" +// Explicitly set boolean value to 1
+                    "WHERE [UserId] = @UserId";
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", id, DbType.String);
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
-
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message, e);
             }
         }
@@ -65,13 +64,14 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT *" + 
+                var query = "SELECT * " + 
                     "FROM [User]" +
                     "WHERE UserId = @UserId";
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", id, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<User>(query, parameter);
+                return await connection.QuerySingleAsync<User>(query, parameter);//exactly one result if many => error
+                                                                                 //return null if not data correct
             }
             catch (Exception e)
             {
@@ -83,7 +83,7 @@ namespace TPSS.Data.Repository.Impl
         {
             var query = "UPDATE [User]" +
                 "SET Email = @Email, Password = @Password, Username = @Username, Phone = @Phone" +
-                "WHERE UserId = @UserId";
+                "WHERE [UserId] = @UserId";
 
             var parameter = new DynamicParameters();
             parameter.Add("Email", updateUser.Email, DbType.String);
@@ -105,7 +105,8 @@ namespace TPSS.Data.Repository.Impl
                     "CAST(SUBSTRING(UserId, 8, LEN(UserId)) AS INT) DESC, " +
                     "UserId DESC";
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QueryFirstOrDefaultAsync<string>(query); //retrieving the first result if have many result
+                                                                                 //null if not.
             }
             catch (Exception e)
             {
@@ -124,7 +125,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Username", username, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleAsync<string>(query, parameter);
             }
             catch (Exception e)
             {
@@ -142,7 +143,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Email", email, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleAsync<string>(query, parameter);
             }
             catch (Exception e)
             {
@@ -160,7 +161,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("Phone", phone, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<string>(query);
+                return await connection.QuerySingleAsync<string>(query,parameter);
             }
             catch (Exception e)
             {

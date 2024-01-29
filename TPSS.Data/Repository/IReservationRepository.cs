@@ -16,5 +16,13 @@ namespace TPSS.Data.Repository
         public Task<int> UpdateReservationAsync(Reservation updateReservation);
 
         public Task<int> DeleteReservationAsync(string reservationId);
+
+        public Task<string> GetLatestReservationIdAsync();
+
+        public Task<int> GetNumberOfPriority(String? propertyId);
+
+        public Task<String> GetOwnerIdByPropertyId(string? propertyId);
+
+        public Task<DateOnly> GetDateReservationByIdAsync(string reservationId);//test
     }
 }

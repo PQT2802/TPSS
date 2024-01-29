@@ -9,15 +9,15 @@ public partial class Contract
 
     public string? ReservationId { get; set; }
 
-    public DateOnly? ContractDate { get; set; }
+    public DateOnly ContractDate { get; set; }
 
     public string? ContractTerms { get; set; } // dieu khoan 
 
     public double? Deposit { get; set; } // tien dat coc 
 
-    public string? ContractStatus { get; set; }
+    public string? ContractStatus { get; set; } //"Active", "Pending", "Cancelled"
 
-    public bool? IsDelete { get; set; }
+    public bool? IsDelete { get; set; } //true se khong xuat hien tren thong tin
 
     public virtual Reservation? Reservation { get; set; }
 

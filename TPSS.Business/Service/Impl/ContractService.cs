@@ -1,14 +1,18 @@
 ﻿
 
+using System.Net;
+using System.Net.Http;
+using System.Net.WebSockets;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
+using TPSS.Data.Repository.Impl;
 
 namespace TPSS.Business.Service.Impl
 {
-     public class ContractService : IContractService
+    public class ContractService : IContractService
     {
-        public readonly IContractRepository _contractRepository;
+        private readonly IContractRepository _contractRepository;
 
         public ContractService(IContractRepository contractRepository)
         {
@@ -19,7 +23,20 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                User result = await _contractRepository.GetContractByIdAsync(id);
+                Contract result = await _contractRepository.GetContractByIdAsync(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<DateOnly> GetdateContractByIdAsync(string id) //lay date
+        {
+            try
+            {
+                DateOnly result = await _contractRepository.GetDateContractByIdAsync(id);
                 return result;
             }
             catch (Exception e)
@@ -29,36 +46,47 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<int> CreateContractAsync(ContractDTO contractDTO)
+        public async Task<int> CreateContractAsync(ContractDTO newContract)
         {
-             try
+            try
             {
-                Contract contract = new Contract();
-                contract.ContractId = AutoGenerateUserId();
-                contract.ContractTerms = contractDTO.ContractTerms;
-                contract.Transactions = contractDTO.Con;
-                contract.Password = contractDTO.Password;
-                contract.Phone = contractDTO.Phone;
+                Contract contract = new()
+                {
+                    ContractId = await AutoGenerateContractId(),//tu tao mot id moi
+                    ReservationId = newContract.ReservationId,//dto contract a contract b property, 
+                    ContractDate = newContract.ContractDate,
+                    ContractTerms = newContract.ContractTerms,
+                    Deposit = newContract.Deposit,
+                    ContractStatus = newContract.ContractStatus,//cap nhat trang thai do nguoi ban suat theo tien trinh nguoi mua
+                    IsDelete = false
+                };
                 int result = await _contractRepository.CreateContractAsync(contract);
                 return result;
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message, e);
             }
         }
 
-        public async Task<int> UpdateContractAsync(ContractDTO user)
+        public static DateOnly GetTodaysDate()
+        {
+            return DateOnly.FromDateTime(DateTime.Now);
+        }
+
+        public async Task<int> UpdateContractAsync(ContractDTO updateContract)
         {
             try
             {
-                User user = new User();
-                user.Username = userdto.Username;
-                user.Email = userdto.Email;
-                user.Password = userdto.Password;
-                user.Phone = userdto.Phone;
-                int result = await _contractRepository.UpdateUserAsync(user);
+                Contract contract = new()
+                {
+                    ContractTerms = updateContract.ContractTerms,
+                    Deposit = updateContract.Deposit,
+                    ContractDate = updateContract.ContractDate,
+                    ReservationId = updateContract.ReservationId,
+                    ContractStatus = updateContract.ContractStatus
+                }; 
+                int result = await _contractRepository.UpdateContractAsync(contract);
                 return result;
             }
             catch (Exception e)
@@ -69,9 +97,9 @@ namespace TPSS.Business.Service.Impl
 
         public async Task<int> DeleteContractAsync(string id)
         {
-             try
+            try
             {
-                int result = await _contractRepository.DeleteUserByIdAsync(id);
+                int result = await _contractRepository.DeleteContractAsync(id);
                 return result;
             }
             catch (Exception e)
@@ -79,20 +107,15 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
-         private async string AutoGenerateUserId()
+        private async Task<string> AutoGenerateContractId()
         {
-            string latestUserId = _contractRepository.GetLatestUserIdAsync().Result;
-            // giả sử định dạng user id của bạn là "USxxxxxxx"
-            // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-            int numericpart = int.Parse(latestUserId.Substring(2));
+            string latestContractId = await _contractRepository.GetLatestContractIdAsync();
+            int numericpart = int.Parse(latestContractId[2..]);
             int newnumericpart = numericpart + 1;
-
-            // tạo ra user id mới
-            //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-            string newuserid = $"US{newnumericpart:d8}";
-            return newuserid;
+            string newContractid = $"CO{newnumericpart:d8}";
+            return newContractid;
         }
 
     }
 }
-}
+

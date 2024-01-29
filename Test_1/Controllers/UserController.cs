@@ -9,7 +9,7 @@ using TPSS.Data.Models.Entities;
 namespace TPSS.API.Controllers
 {
     [ApiController]
-    [Route("api/v1.0/users")]
+    [Route("api/v1.0/user")]
     [EnableCors]
     public class UserController : ControllerBase
     {

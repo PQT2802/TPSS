@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TPSS.Business.Service;
+using TPSS.Business.Service.Impl;
 using TPSS.Data.Models.DTO;
 
 namespace TPSS.API.Controllers
@@ -23,6 +24,8 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
+
+
         [HttpDelete]
         public async Task<IActionResult> DeleteContractAsync(String id)
         {
@@ -35,6 +38,11 @@ namespace TPSS.API.Controllers
             var result = await _contractService.GetContractByIdAsync(id);
             return Ok(result);
         }
-
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetdateContractByIdAsync(String id)//test
+        {
+            var result = await _contractService.GetdateContractByIdAsync(id);
+            return Ok(result);
+        }
     }
 }
