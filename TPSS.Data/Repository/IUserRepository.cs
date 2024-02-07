@@ -10,8 +10,6 @@ namespace TPSS.Data.Repository
     public interface IUserRepository
     {
         public Task<User> GetUserByIdAsync(string id);
-        public Task<User> GetUserAccountAsync(string username, string password);
-        public Task<User> GetUserAccountAsync(string usenameOrPhoneOrEmail, string password, string columnName);
         public Task<string> GetLatestUserIdAsync();
         public Task<string> GetUserNameAsync(string username);
         public Task<string> GetEmailAsync(string email);
@@ -20,7 +18,7 @@ namespace TPSS.Data.Repository
         public Task<int> UpdateUserAsync(User updateUser);
         public Task<int> DeleteUserByIdAsync(string id);
 
-
+        
 
     }
 }

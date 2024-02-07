@@ -397,10 +397,6 @@ namespace TPSS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit")
-                        .HasColumnName("isActive");
-
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
@@ -412,20 +408,12 @@ namespace TPSS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("RoleID");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId")
                         .HasName("PK__User__1788CCAC2A7756CD");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -473,6 +461,11 @@ namespace TPSS.Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("RoleID");
+
                     b.Property<string>("TaxIdentificationNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -491,6 +484,8 @@ namespace TPSS.Data.Migrations
 
                     b.HasKey("UserDetailId")
                         .HasName("PK__UserDeta__1788CCAC0F790C30");
+
+                    b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
 
@@ -587,24 +582,20 @@ namespace TPSS.Data.Migrations
                     b.Navigation("Contract");
                 });
 
-            modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>
-                {
-                    b.HasOne("TPSS.Data.Models.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .IsRequired()
-                        .HasConstraintName("FK_User_Role");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("TPSS.Data.Models.Entities.UserDetail", b =>
                 {
+                    b.HasOne("TPSS.Data.Models.Entities.Role", "Role")
+                        .WithMany("UserDetails")
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_UserDetail_Role");
+
                     b.HasOne("TPSS.Data.Models.Entities.User", "User")
                         .WithMany("UserDetails")
                         .HasForeignKey("UserId")
                         .IsRequired()
                         .HasConstraintName("FK_UserDetail_User");
+
+                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });
@@ -637,7 +628,7 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Role", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("UserDetails");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>
