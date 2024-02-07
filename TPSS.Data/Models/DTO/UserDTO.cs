@@ -18,6 +18,14 @@ namespace TPSS.Data.Models.DTO
 
         public string Phone { get; set; } = null!;
 
+<<<<<<< HEAD
         public bool? IsDelete { get; set; } //mac dich la false hoi thang
+=======
+        public bool? IsDelete { get; set; }
+
+        public string RoleId { get; set; } = null!;
+
+        public bool? IsActive { get; set; }
+>>>>>>> DEV_THANG
     }
 }

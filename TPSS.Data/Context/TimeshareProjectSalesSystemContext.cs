@@ -42,7 +42,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=Timeshare_Project_Sales_System;User ID=sa;Password=thang12345;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Timeshare_Project_Sales_System;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -264,6 +264,15 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
+            entity.Property(e => e.RoleId)
+                .HasMaxLength(15)
+                .HasColumnName("RoleID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_Role");
         });
 
         modelBuilder.Entity<UserDetail>(entity =>
@@ -278,17 +287,10 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasColumnName("UserDetailID");
             entity.Property(e => e.CreateBy).HasMaxLength(20);
             entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
-            entity.Property(e => e.RoleId)
-                .HasMaxLength(15)
-                .HasColumnName("RoleID");
             entity.Property(e => e.UpdateBy).HasMaxLength(20);
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.UserDetails)
-                .HasForeignKey(d => d.RoleId)
-                .HasConstraintName("FK_UserDetail_Role");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserDetails)
                 .HasForeignKey(d => d.UserId)

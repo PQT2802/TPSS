@@ -32,6 +32,14 @@ namespace TPSS.API.Helper
 
             //services.AddTransient<IUserService, UserService2>();
 
+<<<<<<< HEAD
+=======
+
+            //Exception Handler
+            
+
+            ////
+>>>>>>> DEV_THANG
             return services;
         }
     }
