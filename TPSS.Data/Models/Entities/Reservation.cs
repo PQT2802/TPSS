@@ -13,7 +13,7 @@ public partial class Reservation
 
     public string? PropertyId { get; set; }
 
-    public DateOnly? BookingDate { get; set; }
+    public DateTime? BookingDate { get; set; }
 
     public string? Status { get; set; }
 

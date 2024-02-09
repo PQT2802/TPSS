@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPSS.Data.Context;
+using TPSS.Data.Models.Entities;
 
 #nullable disable
 
@@ -244,8 +245,8 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<DateOnly?>("CreateDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Description")
                         .HasColumnType("ntext");
@@ -274,16 +275,16 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<DateOnly?>("UpdateDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("VerifyBy")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<DateOnly?>("VerifyDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("VerifyDate")
+                        .HasColumnType("datetime");
 
                     b.HasKey("PropertyDetailId");
 
@@ -299,8 +300,8 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("ReservationID");
 
-                    b.Property<DateOnly?>("BookingDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("BookingDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("BuyerId")
                         .HasMaxLength(15)
@@ -343,8 +344,7 @@ namespace TPSS.Data.Migrations
                 {
                     b.Property<string>("RoleId")
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("RoleID");
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -390,10 +390,13 @@ namespace TPSS.Data.Migrations
                 {
                     b.Property<string>("UserId")
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("UserID");
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Firstname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -404,23 +407,18 @@ namespace TPSS.Data.Migrations
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("RoleID");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("UserId")
                         .HasName("PK__User__1788CCAC2A7756CD");
@@ -448,22 +446,13 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateOnly?>("CreateDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime");
 
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalId")
@@ -480,8 +469,8 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateOnly?>("UpdateDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -15,9 +15,9 @@ public partial class PropertyDetail
 
     public string? Description { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public string? CreateBy { get; set; }
 
@@ -29,7 +29,7 @@ public partial class PropertyDetail
 
     public string VerifyBy { get; set; } = null!;
 
-    public DateOnly? VerifyDate { get; set; }
+    public DateTime? VerifyDate { get; set; }
 
     public virtual Property? Property { get; set; }
 }

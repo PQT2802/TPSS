@@ -11,17 +11,19 @@ namespace TPSS.API.Helper
         {
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
-
+            services.AddTransient<IUserDetailRepository, UserDetailRepository>();
             //Service
-            
+
             services.AddTransient<IUserService, UserService>();
             //services.AddTransient<IUserService, UserService2>();
 
 
             //Exception Handler
-            
+
 
             ////
+            ///
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }
     }

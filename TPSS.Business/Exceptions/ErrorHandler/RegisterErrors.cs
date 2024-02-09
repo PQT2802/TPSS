@@ -9,11 +9,11 @@ namespace TPSS.Business.Exceptions.ErrorHandler
 {
     public static class RegisterErrors
     {
-        public static Error UserAlreadyExist(string username) => new(
-    "User.NotFound", $"The user with Username '{username}' already exist!!");
+        public static Error UserAlreadyExist(string firstname, string lastname) => new(
+    "User.NotFound", $"The user with Firstname '{firstname}' and Lastname '{lastname}' already exist!!");       
 
         public static Error UsernameIsInvalid(string username) => new(
-"User.NotFound", $"The username:'{username}' is invalid!!!");
+        "User.NotFound", $"The username:'{username}' is invalid!!!");
         public static Error PhoneAlreadyUsed(string phone) => new(
      "User.NotFound", $"The phone number:'{phone}' already used!!");
         public static Error PhoneIsInvalid(string phone) => new(

@@ -5,12 +5,6 @@ namespace TPSS.Data.Models.Entities;
 
 public partial class UserDetail
 {
-    public string? FirstName { get; set; }
-
-    public string? LastName { get; set; }
-
-    public string? Email { get; set; }
-
     public string? Phone { get; set; }
 
     public string? PersonalId { get; set; }
@@ -25,9 +19,9 @@ public partial class UserDetail
 
     public string? Gender { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     public string? CreateBy { get; set; }
 
