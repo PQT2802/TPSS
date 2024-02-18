@@ -9,6 +9,6 @@ namespace TPSS.Business.Service
 {
     public interface IReservationService
     {
-        public Task<int> CreateReservationAsynce(ReservationDTO reservationDTO);
+        public Task<int> CreateReservationAsynce(string userId, string propertyId);
     }
 }

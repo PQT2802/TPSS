@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
@@ -192,7 +193,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("value", value, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
+                return await connection.QueryFirstOrDefaultAsync<string>(query, parameter);
                  
             }
             catch (Exception e)
@@ -214,6 +215,26 @@ namespace TPSS.Data.Repository.Impl
             }
             catch (Exception e)
             {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<dynamic> GetLastNameAndFirstName(string lastName, string firstname)
+        {
+            try
+            {
+                var query = "SELECT Lastname, Firstname " +
+                    "FROM [User] " +
+                    "WHERE Lastname = @LastnameValue AND Firstname = @FirstnameValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("LastnameValue", lastName, DbType.String);
+                parameter.Add("FirstnameValue", firstname, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<dynamic>(query, parameter);
+
+            }
+            catch (Exception e)
+            {
+
                 throw new Exception(e.Message, e);
             }
         }

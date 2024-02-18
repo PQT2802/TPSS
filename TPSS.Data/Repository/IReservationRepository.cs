@@ -10,6 +10,7 @@ namespace TPSS.Data.Repository
     public interface IReservationRepository
     {
         public Task<int> CreateReservationAsync(Reservation reservation);
-
+        public Task<string> GetColumnData(string columnName, string baseOnData);
+        public Task<string> GetLatestReservationIdAsync();
     }
 }
