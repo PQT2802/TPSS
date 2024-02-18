@@ -42,7 +42,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Timeshare_Project_Sales_System;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=Timeshare_Project_Sales_System;User ID=sa;Password=thang12345;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -178,6 +178,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasMaxLength(15)
                 .HasColumnName("PropertyDetailID");
             entity.Property(e => e.CreateBy).HasMaxLength(15);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasColumnType("ntext");
             entity.Property(e => e.OwnerId)
                 .HasMaxLength(15)
@@ -186,7 +187,9 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasMaxLength(15)
                 .HasColumnName("PropertyID");
             entity.Property(e => e.UpdateBy).HasMaxLength(15);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
             entity.Property(e => e.VerifyBy).HasMaxLength(15);
+            entity.Property(e => e.VerifyDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Property).WithMany(p => p.PropertyDetails)
                 .HasForeignKey(d => d.PropertyId)
@@ -208,6 +211,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.ReservationId)
                 .HasMaxLength(15)
                 .HasColumnName("ReservationID");
+            entity.Property(e => e.BookingDate).HasColumnType("datetime");
             entity.Property(e => e.BuyerId)
                 .HasMaxLength(15)
                 .HasColumnName("BuyerID");
@@ -228,9 +232,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
         {
             entity.ToTable("Role");
 
-            entity.Property(e => e.RoleId)
-                .HasMaxLength(15)
-                .HasColumnName("RoleID");
+            entity.Property(e => e.RoleId).HasMaxLength(15);
         });
 
         modelBuilder.Entity<Transaction>(entity =>
@@ -261,13 +263,9 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.ToTable("User");
 
-            entity.Property(e => e.UserId)
-                .HasMaxLength(15)
-                .HasColumnName("UserID");
+            entity.Property(e => e.UserId).HasMaxLength(15);
             entity.Property(e => e.IsActive).HasColumnName("isActive");
-            entity.Property(e => e.RoleId)
-                .HasMaxLength(15)
-                .HasColumnName("RoleID");
+            entity.Property(e => e.RoleId).HasMaxLength(15);
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
@@ -286,8 +284,10 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("UserDetailID");
             entity.Property(e => e.CreateBy).HasMaxLength(20);
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
             entity.Property(e => e.UpdateBy).HasMaxLength(20);
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
             entity.Property(e => e.UserId)
                 .HasMaxLength(15)
                 .HasColumnName("UserID");

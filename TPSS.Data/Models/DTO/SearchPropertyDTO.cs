@@ -6,19 +6,11 @@ using System.Threading.Tasks;
 
 namespace TPSS.Data.Models.DTO
 {
-    public class PropertyDTO
+    public class SearchPropertyDTO
     {
-        public string PropertyId { get; set; } = null!;
+        public double? minPrice { get; set; }
 
-        public string ProjectId { get; set; } = null!;
-
-        public string? PropertyTitle { get; set; }
-
-        public double? Price { get; set; }
-
-        public string? Image { get; set; }
-
-        public double? Area { get; set; }
+        public double? maxPrice { get; set; }
 
         public string? Province { get; set; }
 
@@ -29,5 +21,7 @@ namespace TPSS.Data.Models.DTO
         public string? Ward { get; set; }
 
         public string? Street { get; set; }
+
+        public double? Area { get; set; }
     }
 }
