@@ -49,5 +49,36 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
+        public Task<string> GetColumnData(string columnName, string baseOnData)
+        {
+            try
+            {
+                var query = "";
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<string> GetLatestReservationIdAsync()
+        {
+            try
+            {
+                var query = "SELECT TOP 1 ReservationId " +
+    "FROM [Reservation] " +
+    "ORDER BY " +
+    "CAST(SUBSTRING(UserId, 8, LEN(ReservationId)) AS INT) DESC, " +
+    "ReservationId DESC";
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

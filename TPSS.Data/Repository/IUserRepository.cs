@@ -19,5 +19,6 @@ namespace TPSS.Data.Repository
         public Task<string> GetRoleName(string roleId);
         public Task<dynamic> GetUserAccountAsync2(string email, string password);
         public Task<int> CreateUserAsync2(Object newUser);
+        public Task<dynamic> GetLastNameAndFirstName(string lastName,string firstname);
     }
 }

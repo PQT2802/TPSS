@@ -47,8 +47,9 @@ namespace TPSS.Business.Service.Impl
                 else if (!Validator.IsValidUsername(registerDTO.Lastname))
                 {
                     return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
-                }else if (await CheckFirstNameExistAsync(registerDTO.Firstname) &&
-                    await CheckLastNameExistAsync(registerDTO.Lastname))
+                    //}else if (await CheckFirstNameExistAsync(registerDTO.Firstname) &&
+                    //    await CheckLastNameExistAsync(registerDTO.Lastname))
+                }else if(await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname,registerDTO.Firstname))
                 {
                     return Result.Failure(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
                 }
@@ -89,7 +90,7 @@ namespace TPSS.Business.Service.Impl
                 {
                     UserDetail userDetail = new UserDetail();
                     userDetail.UserId = user.UserId;
-                    userDetail.UserDetailId = "UD";
+                    userDetail.UserDetailId = await AutoGenerateUserDetailId();
                     int result2 = await _userDetailRepository.CreateUserDetailAsync(userDetail);
                 }
                 return result;
@@ -153,8 +154,8 @@ namespace TPSS.Business.Service.Impl
                         List<Claim> authClaims = new List<Claim>
                       {
                             new Claim("UserId", result.UserId),
-                            new Claim("Firstname",result.Firstname),
-                            new Claim("Lastname",result.Lastname),
+                            //new Claim("Firstname",result.Firstname),
+                            //new Claim("Lastname",result.Lastname),
                             new Claim(ClaimTypes.Email,result.Email),
                             new Claim("Role",result.RoleName),
                       };
@@ -242,21 +243,50 @@ namespace TPSS.Business.Service.Impl
             }
             return newuserid;
         }
-
-        private async Task<bool>CheckFirstNameExistAsync (string firstname)
+        private async Task<string> AutoGenerateUserDetailId()
         {
-            string existFirstname = await _userRepository.GetColumnString("Firstname", firstname);
-            if(existFirstname.IsNullOrEmpty()) { return false; } else
+            string newuserid = "";
+            string latestUserId = await _userDetailRepository.GetLatestUserDetailIdAsync();
+            if (latestUserId.IsNullOrEmpty())
             {
-                return firstname.Equals(existFirstname);
+                newuserid = "UD00000000";
             }
-            
+            else
+            {
+                int numericpart = int.Parse(latestUserId.Substring(2));
+                int newnumericpart = numericpart + 1;
+                newuserid = $"UD{newnumericpart:d8}";
+            }
+            return newuserid;
         }
-        private async Task<bool> CheckLastNameExistAsync(string lastname)
+        //private async Task<bool>CheckFirstNameExistAsync (string firstname)
+        //{
+        //    string existFirstname = await _userRepository.GetColumnString("Firstname", firstname);
+        //    if(existFirstname.IsNullOrEmpty()) { return false; } else
+        //    {
+        //        return firstname.Equals(existFirstname);
+        //    }
+
+        //}
+        //private async Task<bool> CheckLastNameExistAsync(string lastname)
+        //{
+        //    string existLastname = await _userRepository.GetColumnString("Lastname", lastname);
+        //        return lastname.Equals(existLastname);           
+        //}
+        private async Task<bool> CheckFirstNameAndLastNameExistAsync(string lastName, string firstName)
         {
-            string existLastname = await _userRepository.GetColumnString("Lastname", lastname);
-                return lastname.Equals(existLastname);           
-        }   
+            var existName = await _userRepository.GetLastNameAndFirstName(lastName, firstName);
+            if (existName != null && existName.Lastname == lastName && existName.Firstname == firstName)
+            {
+                
+                return true;
+            }
+            else
+            {
+                
+                return false;
+            }
+        }
 
         public async Task<bool> CheckEmailExistAsync(string email)
         {

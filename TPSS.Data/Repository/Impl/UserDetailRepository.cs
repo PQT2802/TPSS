@@ -129,5 +129,23 @@ namespace TPSS.Data.Repository.Impl
             using var connection = CreateConnection();
             return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
         }
+        public async Task<string> GetLatestUserDetailIdAsync()
+        {
+            try
+            {
+                var query = "SELECT TOP 1 UserDetailId " +
+                    "FROM [UserDetail] " +
+                    "ORDER BY " +
+                    "CAST(SUBSTRING(UserId, 8, LEN(UserDetailId)) AS INT) DESC, " +
+                    "UserDetailId DESC";
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

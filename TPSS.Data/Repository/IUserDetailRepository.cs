@@ -14,5 +14,6 @@ namespace TPSS.Data.Repository
         public Task<int> UpdateUserDetailAsynce(UserDetail updateUserDetail);
         public Task<string> GetColumnString(string columnName, string value);
         public Task<string> GetAvatarByUserIdAsync(string userId);
+        public Task<string> GetLatestUserDetailIdAsync();
     }
 }
