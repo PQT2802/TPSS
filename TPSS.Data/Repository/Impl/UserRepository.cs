@@ -23,14 +23,9 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-<<<<<<< HEAD
-                var query = "INSERT INTO [User] (UserId, Email, Password, Username, Phone) " +
-                    "VALUES(@UserId, @Email, @Password, @Username, @Phone)";
 
-=======
                 var query = "INSERT INTO [User] (UserId, Email, Password, Firstname, Lastname, RoleId, IsActive, IsDelete) " +
                     "VALUES(@UserId, @Email, @Password, @Firstname, @Lastname, @RoleId, @IsActive, @IsDelete)";
->>>>>>> DEV_THANG
                 var parameter = new DynamicParameters();
                 parameter.Add("UserId", newUser.UserId, DbType.String);
                 parameter.Add("Email", newUser.Email, DbType.String);

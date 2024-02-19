@@ -21,18 +21,8 @@ namespace TPSS.Data.Helper
 
         protected IDbConnection CreateConnection()
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            return new SqlConnection(_configuration.GetConnectionString("DEV_HUNG"));
-=======
-            return new SqlConnection(_configuration.GetConnectionString("DEV_PHAT"));
->>>>>>> Exception_Handler
-            
-=======
-            //return new SqlConnection(_configuration.GetConnectionString("DEV_PHAT"));
-            return new SqlConnection(_configuration.GetConnectionString("DEV_THANG"));
 
->>>>>>> DEV_THANG
+            return new SqlConnection(_configuration.GetConnectionString("DEV_TRONG"));
         }
     }
 }

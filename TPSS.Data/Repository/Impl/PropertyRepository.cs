@@ -46,7 +46,7 @@ namespace TPSS.Data.Repository.Impl
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Property>(query);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception(e.Message, e);
             }
@@ -57,3 +57,4 @@ namespace TPSS.Data.Repository.Impl
             throw new NotImplementedException();
         }
     }
+}

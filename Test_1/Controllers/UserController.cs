@@ -15,14 +15,10 @@ namespace TPSS.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-<<<<<<< HEAD
-        //DI
-        public UserController(IUserService userService)
-=======
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         
         public UserController(IUserService userService, IHttpContextAccessor httpContextAccessor )
->>>>>>> DEV_THANG
         {
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;

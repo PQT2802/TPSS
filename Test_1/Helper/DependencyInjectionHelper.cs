@@ -12,12 +12,11 @@ namespace TPSS.API.Helper
         {
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
-<<<<<<< HEAD
+
             services.AddTransient<IPropertyRepository, PropertyRepository>();
 
-=======
             services.AddTransient<IUserDetailRepository, UserDetailRepository>();
->>>>>>> DEV_THANG
+
             //Service
 
             services.AddTransient<IUserService, UserService>();
