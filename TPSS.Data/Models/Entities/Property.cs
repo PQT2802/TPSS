@@ -36,4 +36,5 @@ public partial class Property
     public virtual ICollection<PropertyDetail> PropertyDetails { get; set; } = new List<PropertyDetail>();
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+
 }

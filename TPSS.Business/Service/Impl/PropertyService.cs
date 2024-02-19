@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-﻿using System;
+using Microsoft.Extensions.Configuration;
+using System;
 =======
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
@@ -20,14 +21,9 @@ namespace TPSS.Business.Service.Impl
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
-        public PropertyService(IPropertyRepository propertyRepository)
+        private readonly IConfiguration _configuration;
+        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration)
 =======
-namespace TPSS.Business.Service.Impl
-{
-    public sealed class PropertyService : IPropertyService
-    {
-        private readonly IPropertyRepository _propertyRepository;
-        public PropertyService(IPropertyRepository propertyRepository) 
 >>>>>>> DEV_THANG
         {
             _propertyRepository = propertyRepository;
@@ -36,7 +32,7 @@ namespace TPSS.Business.Service.Impl
 <<<<<<< HEAD
         private string AutoGenerateUserId()
         {
-            string latestUserId = _userRepository.GetLatestUserIdAsync().Result;
+            string latestUserId = _propertyRepository.GetLatestUserIdAsync().Result;
             // giả sử định dạng user id của bạn là "USxxxxxxx"
             // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
             int numericpart = int.Parse(latestUserId.Substring(2));
@@ -51,29 +47,7 @@ namespace TPSS.Business.Service.Impl
 
         public async Task<int> CreatePropertyAsync(PropertyDTO propertyDTO)
         {
-            try
-            {
-                Property property = new Property();
-                property.PropertyId = propertyDTO.PropertyId;
-                property.ProjectId = propertyDTO.ProjectId;
-                property.PropertyTitle = propertyDTO.PropertyTitle;
-                property.Price = propertyDTO.Price;
-                property.Image = propertyDTO.Image;
-                property.Area = propertyDTO.Area;
-                property.Province = propertyDTO.Province;
-                property.City = propertyDTO.City;
-                property.District = propertyDTO.District;
-                property.Ward = propertyDTO.Ward;
-                property.Street = propertyDTO.Street;
-
-                int result = await _propertyRepository.CreatePropertyAsync(property);
-                return result;
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception(e.Message, e);
-            }
+            throw new NotImplementedException();
         }
         public async Task<int> DeletePropertyAsync(string id)
         {
@@ -255,5 +229,21 @@ namespace TPSS.Business.Service.Impl
             }
         }
 >>>>>>> DEV_THANG
+        
+
+        public async Task<IEnumerable<Property>> GetPropertyForHomePage()
+        {
+            try
+            {
+
+                IEnumerable<Property> result = await _propertyRepository.GetPropertyForHomePage();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

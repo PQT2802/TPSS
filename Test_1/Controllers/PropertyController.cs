@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using TPSS.Business.Service;
 using TPSS.Data.Models.DTO;
+using TPSS.Data.Models.Entities;
 
 namespace TPSS.API.Controllers
 {
@@ -35,6 +36,11 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.GetPropertyByIdAsync(id);
             return Ok(result);
         }
-
+        [HttpGet("HomePage")]
+        public async Task<ActionResult<IEnumerable<Property>>> GetPropertyForHomePage()
+        {
+            var result = await _propertyService.GetPropertyForHomePage();
+            return Ok(result);
+        }
     }
 }
