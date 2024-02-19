@@ -42,7 +42,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT * FROM Property LIMIT 100";
+                var query = "SELECT TOP 3 * FROM dbo.Property";
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Property>(query);
             }

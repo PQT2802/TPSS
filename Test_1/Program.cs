@@ -56,26 +56,27 @@ namespace Test_1
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            }).AddJwtBearer(options =>
+            } ).AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters 
+                { 
+                  
+                  ValidateIssuer = true,
+                  ValidateAudience = true,
 
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-
-
-                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
-
-                };
+                  
+                  ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                  ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+                   
+                }; 
             });
 
             builder.Services.AddServicesConfiguration();
             builder.Services.AddProblemDetails();
+            builder.Services.AddCors();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -85,10 +86,16 @@ namespace Test_1
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("CorsPolicy");
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseHttpsRedirection();
 
-
+            
             app.UseAuthorization();
             app.UseAuthentication();
 
