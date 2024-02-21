@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,29 @@ namespace TPSS.Business.Common
             IsSuccess = isSuccess;
             Error = error;
         }
+        private Result(bool isSuccess, List<Error> errors)
+        {
+            if (isSuccess && (errors == null || errors.Count > 0) ||
+                !isSuccess && (errors != null && errors.Count == 0))
+            {
+                throw new ArgumentException("Invalid errors", nameof(errors));
+            }
+
+            IsSuccess = isSuccess;
+            Errors = errors;
+        }
 
         public bool IsSuccess { get; }
 
         public bool IsFailure => !IsSuccess;
 
         public Error Error { get; }
+        public List<Error> Errors { get; }
 
         public static Result Success() => new(true, Error.None);
 
         public static Result Failure(Error error) => new(false, error);
+
+        public static Result Failures(List<Error> errors) => new(false, errors);
     }
 }

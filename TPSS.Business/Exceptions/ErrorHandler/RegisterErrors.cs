@@ -35,6 +35,15 @@ namespace TPSS.Business.Exceptions.ErrorHandler
         public static Error ConfirmPasswordIsInvalid  => new(
      "User.NotFound", $"The confim password is invalid!!");
 
-
+        public static Error FirstNameIsEmpty => new(
+     "User.NotFound", $"First name should not be empty!!");
+        public static Error LastNameIsEmpty => new(
+     "User.NotFound", $"Last name should not be empty!!");
+        public static Error EmailIsEmpty => new(
+     "User.NotFound", $"Email should not be empty!!");
+        public static Error PasswordIsEmpty => new(
+     "User.NotFound", $"Password should not be empty!!");
+        public static Error ConfirmPasswordIsEmpty => new(
+     "User.NotFound", $"Confirm password should not be empty!!");
     }
 }
