@@ -14,7 +14,7 @@ namespace TPSS.Business.Common
     {
         private static readonly Regex regexMail = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
         private static readonly Regex regexUserName = new(@"^(?![-_.0-9])(?!.*[-_.][-_.])(?!.*[-_.]$)[A-Za-z0-9-_.]+$");
-        private static readonly Regex regexName = new(@"^([a-zA-Z]{2,}\\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\\s?([a-zA-Z]{1,})?)");
+        private static readonly Regex regexName = new(@"^([a-zA-Z]+)+$");
         //Has minimum 8 characters in length. Adjust it by modifying {8,}
         // At least one uppercase English letter.You can remove this condition by removing (?=.*?[A - Z])
         //At least one lowercase English letter.You can remove this condition by removing (?=.*?[a - z])

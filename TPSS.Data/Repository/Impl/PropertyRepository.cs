@@ -24,29 +24,50 @@ namespace TPSS.Data.Repository.Impl
         {
         }
 
-        public async Task<int> CreatePropertyAsync(Property property)
-        {
-            try
-            {
-                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Image, Area, Province, City, District, Ward, Street, IsDelete) " +
-                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Image, @Area, @Province, @City, @District, @Ward, @Street, @IsDelete)";
+        //public async Task<int> CreatePropertyAsync(Property property, PropertyDetail propertyDetail)
+        //{
+        //    try
+        //    {
+        //        var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Image, Area, Province, City, District, Ward, Street, IsDelete) " +
+        //            "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Image, @Area, @Province, @City, @District, @Ward, @Street, @IsDelete)";
                 
-                var parameter = new DynamicParameters();
-                parameter.Add("PropertyID", property.PropertyId, DbType.String);
-                parameter.Add("ProjectID", property.ProjectId, DbType.String);
-                parameter.Add("PropertyTitle", property.PropertyTitle, DbType.String);
-                parameter.Add("Price", property.Price, DbType.Double);
+        //        var parameter = new DynamicParameters();
+        //        parameter.Add("PropertyID", property.PropertyId, DbType.String);
+        //        parameter.Add("ProjectID", property.ProjectId, DbType.String);
+        //        parameter.Add("PropertyTitle", property.PropertyTitle, DbType.String);
+        //        parameter.Add("Price", property.Price, DbType.Double);
 
 
-                using var connection = CreateConnection();
-                return await connection.ExecuteAsync(query, parameter);
+        //        using var connection = CreateConnection();
+        //        return await connection.ExecuteAsync(query, parameter);
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
-        }
+
+                
+        //        var propertyDetailQuery = "INSERT INTO PropertyDetail (PropertyDetailId, PropertyId, OwnerId, PropertyTitle, Description, CreateDate, UpdateDate, CreateBy, UpdateBy, Images, Service, VerifyBy, VerifyDate) " +
+        //                                  "VALUES(@PropertyDetailId, @PropertyId, @OwnerId, @PropertyTitle, @Description, @CreateDate, @UpdateDate, @CreateBy, @UpdateBy, @Images, @Service, @VerifyBy, @VerifyDate)";
+        //        var propertyDetailParameters = new DynamicParameters();
+        //        propertyDetailParameters.Add("PropertyDetailId", propertyDetail.PropertyDetailId, DbType.String);
+        //        propertyDetailParameters.Add("PropertyId", propertyDetail.PropertyId, DbType.String);
+        //        propertyDetailParameters.Add("OwnerId", propertyDetail.OwnerId, DbType.String);
+        //        propertyDetailParameters.Add("PropertyTitle", propertyDetail.PropertyTitle, DbType.String);
+        //        propertyDetailParameters.Add("Description", propertyDetail.Description, DbType.String);
+        //        propertyDetailParameters.Add("CreateDate", propertyDetail.CreateDate, DbType.Date);
+        //        propertyDetailParameters.Add("UpdateDate", propertyDetail.UpdateDate, DbType.Date);
+        //        propertyDetailParameters.Add("CreateBy", propertyDetail.CreateBy, DbType.String);
+        //        propertyDetailParameters.Add("UpdateBy", propertyDetail.UpdateBy, DbType.String);
+        //        //propertyDetailParameters.Add("Images", propertyDetail.Images, DbType.String);
+        //        propertyDetailParameters.Add("Service", propertyDetail.Service, DbType.String);
+        //        propertyDetailParameters.Add("VerifyBy", propertyDetail.VerifyBy, DbType.String);
+        //        propertyDetailParameters.Add("VerifyDate", propertyDetail.VerifyDate, DbType.Date);
+
+        //        return await connection.ExecuteAsync(propertyDetailQuery, propertyDetailParameters);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message, ex);
+        //    }
+        //}
 
         Task<int> IPropertyRepository.DeletePropertyAsync(string id)
         {
@@ -120,6 +141,21 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("City", city, DbType.String);
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Property>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetAllProjects()
+        {
+            try
+            {
+                var query = "SELECT TOP 10 * FROM dbo.Project";
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Project>(query);
             }
             catch (Exception e)
             {

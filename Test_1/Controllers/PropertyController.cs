@@ -17,12 +17,12 @@ namespace TPSS.API.Controllers
         {
             _propertyService = propertyService;
         }
-        [HttpPost]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
-        {
-            var result = await _propertyService.CreatePropertyAsync(newProperty);
-            return Ok(result);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
+        //{
+        //    var result = await _propertyService.CreatePropertyAsync(newProperty);
+        //    return Ok(result);
+        //}
 
         [HttpDelete]
         public async Task<IActionResult> DeleteUserAsync(String id)
@@ -46,6 +46,12 @@ namespace TPSS.API.Controllers
         public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
         {
             var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
+            return Ok(result);
+        }
+        [HttpGet("Project")]
+        public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
+        {
+            var result = await _propertyService.GetAllProjects();
             return Ok(result);
         }
     }

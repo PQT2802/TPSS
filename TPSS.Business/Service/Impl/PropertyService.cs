@@ -28,79 +28,79 @@ namespace TPSS.Business.Service.Impl
         
 
         //Tao property + propertyDetail
-        public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
-        {
-            try
-            {
-                List<Error> Errors = new List<Error>();
-                Property property = new Property();
+        //public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
+        //{
+        //    try
+        //    {
+        //        List<Error> Errors = new List<Error>();
+        //        Property property = new Property();
                 
-                // check null tu dong
-                Type type = propertyDTO.GetType();
+        //        // check null tu dong
+        //        Type type = propertyDTO.GetType();
 
-                foreach (var check in type.GetProperties())
-                {
-                    if(check.GetValue(propertyDTO) == null && 
-                        check.Name != nameof(propertyDTO.PropertyId)
-                        )
-                    {
-                        Errors.Add(Result.CreateError($"{check.Name}.NotFound",$"{check.Name} cannot be null."));
-                    }
-                }
+        //        foreach (var check in type.GetProperties())
+        //        {
+        //            if(check.GetValue(propertyDTO) == null && 
+        //                check.Name != nameof(propertyDTO.PropertyId)
+        //                )
+        //            {
+        //                Errors.Add(Result.CreateError($"{check.Name}.NotFound",$"{check.Name} cannot be null."));
+        //            }
+        //        }
 
-                if (Errors.Count > 0) 
-                {
-                    return Result.Failures(Errors);
+        //        if (Errors.Count > 0) 
+        //        {
+        //            return Result.Failures(Errors);
 
 
-                }
-                property.PropertyId = await AutoGeneratePropertyId();
-                property.ProjectId = propertyDTO.ProjectId;
-                property.PropertyTitle = propertyDTO.PropertyTitle;
-                property.Price = propertyDTO.Price;
-                property.Image = propertyDTO.Image;
-                property.Area = propertyDTO.Area;
-                property.Province = propertyDTO.Province;
-                property.City = propertyDTO.City;
-                property.Ward = propertyDTO.Ward;
-                property.Street = propertyDTO.Street;
-                property.IsDelete = false;
+        //        }
+        //        property.PropertyId = await AutoGeneratePropertyId();
+        //        property.ProjectId = propertyDTO.ProjectId;
+        //        property.PropertyTitle = propertyDTO.PropertyTitle;
+        //        property.Price = propertyDTO.Price;
+        //        property.Image = propertyDTO.Image;
+        //        property.Area = propertyDTO.Area;
+        //        property.Province = propertyDTO.Province;
+        //        property.City = propertyDTO.City;
+        //        property.Ward = propertyDTO.Ward;
+        //        property.Street = propertyDTO.Street;
+        //        property.IsDelete = false;
 
                 
 
 
-                int result1 = await _propertyRepository.CreatePropertyAsync(property);
-                if(result1 == 1)
-                {
-                    PropertyDetail detail = new PropertyDetail();
+        //        int result1 = await _propertyRepository.CreatePropertyAsync(property);
+        //        if(result1 == 1)
+        //        {
+        //            PropertyDetail detail = new PropertyDetail();
 
-                    detail.PropertyId = property.PropertyId;
-                    detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
-                    detail.OwnerId = propertyDTO.OwnerID;
-                    detail.PropertyTitle = propertyDTO.PropertyTitle;
-                    detail.Description = propertyDTO.Description;
+        //            detail.PropertyId = property.PropertyId;
+        //            detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
+        //            detail.OwnerId = propertyDTO.OwnerID;
+        //            detail.PropertyTitle = propertyDTO.PropertyTitle;
+        //            detail.Description = propertyDTO.Description;
 
-                    DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
-                    detail.CreateDate = currentDate;
-                    detail.UpdateDate = currentDate;
+        //            DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
+        //            detail.CreateDate = currentDate;
+        //            detail.UpdateDate = currentDate;
 
-                    detail.CreateBy = propertyDTO.OwnerID;
-                    detail.UpdateBy = propertyDTO.OwnerID;
-                    detail.Service = propertyDTO.Service;
-                    detail.Verify = false;
-                    detail.VerifyBy = null;
-                    detail.VerifyDate = null;
+        //            detail.CreateBy = propertyDTO.OwnerID;
+        //            detail.UpdateBy = propertyDTO.OwnerID;
+        //            detail.Service = propertyDTO.Service;
+        //            detail.Verify = false;
+        //            detail.VerifyBy = null;
+        //            detail.VerifyDate = null;
 
-                    int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
-                }
-                return result1;
+        //            int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
+        //        }
+        //        return result1;
             
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message, e);
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
 
 
         public async Task<int> DeletePropertyAsync(string id)
@@ -204,6 +204,20 @@ namespace TPSS.Business.Service.Impl
             }
             catch (Exception e)
             {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetAllProjects()
+        {
+            try
+            {
+                IEnumerable<Project> result = await _propertyRepository.GetAllProjects();
+                return result;
+            }
+            catch (Exception e)
+            {
+
                 throw new Exception(e.Message, e);
             }
         }

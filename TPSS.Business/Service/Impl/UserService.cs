@@ -34,66 +34,285 @@ namespace TPSS.Business.Service.Impl
 
         }
 
+
         public async Task<dynamic> RegistUserAsync(RegisterDTO registerDTO)
         {
             try
             {
+                //List<Error> errors = new List<Error>();
+                //User user = new User();
+                //bool isValidName = true;
+                //if(!string.IsNullOrEmpty(registerDTO.Firstname))
+                //{
+                //    //check empty
+                //    errors.Add(null);
+                //    if (!Validator.IsValidUsername(registerDTO.Firstname))
+                //    {
+                //        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+                //        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+                //        isValidName = false;
+                //    }
+                //    else { errors.Add(null); }
+
+                //}
+                //else
+                //{
+                //    errors.Add(RegisterErrors.FirstNameIsEmpty);
+                //    errors.Add(null);
+                //}
+                //if(!string.IsNullOrEmpty(registerDTO.Lastname))
+                //{
+                //    //check empty
+                //    errors.Add(null);
+                //    if (!Validator.IsValidUsername(registerDTO.Lastname))
+                //    {
+                //        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+                //        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+                //        isValidName = false;
+                //    }
+                //    else
+                //    {
+                //        //check valid
+                //        errors.Add(null);
+                //    }
+                //}
+                //else
+                //{
+                //    errors.Add(RegisterErrors.LastNameIsEmpty);
+                //    errors.Add(null);
+                //}
+                //if(isValidName)
+                //{
+                //    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
+                //    {
+                //        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
+                //    }
+                //}
+                //else
+                //{
+                //    errors.Add(null);
+                //}
+                ////else if(errors.Count == 0)
+                ////{
+                ////    user.Firstname = registerDTO.Firstname;
+                ////    user.Lastname = registerDTO.Lastname;
+                ////}
+                ////Email///
+                //if(!string.IsNullOrEmpty(registerDTO.Email))
+                //{
+                //    errors.Add(null);
+                //    if (!Validator.IsValidEmail(registerDTO.Email))
+                //    {
+                //        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+                //        //return Result.Failure(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+                //    }
+                //    else { errors.Add(null); }
+
+                //     if (await CheckEmailExistAsync(registerDTO.Email))
+                //    {
+                //        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+                //        //return Result.Failure(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+                //    }
+                //    else { errors.Add(null); }
+                //}
+                //else
+                //{
+                //    errors.Add(RegisterErrors.EmailIsEmpty);
+                //    errors.Add(null);
+                //    errors.Add(null);
+                //}
+
+                ////else { user.Email = registerDTO.Email;}
+                ////PASSWORD///
+                //if (!string.IsNullOrEmpty(registerDTO.Password))
+                //{
+                //    errors.Add(null);
+                //    if (!Validator.IsValidPassword(registerDTO.Password))
+                //    {
+                //        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+                //        //return Result.Failure(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+                //    }
+                //    else
+                //    {
+                //        errors.Add(null);
+                //    }
+                //}
+                //else { errors.Add(RegisterErrors.PasswordIsEmpty); errors.Add(null); }
+                //if(!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
+                //{
+                //    errors.Add(null);
+                //if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
+                //    {
+                //        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
+                //        //return Result.Failure(RegisterErrors.ConfirmPasswordIsInvalid);
+                //    }
+                //    else
+                //    {
+                //        errors.Add(null);
+                //    }
+                //}
+                //else
+                //{
+                //    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
+                //    errors.Add(null);
+                //}
+
+                ////else
+                ////{
+                ////    user.Password = Encryption.Encrypt(registerDTO.Password);
+                ////}
+                List<Error> errors = new List<Error>();
                 User user = new User();
-                //Firstname and Lastname///
-                if (!Validator.IsValidUsername(registerDTO.Firstname))
+                bool isValidName = true;
+
+                if (!string.IsNullOrEmpty(registerDTO.Firstname))
                 {
-                    return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
-                }
-                else if (!Validator.IsValidUsername(registerDTO.Lastname))
-                {
-                    return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
-                    //}else if (await CheckFirstNameExistAsync(registerDTO.Firstname) &&
-                    //    await CheckLastNameExistAsync(registerDTO.Lastname))
-                }else if(await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname,registerDTO.Firstname))
-                {
-                    return Result.Failure(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
+                    // Check empty
+                    errors.Add(null);
+                    if (!Validator.IsValidName(registerDTO.Firstname))
+                    {
+                        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+                        isValidName = false;
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
                 }
                 else
                 {
+                    errors.Add(RegisterErrors.FirstNameIsEmpty);
+                    errors.Add(null);
+                    isValidName = false;
+                }
+
+                if (!string.IsNullOrEmpty(registerDTO.Lastname))
+                {
+                    // Check empty
+                    errors.Add(null);
+                    if (!Validator.IsValidUsername(registerDTO.Lastname))
+                    {
+                        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+                        isValidName = false;
+                    }
+                    else
+                    {
+                        // Check valid
+                        errors.Add(null);
+                    }
+                }
+                else
+                {
+                    errors.Add(RegisterErrors.LastNameIsEmpty);
+                    errors.Add(null);
+                    isValidName = false;
+                }
+
+                // Check if Firstname and Lastname exist
+                if (isValidName)
+                {
+                    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
+                    {
+                        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
+                }
+                else
+                {
+                    errors.Add(null);
+                }
+
+                // Email validation
+                if (!string.IsNullOrEmpty(registerDTO.Email))
+                {
+                    errors.Add(null);
+                    if (!Validator.IsValidEmail(registerDTO.Email))
+                    {
+                        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
+
+                    if (await CheckEmailExistAsync(registerDTO.Email))
+                    {
+                        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
+                }
+                else
+                {
+                    errors.Add(RegisterErrors.EmailIsEmpty);
+                    errors.Add(null);
+                    errors.Add(null);
+                }
+
+                // Password validation
+                if (!string.IsNullOrEmpty(registerDTO.Password))
+                {
+                    errors.Add(null);
+                    if (!Validator.IsValidPassword(registerDTO.Password))
+                    {
+                        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
+                }
+                else
+                {
+                    errors.Add(RegisterErrors.PasswordIsEmpty); // Add the error for passwordIsEmpty only if password is empty
+                    errors.Add(null);
+                }
+
+                // Confirm password validation
+                if (!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
+                {
+                    errors.Add(null);
+                    if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
+                    {
+                        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
+                    }
+                    else
+                    {
+                        errors.Add(null);
+                    }
+                }
+                else
+                {
+                    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
+                    errors.Add(null);
+                }
+
+                if (errors.All(error => error == null))
+                {
+                    user.UserId = await AutoGenerateUserId();
                     user.Firstname = registerDTO.Firstname;
                     user.Lastname = registerDTO.Lastname;
-                }
-                //Email///
-                if (!Validator.IsValidEmail(registerDTO.Email))
-                {
-                    return Result.Failure(RegisterErrors.EmailIsInvalid(registerDTO.Email));
-                }
-                else if ( await CheckEmailExistAsync(registerDTO.Email))
-                {
-                    return Result.Failure(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
-                }
-                else { user.Email = registerDTO.Email;}
-                //PASSWORD///
-                if (!Validator.IsValidPassword(registerDTO.Password))
-                {
-                    return Result.Failure(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
-                }
-                else if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
-                {
-                    return Result.Failure(RegisterErrors.ConfirmPasswordIsInvalid);
-                }
-                else
-                {
+                    user.Email = registerDTO.Email;
                     user.Password = Encryption.Encrypt(registerDTO.Password);
+                    user.IsActive = false;
+                    user.IsDelete = false;
+                    user.RoleId = "R1";
+                    int result = await _userRepository.CreateUserAsync(user);
+                    if (result == 1)
+                    {
+                        UserDetail userDetail = new UserDetail();
+                        userDetail.UserId = user.UserId;
+                        userDetail.UserDetailId = await AutoGenerateUserDetailId();
+                        int result2 = await _userDetailRepository.CreateUserDetailAsync(userDetail);
+                    }
+                    return result;
                 }
-                user.UserId = await AutoGenerateUserId();
-                user.IsActive = false;
-                user.IsDelete = false;
-                user.RoleId = "R1";
-                int result = await _userRepository.CreateUserAsync(user);
-                if (result == 1)
-                {
-                    UserDetail userDetail = new UserDetail();
-                    userDetail.UserId = user.UserId;
-                    userDetail.UserDetailId = await AutoGenerateUserDetailId();
-                    int result2 = await _userDetailRepository.CreateUserDetailAsync(userDetail);
-                }
-                return result;
+                return Result.Failures(errors);
             }
             catch (Exception ex)
             {
@@ -132,6 +351,14 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
+                if (string.IsNullOrEmpty(loginDTO.Email))
+                {
+                    return Result.Failure(LoginErrors.EmailIsEmpty);
+                }
+                if (string.IsNullOrEmpty(loginDTO.Password))
+                {
+                    return Result.Failure(LoginErrors.PasswordIsEmpty);
+                }
                 if (!await CheckEmailExistAsync(loginDTO.Email))
                 {
                     return Result.Failure(LoginErrors.EmailNotExist(loginDTO.Email));
