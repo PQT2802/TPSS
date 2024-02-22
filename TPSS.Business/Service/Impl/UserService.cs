@@ -215,6 +215,10 @@ namespace TPSS.Business.Service.Impl
                     {
                         errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
                     }
+                    else
+                    {
+                        errors.Add(null);
+                    }
                 }
                 else
                 {
@@ -265,10 +269,11 @@ namespace TPSS.Business.Service.Impl
                 }
                 else
                 {
-                    errors.Add(RegisterErrors.PasswordIsEmpty);
+                    errors.Add(RegisterErrors.PasswordIsEmpty); // Add the error for passwordIsEmpty only if password is empty
                     errors.Add(null);
                 }
 
+                // Confirm password validation
                 if (!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
                 {
                     errors.Add(null);
@@ -286,6 +291,7 @@ namespace TPSS.Business.Service.Impl
                     errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
                     errors.Add(null);
                 }
+
                 if (errors.All(error => error == null))
                 {
                     user.UserId = await AutoGenerateUserId();

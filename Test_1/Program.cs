@@ -85,7 +85,14 @@ namespace Test_1
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("CorsPolicy");  
+            //app.UseCors("CorsPolicy");
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseHttpsRedirection();
 
             

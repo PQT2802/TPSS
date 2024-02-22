@@ -54,7 +54,7 @@ namespace TPSS.Data.Repository.Impl
                 propertyDetailParameters.Add("UpdateDate", propertyDetail.UpdateDate, DbType.Date);
                 propertyDetailParameters.Add("CreateBy", propertyDetail.CreateBy, DbType.String);
                 propertyDetailParameters.Add("UpdateBy", propertyDetail.UpdateBy, DbType.String);
-                propertyDetailParameters.Add("Images", propertyDetail.Images, DbType.String);
+                //propertyDetailParameters.Add("Images", propertyDetail.Images, DbType.String);
                 propertyDetailParameters.Add("Service", propertyDetail.Service, DbType.String);
                 propertyDetailParameters.Add("VerifyBy", propertyDetail.VerifyBy, DbType.String);
                 propertyDetailParameters.Add("VerifyDate", propertyDetail.VerifyDate, DbType.Date);
