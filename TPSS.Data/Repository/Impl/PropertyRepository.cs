@@ -59,7 +59,8 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT TOP 3 * FROM dbo.Property";
+                var query = "SELECT TOP 10 * FROM dbo.Property";
+                
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Property>(query);
             }
@@ -94,9 +95,9 @@ namespace TPSS.Data.Repository.Impl
             try
             {
                 var query = "SELECT * " +
-                    "FROM [dbo].[Property] AS P " +
-                    "JOIN [dbo].[PropertyDetail] AS PD ON P.[PropertyID] = PD.[PropertyID] " +
-                    "WHERE P.[PropertyID] = @PropertyID;";
+                    "FROM dbo.Property AS P " +
+                    "JOIN dbo.PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "WHERE P.PropertyID = @PropertyID";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyID", id, DbType.String);
@@ -113,12 +114,12 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT TOP 5 * FROM dbo.Property" +
-                    "Where City = @City";
+                var query = "SELECT TOP 5 * FROM dbo.Property " +
+                    "WHERE City = @City";
                 var parameter = new DynamicParameters();
                 parameter.Add("City", city, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QueryAsync<Property>(query);
+                return await connection.QueryAsync<Property>(query, parameter);
             }
             catch (Exception e)
             {
