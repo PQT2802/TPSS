@@ -20,6 +20,17 @@ namespace TPSS.Business.Common
             IsSuccess = isSuccess;
             Error = error;
         }
+        private Result(bool isSuccess, List<Error> errors)
+        {
+            if (isSuccess && (errors == null || errors.Count > 0) ||
+                !isSuccess && (errors != null || errors.Count==0))
+            {
+                throw new ArgumentException("Invalid error", nameof(errors));
+            }
+
+            IsSuccess = isSuccess;
+            Errors = errors;
+        }
 
         public bool IsSuccess { get; }
 
@@ -27,8 +38,17 @@ namespace TPSS.Business.Common
 
         public Error Error { get; }
 
+        public List<Error> Errors { get; }
+
         public static Result Success() => new(true, Error.None);
 
         public static Result Failure(Error error) => new(false, error);
+
+        public static Result Failures(List<Error> errors) => new(false, errors);
+
+        public static Error CreateError(string code,string errorMessage)
+        {
+            return new Error(code,errorMessage);
+        }
     }
 }

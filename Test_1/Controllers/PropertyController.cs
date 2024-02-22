@@ -42,5 +42,11 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.GetPropertyForHomePage();
             return Ok(result);
         }
+        [HttpGet("Detail")]
+        public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
+        {
+            var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
+            return Ok(result);
+        }
     }
 }

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace TPSS.Data.Models.Entities;
 
-public partial class PropertyDetail
+public partial class PropertyDetail : Property
 {
     public string PropertyDetailId { get; set; } = null!;
-
-    public string? PropertyId { get; set; }
 
     public string OwnerId { get; set; } = null!;
 
@@ -26,6 +24,8 @@ public partial class PropertyDetail
     public string? Image { get; set; }
 
     public string? Service { get; set; }
+
+    public bool? Verify { get; set; }
 
     public string VerifyBy { get; set; } = null!;
 
