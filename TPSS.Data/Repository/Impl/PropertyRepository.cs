@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TPSS.Data.Helper;
 using TPSS.Data.Models.Entities;
 using System.Reflection.Metadata;
+using System.Data.Common;
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -131,7 +132,23 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public async Task<IEnumerable<Property>> GetRelatedPropertiesAsync(string city)
+
+        public async Task<IEnumerable<Project>> GetAllProjects()
+        {
+            try
+            {
+                var query = "SELECT TOP 10 * FROM dbo.Project";
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Project>(query);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city)
         {
             try
             {
@@ -148,19 +165,60 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public async Task<IEnumerable<Project>> GetAllProjects()
+        public async Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province)
         {
             try
             {
-                var query = "SELECT TOP 10 * FROM dbo.Project";
-
+                var query = "SELECT TOP 5 * FROM dbo.Property " +
+                    "WHERE Province = @Province";
+                var parameter = new DynamicParameters();
+                parameter.Add("Province", province, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QueryAsync<Project>(query);
+                return await connection.QueryAsync<Property>(query, parameter);
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<UserDetail> GetOwnerByIdAsync(string ownerId)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM UserDetail " +
+                    "WHERE UserId = @value";
+                var parameter = new DynamicParameters();
+                parameter.Add("value", ownerId, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryFirstOrDefaultAsync<UserDetail>(query, parameter);
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<string> GetProjectNameAsync(string projectID)
+        {
+            try
+            {
+                var query = "SELECT ProjectName  " +
+                    "FROM dbo.Project " +
+                    "WHERE ProjectID = @value";
+                var parameter = new DynamicParameters();
+                parameter.Add("value", projectID, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryFirstOrDefaultAsync<string>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
     }
 }

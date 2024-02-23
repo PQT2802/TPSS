@@ -193,11 +193,23 @@ namespace TPSS.Business.Service.Impl
 
                 var propertyDetail = await _propertyRepository.GetPropertyByIdAsync(propertyID);
 
+                var owner = await _propertyRepository.GetOwnerByIdAsync(propertyDetail.OwnerId);
 
-                var relatedProperties = await _propertyRepository.GetRelatedPropertiesAsync(propertyDetail.City);
+                var project = await _propertyRepository.GetProjectByIdAsync(propertyDetail.ProjectId);
+                
+                IEnumerable<Property> relatedProperties = null;
 
+                if (propertyDetail.City == null)
+                {
+                     relatedProperties = await _propertyRepository.GetRelatedPropertiesByProvinceAsync(propertyDetail.Province);
+                }
+                else
+                {
+                     relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
+                }
+               
                 // Tạo đối tượng chứa thông tin PropertyDetail và danh sách các Property khác
-                var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties);
+                var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
 
                 return result;
 
