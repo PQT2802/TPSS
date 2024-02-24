@@ -13,9 +13,11 @@ namespace TPSS.Business.Service.Impl
     public class ReservationService : IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
-        public ReservationService(IReservationRepository reservationRepository) 
+        private readonly IPropertyRepository _propertyRepository;
+        public ReservationService(IReservationRepository reservationRepository, IPropertyRepository propertyRepository) 
         { 
             _reservationRepository = reservationRepository;
+            _propertyRepository = propertyRepository;
         }
         public async Task<int> CreateReservationAsynce(string userId, string propertyId)
         {
@@ -25,18 +27,45 @@ namespace TPSS.Business.Service.Impl
                     ReservationId = await AutoGenerateReservationId(),
                     BuyerId = userId,
                     PropertyId = propertyId,
-                    SellerId = "",
+                    SellerId = await _propertyRepository.GetOwnerIdAsync(propertyId),
                     BookingDate = DateTime.Now,
                     Status = "Waiting",
                     Priority = 0,
                     IsDelete = false,
                 };
-                return 0;
+                var result = await _reservationRepository.CreateReservationAsync(reservation);
+                return  result;
 			}
 			catch (Exception e )
 			{
 
                 throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId)
+        {
+            try
+            {
+                var result = await _reservationRepository.GetReservationForBuyerAsync(userId);
+                return  result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId)
+        {
+            try
+            {
+                var result = await _reservationRepository.GetReservationForSellerAsync(userId);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 

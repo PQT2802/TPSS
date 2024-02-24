@@ -12,5 +12,7 @@ namespace TPSS.Data.Repository
         public Task<int> CreateReservationAsync(Reservation reservation);
         public Task<string> GetColumnData(string columnName, string baseOnData);
         public Task<string> GetLatestReservationIdAsync();
+        public Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId);
+        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId);
     }
 }

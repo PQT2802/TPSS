@@ -148,5 +148,20 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+        public async Task<string> GetOwnerIdAsync(string propertyId)
+        {
+            try
+            {
+                var query = "SELECT OwnerId FROM PropertyDetail WHERE PropertyId = @PropertyId";
+                var parameters = new { PropertyId = propertyId };
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query, parameters);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
