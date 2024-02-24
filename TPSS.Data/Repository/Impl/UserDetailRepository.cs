@@ -186,10 +186,30 @@ WHERE UserId = @UserIdValue ";
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<dynamic> GetInforUserAsync(string userId)
+        {
+            try
+            {
+                var query = @"
+SELECT u.Firstname, u.Lastname, u.Email, ud.Phone, ud.PersonalId, ud.Avatar, ud.DateOfBirth, ud.Address, ud.Gender, ud.TaxIdentificationNumber 
+FROM [User] u 
+INNER JOIN UserDetail ud ON u.UserId = ud.UserId
+WHERE u.UserId = @UserIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("UserIdValue", userId,DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<dynamic>(query,parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
             }
         }
     }

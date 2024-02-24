@@ -13,6 +13,6 @@ namespace TPSS.Data.Repository
         public Task<string> GetColumnData(string columnName, string baseOnData);
         public Task<string> GetLatestReservationIdAsync();
         public Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId);
-        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId);
+        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId);
     }
 }

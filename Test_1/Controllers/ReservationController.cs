@@ -33,10 +33,10 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
         [HttpGet("GetForSeller")]
-        public async Task<IActionResult> GetReservationForSellerrAsync()
+        public async Task<IActionResult> GetReservationForSellerrAsync(string propertyId)
         {
             CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _reservationService.GetReservationForSellerAsync(c.UserId);
+            var result = await _reservationService.GetReservationForSellerAsync(c.UserId, propertyId);
             return Ok(result);
         }
     }

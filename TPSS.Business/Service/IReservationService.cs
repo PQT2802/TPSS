@@ -11,6 +11,6 @@ namespace TPSS.Business.Service
     {
         public Task<int> CreateReservationAsynce(string userId, string propertyId);
         public Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId);
-        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId);
+        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId);
     }
 }

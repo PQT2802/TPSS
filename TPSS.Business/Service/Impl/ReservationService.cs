@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,11 +56,11 @@ namespace TPSS.Business.Service.Impl
                 throw;
             }
         }
-        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId)
+        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId)
         {
             try
             {
-                var result = await _reservationRepository.GetReservationForSellerAsync(userId);
+                var result = await _reservationRepository.GetReservationForSellerAsync(userId, propertyId);
                 return result;
             }
             catch (Exception)

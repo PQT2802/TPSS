@@ -112,7 +112,7 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
-        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId)
+        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId, string propertyId)
         {
             try
             {
@@ -130,10 +130,11 @@ namespace TPSS.Data.Repository.Impl
             INNER JOIN [User] seller ON r.SellerId = seller.UserId
             INNER JOIN Property p ON r.PropertyId = p.PropertyId
             INNER JOIN [User] buyer ON r.BuyerId = buyer.UserId
-            WHERE r.SellerID = @userId";
+            WHERE r.SellerID = @userId AND r.PropertyId = @PropertyIdValue";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("userId", userId, DbType.String);
+                parameter.Add("PropertyIdValue", propertyId, DbType.String);
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query, parameter);

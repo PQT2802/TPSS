@@ -430,18 +430,30 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
-
-        public async Task<int> UpdateUserAsync(UserDTO userdto)
+        public async Task<dynamic> GetInforUserAsync(string userId)
         {
             try
             {
-                User user = new User();
-                //user.Username = userdto.Username;
-                //user.Email = userdto.Email;
-                //user.Password = userdto.Password;
-                //user.Phone = userdto.Phone;
-                int result = await _userRepository.UpdateUserAsync(user);
+                var result = await _userDetailRepository.GetInforUserAsync(userId);
                 return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> UpdateUserAsync(UpdateUserObject updateUser)
+        {
+            try
+            {
+                var currentUser = await _userDetailRepository.GetInforUserAsync(updateUser.UserId);
+                List<Error> errors = new List<Error>();
+                if (string.IsNullOrEmpty(updateUser.Firstname))
+                {
+                    
+                }
+                return 0;
             }
             catch (Exception e)
             {
