@@ -195,7 +195,7 @@ namespace TPSS.Business.Service.Impl
 
                 var owner = await _propertyRepository.GetOwnerByIdAsync(propertyDetail.OwnerId);
 
-                var project = await _propertyRepository.GetProjectByIdAsync(propertyDetail.ProjectId);
+                var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
                 
                 IEnumerable<Property> relatedProperties = null;
 
