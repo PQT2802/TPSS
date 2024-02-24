@@ -13,6 +13,7 @@ namespace TPSS.API.Controllers
     public class PropertyController : ControllerBase
     {
         public readonly IPropertyService _propertyService;
+        private readonly ImageService _imageService;
         public PropertyController(IPropertyService propertyService) 
         {
             _propertyService = propertyService;
@@ -52,6 +53,12 @@ namespace TPSS.API.Controllers
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
         {
             var result = await _propertyService.GetAllProjects();
+            return Ok(result);
+        }
+        [HttpGet("ProjectDetail")]
+        public async Task<ActionResult<ProjectDetail>> GetProjectDetail(string id)
+        {
+            var result = await _propertyService.GetProjectDetail(id);
             return Ok(result);
         }
     }

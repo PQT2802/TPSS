@@ -17,5 +17,6 @@ namespace TPSS.Business.Service
         public Task<int> DeletePropertyAsync(String id);
         public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
         public Task<IEnumerable<Project>> GetAllProjects();
+        public Task<ProjectDetail> GetProjectDetail(string id);
     }
 }

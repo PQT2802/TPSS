@@ -233,5 +233,19 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<ProjectDetail> GetProjectDetail(string id)
+        {
+            try
+            {
+                ProjectDetail result = await _propertyRepository.GetProjectDetail(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

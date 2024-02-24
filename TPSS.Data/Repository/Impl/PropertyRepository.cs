@@ -206,7 +206,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT ProjectName  " +
+                var query = "SELECT ProjectName " +
                     "FROM dbo.Project " +
                     "WHERE ProjectID = @value";
                 var parameter = new DynamicParameters();
@@ -220,5 +220,22 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
+        public async Task<ProjectDetail> GetProjectDetail(string id)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM dbo.ProjectDetail " +
+                    "WHERE ProjectID = @value";
+                var parameter = new DynamicParameters();
+                parameter.Add("value", id, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryFirstOrDefaultAsync<ProjectDetail>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
