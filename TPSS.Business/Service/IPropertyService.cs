@@ -16,6 +16,7 @@ namespace TPSS.Business.Service
         public Task<dynamic> UpdatePropertyAsync(PropertyDTO user);
         public Task<int> DeletePropertyAsync(String id);
         public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
+        public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
         public Task<ProjectDetail> GetProjectDetail(string id);
     }

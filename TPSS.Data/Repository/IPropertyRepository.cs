@@ -23,6 +23,7 @@ namespace TPSS.Data.Repository
         public Task<IEnumerable<Property>> GetPropertyForHomePage();
         public Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city);
         public Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province);
+        public Task<IEnumerable<Property>> GetRelatedPropertiesByProjectIDAsync(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
 
         public Task<UserDetail> GetOwnerByIdAsync(string ownerId);

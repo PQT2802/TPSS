@@ -56,9 +56,9 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
         [HttpGet("ProjectDetail")]
-        public async Task<ActionResult<ProjectDetail>> GetProjectDetail(string id)
+        public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
         {
-            var result = await _propertyService.GetProjectDetail(id);
+            var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
             return Ok(result);
         }
     }

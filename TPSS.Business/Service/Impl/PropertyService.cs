@@ -247,5 +247,25 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID)
+        {
+            try
+            {
+                var projectDetail = await _propertyRepository.GetProjectDetail(projectID);
+
+                IEnumerable<Property> relatedProperties = await _propertyRepository.GetRelatedPropertiesByProjectIDAsync(projectID);
+
+                var result = new ProjectDetailWithRelatedProperties(projectDetail, relatedProperties);
+
+                return result;
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

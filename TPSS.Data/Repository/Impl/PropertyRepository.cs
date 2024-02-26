@@ -237,5 +237,22 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<IEnumerable<Property>> GetRelatedPropertiesByProjectIDAsync(string projectID)
+        {
+            try
+            {
+                var query = "SELECT * FROM dbo.Property " +
+                    "WHERE ProjectID = @ProjectID";
+                var parameter = new DynamicParameters();
+                parameter.Add("ProjectID", projectID, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Property>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
