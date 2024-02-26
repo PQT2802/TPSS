@@ -18,7 +18,7 @@ namespace TPSS.Data.Repository
 
         public Task<string> GetLatestPropertyIdAsync();
         public Task<string> GetLatestPropertyDetailIdAsync();
-<<<<<<< HEAD
+
         public Task<string> GetProjectNameAsync(string projectID);
 
         public Task<IEnumerable<Property>> GetPropertyForHomePage();
@@ -32,9 +32,9 @@ namespace TPSS.Data.Repository
         public Task<PropertyDetail> GetPropertyByIdAsync(string id);
         public Task<ProjectDetail> GetProjectDetail(string id);
 
-=======
+
         
         public Task<string> GetOwnerIdAsync(string propertyId);
->>>>>>> DEV_THANG
+
     }
 }
