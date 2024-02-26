@@ -449,10 +449,69 @@ namespace TPSS.Business.Service.Impl
             {
                 var currentUser = await _userDetailRepository.GetInforUserAsync(updateUser.UserId);
                 List<Error> errors = new List<Error>();
-                if (string.IsNullOrEmpty(updateUser.Firstname))
+                UpdateUserObject newUser = new UpdateUserObject();
+                if (!string.IsNullOrEmpty(updateUser.Firstname))
                 {
-                    
+                    if(Validator.IsValidName(updateUser.Firstname))
+                    {
+                        newUser.Firstname = updateUser.Firstname;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.FirstNameIsInvalid(updateUser.Firstname));
+                    }                   
                 }
+                else { newUser.Firstname=currentUser.Firstname;}
+                if (!string.IsNullOrEmpty(updateUser.Lastname))
+                {
+                    if (Validator.IsValidName(updateUser.Lastname))
+                    {
+                        newUser.Lastname = updateUser.Lastname;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.LastNameIsInvalid(updateUser.Lastname));
+                    }
+                }
+                else
+                {
+                    newUser.Lastname=currentUser.Lastname;
+                }
+                if (!string.IsNullOrEmpty(updateUser.Email))
+                {
+                    if(Validator.IsValidEmail(updateUser.Email))
+                    {
+                        newUser.Email = updateUser.Email;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.EmailIsInvalid(updateUser.Email));
+                    }
+                }
+                else
+                {
+                    newUser.Email=currentUser.Email;
+                }
+                if(!string.IsNullOrEmpty(updateUser.Phone))
+                {
+                    if (Validator.IsValidPhone(updateUser.Phone))
+                    {
+                        newUser.Phone = updateUser.Phone;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.PhoneIsInvalid(updateUser.Phone));
+                    }
+                }
+                else
+                {
+                    newUser.Phone=currentUser.Phone;
+                }
+                if(!string.IsNullOrEmpty(updateUser.PersonalId))
+                {
+                    //if()
+                }
+                
                 return 0;
             }
             catch (Exception e)

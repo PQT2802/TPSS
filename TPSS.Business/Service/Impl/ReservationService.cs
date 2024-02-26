@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TPSS.Business.Common;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
+using TPSS.Data.Repository.Impl;
 
 namespace TPSS.Business.Service.Impl
 {
@@ -20,22 +23,30 @@ namespace TPSS.Business.Service.Impl
             _reservationRepository = reservationRepository;
             _propertyRepository = propertyRepository;
         }
-        public async Task<int> CreateReservationAsynce(string userId, string propertyId)
+        public async Task<dynamic> CreateReservationAsynce(string userId, string propertyId)
         {
 			try
 			{
-                Reservation reservation = new Reservation() {
-                    ReservationId = await AutoGenerateReservationId(),
-                    BuyerId = userId,
-                    PropertyId = propertyId,
-                    SellerId = await _propertyRepository.GetOwnerIdAsync(propertyId),
-                    BookingDate = DateTime.Now,
-                    Status = "Waiting",
-                    Priority = 0,
-                    IsDelete = false,
-                };
-                var result = await _reservationRepository.CreateReservationAsync(reservation);
-                return  result;
+                if ( await CheckExistReservation(userId, propertyId))
+                {
+                    return Result.Failure(new Error("User.IsExist", "This timeshare have already reserved!!!!!"));
+                }
+                else
+                {
+                    Reservation reservation = new Reservation()
+                    {
+                        ReservationId = await AutoGenerateReservationId(),
+                        BuyerId = userId,
+                        PropertyId = propertyId,
+                        SellerId = await _propertyRepository.GetOwnerIdAsync(propertyId),
+                        BookingDate = DateTime.Now,
+                        Status = "Waiting",
+                        Priority = 0,
+                        IsDelete = false,
+                    };
+                    var result = await _reservationRepository.CreateReservationAsync(reservation);
+                    return result;
+                }
 			}
 			catch (Exception e )
 			{
@@ -67,6 +78,20 @@ namespace TPSS.Business.Service.Impl
             {
 
                 throw;
+            }
+        }
+        private async Task<bool> CheckExistReservation(string userId, string propertyId)
+        {
+            var existReservation = await _reservationRepository.GetReservation(userId, propertyId);
+            if (existReservation != null && existReservation.BuyerId == userId && existReservation.PropertyId == propertyId)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
             }
         }
 

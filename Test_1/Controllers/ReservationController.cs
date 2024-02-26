@@ -39,5 +39,6 @@ namespace TPSS.API.Controllers
             var result = await _reservationService.GetReservationForSellerAsync(c.UserId, propertyId);
             return Ok(result);
         }
+
     }
 }

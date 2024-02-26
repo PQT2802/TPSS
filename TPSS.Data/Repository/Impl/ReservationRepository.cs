@@ -48,6 +48,25 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+        public async Task<Reservation> GetReservation(string userId, string properetyId)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM Reservation " +
+                    "WHERE BuyerId = @userIdValue AND PropertyId = @propertyIdValue";
+                var parameter = new DynamicParameters();
+                parameter.Add("userIdValue", userId);
+                parameter.Add("propertyIdValue", properetyId);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<Reservation>(query,parameter);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public Task<string> GetColumnData(string columnName, string baseOnData)
         {

@@ -14,5 +14,6 @@ namespace TPSS.Data.Repository
         public Task<string> GetLatestReservationIdAsync();
         public Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId);
         public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId);
+        public Task<Reservation> GetReservation(string userId, string properetyId);
     }
 }

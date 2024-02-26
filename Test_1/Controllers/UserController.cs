@@ -37,7 +37,7 @@ namespace TPSS.API.Controllers
         public async Task<IActionResult> GetUserdAsync()
         {
             CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _userService.GetUserByIdAsync(c.UserId);
+            var result = await _userService.GetInforUserAsync(c.UserId);
             return Ok(result);
         }
 
