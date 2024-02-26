@@ -8,6 +8,7 @@ namespace TPSS.Data.Models.DTO
 {
     public class UpdateUserObject
     {
+        public string UserId { get; set; } = null!;
         public string? Firstname { get; set; } 
         public string? Lastname { get; set; } 
         public string? Email { get; set; } 
@@ -19,5 +20,6 @@ namespace TPSS.Data.Models.DTO
 
         public string? Gender { get; set; }
         public string? TaxIdentificationNumber { get; set; }
+        public string? UpdateBy { get; set; }
     }
 }

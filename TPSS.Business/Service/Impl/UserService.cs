@@ -430,18 +430,89 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
-
-        public async Task<int> UpdateUserAsync(UserDTO userdto)
+        public async Task<dynamic> GetInforUserAsync(string userId)
         {
             try
             {
-                User user = new User();
-                //user.Username = userdto.Username;
-                //user.Email = userdto.Email;
-                //user.Password = userdto.Password;
-                //user.Phone = userdto.Phone;
-                int result = await _userRepository.UpdateUserAsync(user);
+                var result = await _userDetailRepository.GetInforUserAsync(userId);
                 return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> UpdateUserAsync(UpdateUserObject updateUser)
+        {
+            try
+            {
+                var currentUser = await _userDetailRepository.GetInforUserAsync(updateUser.UserId);
+                List<Error> errors = new List<Error>();
+                UpdateUserObject newUser = new UpdateUserObject();
+                if (!string.IsNullOrEmpty(updateUser.Firstname))
+                {
+                    if(Validator.IsValidName(updateUser.Firstname))
+                    {
+                        newUser.Firstname = updateUser.Firstname;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.FirstNameIsInvalid(updateUser.Firstname));
+                    }                   
+                }
+                else { newUser.Firstname=currentUser.Firstname;}
+                if (!string.IsNullOrEmpty(updateUser.Lastname))
+                {
+                    if (Validator.IsValidName(updateUser.Lastname))
+                    {
+                        newUser.Lastname = updateUser.Lastname;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.LastNameIsInvalid(updateUser.Lastname));
+                    }
+                }
+                else
+                {
+                    newUser.Lastname=currentUser.Lastname;
+                }
+                if (!string.IsNullOrEmpty(updateUser.Email))
+                {
+                    if(Validator.IsValidEmail(updateUser.Email))
+                    {
+                        newUser.Email = updateUser.Email;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.EmailIsInvalid(updateUser.Email));
+                    }
+                }
+                else
+                {
+                    newUser.Email=currentUser.Email;
+                }
+                if(!string.IsNullOrEmpty(updateUser.Phone))
+                {
+                    if (Validator.IsValidPhone(updateUser.Phone))
+                    {
+                        newUser.Phone = updateUser.Phone;
+                    }
+                    else
+                    {
+                        errors.Add(UpdateUserErrors.PhoneIsInvalid(updateUser.Phone));
+                    }
+                }
+                else
+                {
+                    newUser.Phone=currentUser.Phone;
+                }
+                if(!string.IsNullOrEmpty(updateUser.PersonalId))
+                {
+                    //if()
+                }
+                
+                return 0;
             }
             catch (Exception e)
             {

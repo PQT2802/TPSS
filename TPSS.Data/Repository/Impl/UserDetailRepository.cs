@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
+using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 
 namespace TPSS.Data.Repository.Impl
@@ -52,8 +53,8 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("Phone", updateUserDetail.Phone, DbType.String);
                 parameter.Add("PersonalId", updateUserDetail.PersonalId, DbType.String);
                 parameter.Add("Avatar", updateUserDetail.Avatar, DbType.String);
-                parameter.Add("DateOfBirth", updateUserDetail.DateOfBirth, DbType.DateTime);
-                parameter.Add("Address", updateUserDetail.Phone, DbType.String);
+                parameter.Add("DateOfBirth", updateUserDetail.DateOfBirth, DbType.Date);
+                parameter.Add("Address", updateUserDetail.Address, DbType.String);
                 parameter.Add("Gender", updateUserDetail.Phone, DbType.String);
                 parameter.Add("UpdateBy", updateUserDetail.Phone, DbType.String);
                 parameter.Add("UpdateDate", updateUserDetail.Phone, DbType.DateTime);
@@ -140,6 +141,70 @@ namespace TPSS.Data.Repository.Impl
                     "UserDetailId DESC";
                 using var connection = CreateConnection();
                 return await connection.QuerySingleOrDefaultAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<dynamic> UpdateUserDetailAsync(UpdateUserObject userDetail)
+        {
+            try
+            {
+                var query = @"
+UPDATE [User] 
+SET Firstname = @FirstnameValue 
+    Lastname = @LastnameValue
+    Email = @EmailValue
+WHERE UserId = @UserIdValue
+
+UPDATE DetailUser 
+SET Phone = @PhoneValue 
+    PersonalId = @PersonalIdValue 
+    Avatar = @AvatarValue 
+    DateOfBirth = @DateOfBirthValue 
+    Address = @AddressValue 
+    Gender = @GenderValue 
+    UpdateDate = @UpdateDateValue 
+    UpdateBy = @UpdateByValue 
+    TaxIdentificationNumber = @TaxIdentificationNumberValue
+WHERE UserId = @UserIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("FirstnameValue", userDetail.Firstname, DbType.String);
+                parameter.Add("LastnameValue", userDetail.Lastname, DbType.String);
+                parameter.Add("EmailValue", userDetail.Email, DbType.String);
+                parameter.Add("PhoneValue", userDetail.Phone, DbType.String);
+                parameter.Add("PersonalIdValue", userDetail.PersonalId, DbType.String);
+                parameter.Add("AvatarValue ", userDetail.Avatar, DbType.String);
+                parameter.Add("DateOfBirthValue ", userDetail.DateOfBirth, DbType.Date);
+                parameter.Add("AddressValue ", userDetail.Address, DbType.String);
+                parameter.Add("GenderValue ", userDetail.Gender, DbType.String);
+                parameter.Add("UpdateDateValue", DateTime.Now, DbType.DateTime);
+                parameter.Add("UpdateByValue", userDetail.UpdateBy, DbType.String);
+                parameter.Add("TaxIdentificationNumberValue", userDetail.TaxIdentificationNumber, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<dynamic> GetInforUserAsync(string userId)
+        {
+            try
+            {
+                var query = @"
+SELECT u.Firstname, u.Lastname, u.Email, ud.Phone, ud.PersonalId, ud.Avatar, ud.DateOfBirth, ud.Address, ud.Gender, ud.TaxIdentificationNumber 
+FROM [User] u 
+INNER JOIN UserDetail ud ON u.UserId = ud.UserId
+WHERE u.UserId = @UserIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("UserIdValue", userId,DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<dynamic>(query,parameter);
             }
             catch (Exception e)
             {

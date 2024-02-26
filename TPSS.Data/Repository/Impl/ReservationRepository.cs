@@ -48,6 +48,25 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+        public async Task<Reservation> GetReservation(string userId, string properetyId)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM Reservation " +
+                    "WHERE BuyerId = @userIdValue AND PropertyId = @propertyIdValue";
+                var parameter = new DynamicParameters();
+                parameter.Add("userIdValue", userId);
+                parameter.Add("propertyIdValue", properetyId);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<Reservation>(query,parameter);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public Task<string> GetColumnData(string columnName, string baseOnData)
         {
@@ -66,17 +85,81 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT TOP 1 ReservationId " +
+                var query = "SELECT TOP 1 ReservationID " +
     "FROM [Reservation] " +
     "ORDER BY " +
-    "CAST(SUBSTRING(UserId, 8, LEN(ReservationId)) AS INT) DESC, " +
-    "ReservationId DESC";
+    "CAST(SUBSTRING(ReservationID, 8, LEN(ReservationID)) AS INT) DESC, " +
+    "ReservationID DESC";
                 using var connection = CreateConnection();
                 return await connection.QuerySingleOrDefaultAsync<string>(query);
             }
             catch (Exception e)
             {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId)
+        {
+            try
+            {
+                var query = @"
+            SELECT
+                p.Image,
+                p.PropertyTitle,
+                p.PropertyID,
+                pd.OwnerID,
+                owner.Firstname AS OwnerFirstname,
+                owner.Lastname AS OwnerLastname,
+                r.Status,
+                r.BookingDate
+            FROM Reservation r
+            INNER JOIN [User] buyer ON r.BuyerID = buyer.UserId
+            INNER JOIN Property p ON r.PropertyID = p.PropertyID
+            INNER JOIN [dbo].[PropertyDetail] pd ON p.PropertyID = pd.PropertyID
+            INNER JOIN [User] owner ON pd.OwnerID = owner.UserId
+            WHERE buyer.UserId = @userId";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("userId", userId, DbType.String);
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<dynamic>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId, string propertyId)
+        {
+            try
+            {
+                var query = @"
+            SELECT
+                p.Image,
+                p.PropertyTitle,
+                p.PropertyId,
+                buyer.UserId AS BuyerId,
+                buyer.Firstname AS BuyerFirstname,
+                buyer.Lastname AS BuyerLastname,
+                r.Status,
+                r.BookingDate
+            FROM Reservation r
+            INNER JOIN [User] seller ON r.SellerId = seller.UserId
+            INNER JOIN Property p ON r.PropertyId = p.PropertyId
+            INNER JOIN [User] buyer ON r.BuyerId = buyer.UserId
+            WHERE r.SellerID = @userId AND r.PropertyId = @PropertyIdValue";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("userId", userId, DbType.String);
+                parameter.Add("PropertyIdValue", propertyId, DbType.String);
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<dynamic>(query, parameter);
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message, e);
             }
         }
