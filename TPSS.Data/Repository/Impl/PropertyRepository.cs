@@ -254,5 +254,24 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID)
+        {
+            try
+            {
+                var query = "SELECT * " +
+                    "FROM [dbo].[Property] AS P " +
+                    "JOIN [dbo].[PropertyDetail] AS PD ON P.[PropertyID] = PD.[PropertyID] " +
+                    "WHERE PD.[OwnerID] = @UserID";
+                var parameter = new DynamicParameters();
+                parameter.Add("UserID", UserID, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Property>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

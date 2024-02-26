@@ -267,5 +267,19 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID)
+        {
+            try
+            {
+                IEnumerable<Property> result = await _propertyRepository.GetPropertiesByUserIDAsync(UserID);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

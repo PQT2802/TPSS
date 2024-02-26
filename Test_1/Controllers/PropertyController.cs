@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
+using TPSS.Business.Common;
 using TPSS.Business.Service;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
@@ -14,9 +15,12 @@ namespace TPSS.API.Controllers
     {
         public readonly IPropertyService _propertyService;
         private readonly ImageService _imageService;
-        public PropertyController(IPropertyService propertyService) 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public PropertyController(IPropertyService propertyService, IHttpContextAccessor httpContextAccessor) 
         {
             _propertyService = propertyService;
+            _httpContextAccessor = httpContextAccessor;
         }
         //[HttpPost]
         //public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
@@ -59,6 +63,13 @@ namespace TPSS.API.Controllers
         public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
         {
             var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
+            return Ok(result);
+        }
+        [HttpGet("PropertiesByUser")]
+        public async Task<ActionResult<IEnumerable<Property>>> GetProjectDetailWithRelatedProperties()
+        {
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetPropertiesByUserIDAsync(c.UserId);
             return Ok(result);
         }
     }

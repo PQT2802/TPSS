@@ -18,6 +18,8 @@ namespace TPSS.Business.Service
         public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
         public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
+        public Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID);
         public Task<ProjectDetail> GetProjectDetail(string id);
+
     }
 }
