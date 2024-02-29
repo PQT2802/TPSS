@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using TPSS.Business.Common;
 using TPSS.Business.Service;
+using TPSS.Business.Service.Impl;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 
@@ -14,13 +15,14 @@ namespace TPSS.API.Controllers
     public class PropertyController : ControllerBase
     {
         public readonly IPropertyService _propertyService;
-        private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PropertyController(IPropertyService propertyService, IHttpContextAccessor httpContextAccessor) 
+        public PropertyController(IPropertyService propertyService, IHttpContextAccessor httpContextAccessor, IImageService imageService) 
         {
             _propertyService = propertyService;
             _httpContextAccessor = httpContextAccessor;
+            _imageService = imageService;
         }
         //[HttpPost]
         //public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
@@ -47,7 +49,7 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.GetPropertyForHomePage();
             return Ok(result);
         }
-        [HttpGet("Detail")]
+        [HttpGet("PropertyDetail")]
         public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
         {
             var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
@@ -70,6 +72,35 @@ namespace TPSS.API.Controllers
         {
             CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
             var result = await _propertyService.GetPropertiesByUserIDAsync(c.UserId);
+            return Ok(result);
+        }
+
+
+        ///test image
+        [HttpPost("Image")]
+        public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
+        {
+
+            var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
+
+            return Ok(result);
+        }
+
+        [HttpPost("Images")]
+        public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
+        {
+
+            var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
+
+            return Ok(result);
+        }
+
+        [HttpPost("ImagesProper")]
+        public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
+        {
+
+            var result = await _imageService.UploadImagesForPropertyDetail(thumbnails, folderName);
+
             return Ok(result);
         }
     }

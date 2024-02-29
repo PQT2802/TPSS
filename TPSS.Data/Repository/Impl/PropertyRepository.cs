@@ -81,7 +81,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT TOP 10 * FROM dbo.Property";
+                var query = "SELECT * FROM dbo.Property";
                 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Property>(query);
@@ -137,7 +137,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT TOP 10 * FROM dbo.Project";
+                var query = "SELECT * FROM dbo.Project";
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Project>(query);

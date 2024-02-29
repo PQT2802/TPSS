@@ -32,12 +32,6 @@ namespace TPSS.Data.Models.DTO
 
         public string? Street { get; set; }
 
-        public string? CreateBy { get; set; }
-
-        public string? UpdateBy { get; set; }
-
-        public bool? IsDelete { get; set; }
-
         public string? Description { get; set; }
 
         public string? Images { get; set; }

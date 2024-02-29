@@ -22,6 +22,7 @@ namespace TPSS.API.Helper
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IImageService, ImageService>();
             
 
             //services.AddTransient<IUserService, UserService2>();

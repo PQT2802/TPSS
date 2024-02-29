@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TPSS.Business.Service
+namespace TPSS.Data.Models.DTO
 {
-    public interface ImageService
+    internal class CreatePropertyDTO
     {
     }
 }
