@@ -389,6 +389,7 @@ namespace TPSS.Business.Service.Impl
                         var token = Common.TokenHepler.Instance.CreateToken(authClaims, _configuration);
                         //string avatar = await _userDetailRepository.GetAvatarByUserIdAsync(result.UserId);
                         var responseObject = new ResponseObject() {
+                            UserId = result.UserId,
                             Avatar = result.Avatar,
                             Email = result.Email,
                             FullName = result.Lastname + " " + result.Firstname,

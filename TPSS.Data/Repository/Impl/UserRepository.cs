@@ -193,8 +193,7 @@ namespace TPSS.Data.Repository.Impl
                 var parameter = new DynamicParameters();
                 parameter.Add("value", value, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QueryFirstOrDefaultAsync<string>(query, parameter);
-                 
+                return await connection.QueryFirstOrDefaultAsync<string>(query, parameter);            
             }
             catch (Exception e)
             {
