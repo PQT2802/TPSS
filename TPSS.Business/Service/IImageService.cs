@@ -11,6 +11,6 @@ namespace TPSS.Business.Service
     {
         public Task<string> UploadImageToFirebaseStorage(IFormFile image, string folderName);
         public Task<string> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName);
-        public Task<string> UploadImagesForPropertyDetail(IFormFileCollection images, string propertyDetailId);
+        public Task<string> UploadImagesForProperty(IFormFileCollection images, string propertyID);
     }
 }

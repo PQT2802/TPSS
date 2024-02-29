@@ -11,7 +11,7 @@ namespace TPSS.Data.Repository
     public interface IPropertyRepository
     {
 
-        //public Task<int> CreatePropertyAsync(Property property, PropertyDetail detail) ;
+        public Task<int> CreatePropertyAsync(Property property) ;
         public Task<int> CreatePropertyDetailAsync(PropertyDetail detail);
         public Task<int> UpdatePropertyAsync(Property property);
         public Task<int> DeletePropertyAsync(string id);

@@ -19,88 +19,71 @@ namespace TPSS.Business.Service.Impl
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IImageService _imageService;
         private readonly IConfiguration _configuration;
-        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration)
+        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration, IImageService imageService)
         {
             _propertyRepository = propertyRepository;
+            _imageService = imageService;
         }
 
+
+
         
+        public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
+        {
+            try
+            {
+                List<Error> Errors = new List<Error>();
+                Property property = new Property();
 
-        //Tao property + propertyDetail
-        //public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
-        //{
-        //    try
-        //    {
-        //        List<Error> Errors = new List<Error>();
-        //        Property property = new Property();
-                
-        //        // check null tu dong
-        //        Type type = propertyDTO.GetType();
+                property.PropertyId = await AutoGeneratePropertyId();
+                property.ProjectId = propertyDTO.ProjectId;
+                property.PropertyTitle = propertyDTO.PropertyTitle;
+                property.Price = propertyDTO.Price;
+                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
+                property.Area = propertyDTO.Area;
+                property.Province = propertyDTO.Province;
+                property.City = propertyDTO.City;
+                property.District = propertyDTO.District;
+                property.Ward = propertyDTO.Ward;
+                property.Street = propertyDTO.Street;
+                property.IsDelete = false;
+                int result1 = await _propertyRepository.CreatePropertyAsync(property);
 
-        //        foreach (var check in type.GetProperties())
-        //        {
-        //            if(check.GetValue(propertyDTO) == null && 
-        //                check.Name != nameof(propertyDTO.PropertyId)
-        //                )
-        //            {
-        //                Errors.Add(Result.CreateError($"{check.Name}.NotFound",$"{check.Name} cannot be null."));
-        //            }
-        //        }
+                if (result1 == 1)
+                {
+                    PropertyDetail detail = new PropertyDetail();
 
-        //        if (Errors.Count > 0) 
-        //        {
-        //            return Result.Failures(Errors);
+                    detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
+                    detail.PropertyId = property.PropertyId;
+                    detail.OwnerId = propertyDTO.OwnerID;
+                    detail.Description = propertyDTO.Description;
+                    detail.PropertyTitle = null;
+                    detail.UpdateDate = null;
+                    detail.Image= null;
+                    detail.Verify = null;
 
+                    DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
+                    detail.CreateDate = currentDate;
 
-        //        }
-        //        property.PropertyId = await AutoGeneratePropertyId();
-        //        property.ProjectId = propertyDTO.ProjectId;
-        //        property.PropertyTitle = propertyDTO.PropertyTitle;
-        //        property.Price = propertyDTO.Price;
-        //        property.Image = propertyDTO.Image;
-        //        property.Area = propertyDTO.Area;
-        //        property.Province = propertyDTO.Province;
-        //        property.City = propertyDTO.City;
-        //        property.Ward = propertyDTO.Ward;
-        //        property.Street = propertyDTO.Street;
-        //        property.IsDelete = false;
+                    detail.CreateBy = propertyDTO.OwnerID;
+                    detail.UpdateBy = propertyDTO.OwnerID;
+                    detail.Service = propertyDTO.Service;
+                    //detail.Verify = false;
+                    detail.VerifyBy = propertyDTO.OwnerID;
+                    detail.VerifyDate = null;
 
-                
+                    int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
+                }
+                return result1;
 
-
-        //        int result1 = await _propertyRepository.CreatePropertyAsync(property);
-        //        if(result1 == 1)
-        //        {
-        //            PropertyDetail detail = new PropertyDetail();
-
-        //            detail.PropertyId = property.PropertyId;
-        //            detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
-        //            detail.OwnerId = propertyDTO.OwnerID;
-        //            detail.PropertyTitle = propertyDTO.PropertyTitle;
-        //            detail.Description = propertyDTO.Description;
-
-        //            DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
-        //            detail.CreateDate = currentDate;
-        //            detail.UpdateDate = currentDate;
-
-        //            detail.CreateBy = propertyDTO.OwnerID;
-        //            detail.UpdateBy = propertyDTO.OwnerID;
-        //            detail.Service = propertyDTO.Service;
-        //            detail.Verify = false;
-        //            detail.VerifyBy = null;
-        //            detail.VerifyDate = null;
-
-        //            int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
-        //        }
-        //        return result1;
-            
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message, e);
-        //    }
-        //}
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
 
 
         public async Task<int> DeletePropertyAsync(string id)
@@ -171,14 +154,14 @@ namespace TPSS.Business.Service.Impl
         private async Task<string> AutoGeneratePropertyDetailId()
         {
             string newPropertyid = "";
-            string latestPropertyId = await _propertyRepository.GetLatestPropertyDetailIdAsync();
-            if (latestPropertyId.IsNullOrEmpty())
+            string latestPropertyDetailId = await _propertyRepository.GetLatestPropertyDetailIdAsync();
+            if (latestPropertyDetailId.IsNullOrEmpty())
             {
                 newPropertyid = "PD00000000";
             }
             else
             {
-                int numericpart = int.Parse(latestPropertyId.Substring(2));
+                int numericpart = int.Parse(latestPropertyDetailId.Substring(2));
                 int newnumericpart = numericpart + 1;
 
                 newPropertyid = $"PD{newnumericpart:d8}";

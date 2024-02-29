@@ -105,7 +105,7 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<string> UploadImagesForPropertyDetail(IFormFileCollection images, string propertyDetailId)
+        public async Task<string> UploadImagesForProperty(IFormFileCollection images, string propertyID)
         {
             try
             {
@@ -129,8 +129,8 @@ namespace TPSS.Business.Service.Impl
                 int counter = 1;
                 foreach (var image in images)
                 {
-                    var fileName = $"{propertyDetailId}-{counter:00}";
-                    var uploadTask = storage.Child("Images").Child("PropertyDetail").Child(propertyDetailId).Child(fileName).PutAsync(image.OpenReadStream());
+                    var fileName = $"{propertyID}-{counter:00}";
+                    var uploadTask = storage.Child("Images").Child("PropertyDetail").Child(propertyID).Child(fileName).PutAsync(image.OpenReadStream());
                     var downloadUrl = await uploadTask;
                     downloadUrls.Add(downloadUrl.ToString());
                     counter++;

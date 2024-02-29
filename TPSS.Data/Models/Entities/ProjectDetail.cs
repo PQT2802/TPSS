@@ -13,13 +13,13 @@ public partial class ProjectDetail
 
     public string? Image { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
-    public DateOnly? CreateBy { get; set; }
+    public DateTime? CreateBy { get; set; }
 
-    public DateOnly? UpdateBy { get; set; }
+    public DateTime? UpdateBy { get; set; }
 
     public string? ProjectDescription { get; set; }
 

@@ -24,12 +24,6 @@ namespace TPSS.API.Controllers
             _httpContextAccessor = httpContextAccessor;
             _imageService = imageService;
         }
-        //[HttpPost]
-        //public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
-        //{
-        //    var result = await _propertyService.CreatePropertyAsync(newProperty);
-        //    return Ok(result);
-        //}
 
         [HttpDelete]
         public async Task<IActionResult> DeleteUserAsync(String id)
@@ -99,8 +93,15 @@ namespace TPSS.API.Controllers
         public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
         {
 
-            var result = await _imageService.UploadImagesForPropertyDetail(thumbnails, folderName);
+            var result = await _imageService.UploadImagesForProperty(thumbnails, folderName);
 
+            return Ok(result);
+        }
+
+        [HttpPost("CreateProperty")]
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
+        {
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO);
             return Ok(result);
         }
     }

@@ -47,10 +47,10 @@ namespace TPSS.Business.Common
         public static Result Failures(List<Error> errors) => new(false, errors);
 
 
-        //public static Error CreateError(string code,string errorMessage)
-        //{
-        //    return new Error(code,errorMessage);
-        //}
+        public static Error CreateError(string code, string errorMessage)
+        {
+            return new Error(code, errorMessage);
+        }
 
     }
 }
