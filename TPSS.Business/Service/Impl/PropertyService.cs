@@ -51,7 +51,7 @@ namespace TPSS.Business.Service.Impl
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
                 property.Price = propertyDTO.Price;
-                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
+                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.images, property.PropertyId);
                 property.Area = propertyDTO.Area;
                 property.Province = propertyDTO.Province;
                 property.City = propertyDTO.City;

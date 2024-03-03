@@ -33,7 +33,7 @@ namespace TPSS.Data.Models.DTO
         
         public string? Service { get; set; }
 
-        public IFormFileCollection? Images { get; set; }
+        public List<IFormFile>? images {  get; set; }         
 
     }
 }

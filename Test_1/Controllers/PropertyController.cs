@@ -62,7 +62,7 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
+        public async Task<IActionResult> CreatePropertyAsync( [FromForm]PropertyDTO propertyDTO)
         {
             var result = await _propertyService.CreatePropertyAsync(propertyDTO);
             return Ok(result);
@@ -84,23 +84,23 @@ namespace TPSS.API.Controllers
 
 
         ///test image
-        //[HttpPost("Image")]
-        //public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
+        //[httppost("image")]
+        //public async task<iactionresult> uploadimagetofirebasestorage( iformfile image, string foldername)
         //{
 
-        //    var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
+        //    var result = await _imageservice.uploadimagetofirebasestorage(image, foldername);
 
-        //    return Ok(result);
+        //    return ok(result);
         //}
 
-        //[HttpPost("Images")]
-        //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
-        //{
+        [HttpPost("Images")]
+        public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage([FromBody] List<IFormFile> files)
+        {
 
-        //    var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
+            var result = await _imageService.UploadMultipleImagesToFirebaseStorage(files);
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
         //[HttpPost("ImagesProper")]
         //public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
