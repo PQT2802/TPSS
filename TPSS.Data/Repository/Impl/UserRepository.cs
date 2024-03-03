@@ -237,6 +237,60 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+        public async Task<string> GetExistEmailAsync(string email)
+        {
+            try
+            {
+                var query = "SELECT Email " +
+                    "FROM [User] " +
+                    "WHERE Email = @emailValue AND IsDelete = 0 ";
+                var parameter = new DynamicParameters();
+                parameter.Add("emailValue", email);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<string> GetExistPhoneAsync(string phone)
+        {
+            try
+            {
+                var query = "SELECT Phone " +
+                    "FROM [UserDetail] " +
+                    "WHERE Phone = @phoneValue AND IsDelete = 0 ";
+                var parameter = new DynamicParameters();
+                parameter.Add("phoneValue", phone);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<string> GetExistPersonalIdAsync(string personalId)
+        {
+            try
+            {
+                var query = "SELECT PersonalId " +
+                    "FROM [UserDetail] " +
+                    "WHERE PersonalId = @personalIdValue AND IsDelete = 0 ";
+                var parameter = new DynamicParameters();
+                parameter.Add("personalIdValue", personalId);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
     
 

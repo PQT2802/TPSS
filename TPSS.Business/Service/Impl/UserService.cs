@@ -5,10 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TPSS.Business.Common;
 using TPSS.Business.Exceptions.ErrorHandler;
@@ -39,128 +41,7 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                //List<Error> errors = new List<Error>();
-                //User user = new User();
-                //bool isValidName = true;
-                //if(!string.IsNullOrEmpty(registerDTO.Firstname))
-                //{
-                //    //check empty
-                //    errors.Add(null);
-                //    if (!Validator.IsValidUsername(registerDTO.Firstname))
-                //    {
-                //        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
-                //        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
-                //        isValidName = false;
-                //    }
-                //    else { errors.Add(null); }
 
-                //}
-                //else
-                //{
-                //    errors.Add(RegisterErrors.FirstNameIsEmpty);
-                //    errors.Add(null);
-                //}
-                //if(!string.IsNullOrEmpty(registerDTO.Lastname))
-                //{
-                //    //check empty
-                //    errors.Add(null);
-                //    if (!Validator.IsValidUsername(registerDTO.Lastname))
-                //    {
-                //        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
-                //        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
-                //        isValidName = false;
-                //    }
-                //    else
-                //    {
-                //        //check valid
-                //        errors.Add(null);
-                //    }
-                //}
-                //else
-                //{
-                //    errors.Add(RegisterErrors.LastNameIsEmpty);
-                //    errors.Add(null);
-                //}
-                //if(isValidName)
-                //{
-                //    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
-                //    {
-                //        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
-                //    }
-                //}
-                //else
-                //{
-                //    errors.Add(null);
-                //}
-                ////else if(errors.Count == 0)
-                ////{
-                ////    user.Firstname = registerDTO.Firstname;
-                ////    user.Lastname = registerDTO.Lastname;
-                ////}
-                ////Email///
-                //if(!string.IsNullOrEmpty(registerDTO.Email))
-                //{
-                //    errors.Add(null);
-                //    if (!Validator.IsValidEmail(registerDTO.Email))
-                //    {
-                //        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
-                //        //return Result.Failure(RegisterErrors.EmailIsInvalid(registerDTO.Email));
-                //    }
-                //    else { errors.Add(null); }
-
-                //     if (await CheckEmailExistAsync(registerDTO.Email))
-                //    {
-                //        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
-                //        //return Result.Failure(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
-                //    }
-                //    else { errors.Add(null); }
-                //}
-                //else
-                //{
-                //    errors.Add(RegisterErrors.EmailIsEmpty);
-                //    errors.Add(null);
-                //    errors.Add(null);
-                //}
-
-                ////else { user.Email = registerDTO.Email;}
-                ////PASSWORD///
-                //if (!string.IsNullOrEmpty(registerDTO.Password))
-                //{
-                //    errors.Add(null);
-                //    if (!Validator.IsValidPassword(registerDTO.Password))
-                //    {
-                //        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
-                //        //return Result.Failure(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
-                //    }
-                //    else
-                //    {
-                //        errors.Add(null);
-                //    }
-                //}
-                //else { errors.Add(RegisterErrors.PasswordIsEmpty); errors.Add(null); }
-                //if(!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
-                //{
-                //    errors.Add(null);
-                //if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
-                //    {
-                //        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
-                //        //return Result.Failure(RegisterErrors.ConfirmPasswordIsInvalid);
-                //    }
-                //    else
-                //    {
-                //        errors.Add(null);
-                //    }
-                //}
-                //else
-                //{
-                //    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
-                //    errors.Add(null);
-                //}
-
-                ////else
-                ////{
-                ////    user.Password = Encryption.Encrypt(registerDTO.Password);
-                ////}
                 List<Error> errors = new List<Error>();
                 User user = new User();
                 bool isValidName = true;
@@ -208,23 +89,8 @@ namespace TPSS.Business.Service.Impl
                     isValidName = false;
                 }
 
-                // Check if Firstname and Lastname exist
-                if (isValidName)
-                {
-                    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
-                    {
-                        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(null);
-                }
-
+                errors.Add(null);
+                errors.Add(null);
                 // Email validation
                 if (!string.IsNullOrEmpty(registerDTO.Email))
                 {
@@ -450,24 +316,25 @@ namespace TPSS.Business.Service.Impl
             {
                 var currentUser = await _userDetailRepository.GetInforUserAsync(updateUser.UserId);
                 List<Error> errors = new List<Error>();
-                UpdateUserObject newUser = new UpdateUserObject();
+                var user = new User();
+                var userDetail = new UserDetail();
                 if (!string.IsNullOrEmpty(updateUser.Firstname))
                 {
-                    if(Validator.IsValidName(updateUser.Firstname))
+                    if (Validator.IsValidName(updateUser.Firstname))
                     {
-                        newUser.Firstname = updateUser.Firstname;
+                        user.Firstname = updateUser.Firstname;
                     }
                     else
                     {
                         errors.Add(UpdateUserErrors.FirstNameIsInvalid(updateUser.Firstname));
                     }                   
                 }
-                else { newUser.Firstname=currentUser.Firstname;}
+                else { user.Firstname=currentUser.Firstname;}
                 if (!string.IsNullOrEmpty(updateUser.Lastname))
                 {
                     if (Validator.IsValidName(updateUser.Lastname))
                     {
-                        newUser.Lastname = updateUser.Lastname;
+                        user.Lastname = updateUser.Lastname;
                     }
                     else
                     {
@@ -476,13 +343,20 @@ namespace TPSS.Business.Service.Impl
                 }
                 else
                 {
-                    newUser.Lastname=currentUser.Lastname;
+                    user.Lastname=currentUser.Lastname;
                 }
                 if (!string.IsNullOrEmpty(updateUser.Email))
                 {
                     if(Validator.IsValidEmail(updateUser.Email))
                     {
-                        newUser.Email = updateUser.Email;
+                        if(!await CheckEmailExistAsync(updateUser.Email))
+                        {
+                            user.Email = updateUser.Email;
+                        }
+                        else
+                        {
+                            errors.Add(UpdateUserErrors.EmailAlreadyUsed(updateUser.Email));
+                        }                        
                     }
                     else
                     {
@@ -491,13 +365,20 @@ namespace TPSS.Business.Service.Impl
                 }
                 else
                 {
-                    newUser.Email=currentUser.Email;
+                    user.Email=currentUser.Email;
                 }
                 if(!string.IsNullOrEmpty(updateUser.Phone))
                 {
                     if (Validator.IsValidPhone(updateUser.Phone))
                     {
-                        newUser.Phone = updateUser.Phone;
+                        if(!await CheckPhoneExistAsync(updateUser.Phone))
+                        {
+                            userDetail.Phone = updateUser.Phone;
+                        }
+                        else
+                        {
+                            errors.Add(UpdateUserErrors.PhoneAlreadyUsed(updateUser.Phone));
+                        }                        
                     }
                     else
                     {
@@ -506,14 +387,61 @@ namespace TPSS.Business.Service.Impl
                 }
                 else
                 {
-                    newUser.Phone=currentUser.Phone;
+                    userDetail.Phone=currentUser.Phone;
                 }
                 if(!string.IsNullOrEmpty(updateUser.PersonalId))
                 {
-                    //if()
+                    if (!string.IsNullOrEmpty(updateUser.PersonalId))
+                    {
+                        if (Validator.IsValidPersonalId(updateUser.PersonalId))
+                        {
+                            if(!await CheckPersonalIdExistAsync(updateUser.PersonalId))
+                            {
+                                userDetail.PersonalId = updateUser.PersonalId;
+                            }
+                            else
+                            {
+                                errors.Add(UpdateUserErrors.PersonalIdAlreadyUsed(updateUser.PersonalId));
+                            }
+                        }
+                        else
+                        {
+                            errors.Add(UpdateUserErrors.PersonalIdIsInvalid(updateUser.PersonalId));
+                        }
+                    }
+                    else
+                    {
+                        userDetail.PersonalId = currentUser.PersonalId;
+                    }
                 }
-                
-                return 0;
+                userDetail.Avatar = !string.IsNullOrEmpty(updateUser.Avatar) ? updateUser.Avatar : currentUser.Avatar;
+                userDetail.Address = !string.IsNullOrEmpty(updateUser.Address) ? updateUser.Address : currentUser.Address;
+                userDetail.Gender = !string.IsNullOrEmpty(updateUser.Gender) ? updateUser.Gender : currentUser.Gender;
+                userDetail.TaxIdentificationNumber = !string.IsNullOrEmpty(updateUser.TaxIdentificationNumber) ? updateUser.TaxIdentificationNumber : currentUser.TaxIdentificationNumber;
+                if (!string.IsNullOrEmpty(updateUser.DateOfBirth))
+                {
+                    if (DateTime.TryParseExact(updateUser.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dob))
+                    {
+                        userDetail.DateOfBirth = new DateOnly(dob.Year, dob.Month, dob.Day);
+                    }
+                    else
+                    {
+                        errors.Add(new Error("User.InvalidFormat", "Invalid date format. Expected format: dd-MM-yyyy"));
+                    }
+                }
+                else
+                {
+                    userDetail.DateOfBirth = currentUser.DateOfBirth;
+                }
+
+                if (errors.All(error => error == null))
+                {
+                    user.UserId = updateUser.UserId;
+                    userDetail.UserId = updateUser.UserId;
+                    var result =await _userDetailRepository.UpdateUserDetailAsync(user,userDetail);
+                    return result;
+                }
+                    return Result.Failures(errors);
             }
             catch (Exception e)
             {
@@ -558,41 +486,21 @@ namespace TPSS.Business.Service.Impl
             }
             return newuserid;
         }
-        //private async Task<bool>CheckFirstNameExistAsync (string firstname)
-        //{
-        //    string existFirstname = await _userRepository.GetColumnString("Firstname", firstname);
-        //    if(existFirstname.IsNullOrEmpty()) { return false; } else
-        //    {
-        //        return firstname.Equals(existFirstname);
-        //    }
-
-        //}
-        //private async Task<bool> CheckLastNameExistAsync(string lastname)
-        //{
-        //    string existLastname = await _userRepository.GetColumnString("Lastname", lastname);
-        //        return lastname.Equals(existLastname);           
-        //}
-        private async Task<bool> CheckFirstNameAndLastNameExistAsync(string lastName, string firstName)
-        {
-            var existName = await _userRepository.GetLastNameAndFirstName(lastName, firstName);
-            if (existName != null && existName.Lastname == lastName && existName.Firstname == firstName)
-            {
-                
-                return true;
-            }
-            else
-            {
-                
-                return false;
-            }
-        }
-
         public async Task<bool> CheckEmailExistAsync(string email)
         {
-            string existingEmail = await _userRepository.GetColumnString("Email",email);
+            string existingEmail = await _userRepository.GetExistEmailAsync(email);
             return email.Equals(existingEmail);
         }
-        
+        public async Task<bool> CheckPhoneExistAsync(string phone)
+        {
+            string existingPhone = await _userRepository.GetExistPhoneAsync(phone);
+            return phone.Equals(existingPhone);
+        }
+        public async Task<bool> CheckPersonalIdExistAsync(string personalId)
+        {
+            string existingPersonalId = await _userRepository.GetExistPersonalIdAsync(personalId);
+            return personalId.Equals(existingPersonalId);
+        }
     }
 
 }
@@ -691,4 +599,170 @@ namespace TPSS.Business.Service.Impl
 //{
 //    string existingPhone = await _userRepository.GetPhoneAsync(phone);
 //    return phone.Equals(existingPhone);
+//}
+//List<Error> errors = new List<Error>();
+//User user = new User();
+//bool isValidName = true;
+//if(!string.IsNullOrEmpty(registerDTO.Firstname))
+//{
+//    //check empty
+//    errors.Add(null);
+//    if (!Validator.IsValidUsername(registerDTO.Firstname))
+//    {
+//        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+//        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+//        isValidName = false;
+//    }
+//    else { errors.Add(null); }
+
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.FirstNameIsEmpty);
+//    errors.Add(null);
+//}
+//if(!string.IsNullOrEmpty(registerDTO.Lastname))
+//{
+//    //check empty
+//    errors.Add(null);
+//    if (!Validator.IsValidUsername(registerDTO.Lastname))
+//    {
+//        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+//        //return Result.Failure(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+//        isValidName = false;
+//    }
+//    else
+//    {
+//        //check valid
+//        errors.Add(null);
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.LastNameIsEmpty);
+//    errors.Add(null);
+//}
+//if(isValidName)
+//{
+//    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
+//    {
+//        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
+//    }
+//}
+//else
+//{
+//    errors.Add(null);
+//}
+////else if(errors.Count == 0)
+////{
+////    user.Firstname = registerDTO.Firstname;
+////    user.Lastname = registerDTO.Lastname;
+////}
+////Email///
+//if(!string.IsNullOrEmpty(registerDTO.Email))
+//{
+//    errors.Add(null);
+//    if (!Validator.IsValidEmail(registerDTO.Email))
+//    {
+//        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+//        //return Result.Failure(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+//    }
+//    else { errors.Add(null); }
+
+//     if (await CheckEmailExistAsync(registerDTO.Email))
+//    {
+//        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+//        //return Result.Failure(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+//    }
+//    else { errors.Add(null); }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.EmailIsEmpty);
+//    errors.Add(null);
+//    errors.Add(null);
+//}
+
+////else { user.Email = registerDTO.Email;}
+////PASSWORD///
+//if (!string.IsNullOrEmpty(registerDTO.Password))
+//{
+//    errors.Add(null);
+//    if (!Validator.IsValidPassword(registerDTO.Password))
+//    {
+//        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+//        //return Result.Failure(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+//    }
+//    else
+//    {
+//        errors.Add(null);
+//    }
+//}
+//else { errors.Add(RegisterErrors.PasswordIsEmpty); errors.Add(null); }
+//if(!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
+//{
+//    errors.Add(null);
+//if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
+//    {
+//        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
+//        //return Result.Failure(RegisterErrors.ConfirmPasswordIsInvalid);
+//    }
+//    else
+//    {
+//        errors.Add(null);
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
+//    errors.Add(null);
+//}
+
+////else
+////{
+////    user.Password = Encryption.Encrypt(registerDTO.Password);
+////}
+///                // Check if Firstname and Lastname exist
+//if (isValidName)
+//{
+//    if (await CheckFirstNameAndLastNameExistAsync(registerDTO.Lastname, registerDTO.Firstname))
+//    {
+//        errors.Add(RegisterErrors.UserAlreadyExist(registerDTO.Firstname, registerDTO.Lastname));
+//    }
+//    else
+//    {
+//        errors.Add(null);
+//    }
+//}
+//else
+//{
+//    errors.Add(null);
+//}
+//private async Task<bool>CheckFirstNameExistAsync (string firstname)
+//{
+//    string existFirstname = await _userRepository.GetColumnString("Firstname", firstname);
+//    if(existFirstname.IsNullOrEmpty()) { return false; } else
+//    {
+//        return firstname.Equals(existFirstname);
+//    }
+
+//}
+//private async Task<bool> CheckLastNameExistAsync(string lastname)
+//{
+//    string existLastname = await _userRepository.GetColumnString("Lastname", lastname);
+//        return lastname.Equals(existLastname);           
+//}
+//private async Task<bool> CheckFirstNameAndLastNameExistAsync(string lastName, string firstName)
+//{
+//    var existName = await _userRepository.GetLastNameAndFirstName(lastName, firstName);
+//    if (existName != null && existName.Lastname == lastName && existName.Firstname == firstName)
+//    {
+
+//        return true;
+//    }
+//    else
+//    {
+
+//        return false;
+//    }
 //}
