@@ -31,24 +31,44 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.DeletePropertyAsync(id);
             return Ok(result);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetUserByIdAsync(String id)
         {
             var result = await _propertyService.GetPropertyByIdAsync(id);
             return Ok(result);
         }
+
         [HttpGet("HomePage")]
         public async Task<ActionResult<IEnumerable<Property>>> GetPropertyForHomePage()
         {
             var result = await _propertyService.GetPropertyForHomePage();
             return Ok(result);
         }
+
         [HttpGet("PropertyDetail")]
         public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
         {
             var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
             return Ok(result);
         }
+
+        [HttpGet("PropertiesByUser")]
+        public async Task<ActionResult<IEnumerable<Property>>> GetProjectDetailWithRelatedProperties()
+        {
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetPropertiesByUserIDAsync(c.UserId);
+            return Ok(result);
+        }
+
+        [HttpPost("CreateProperty")]
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
+        {
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO);
+            return Ok(result);
+        }
+
+
         [HttpGet("Project")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
         {
@@ -61,48 +81,36 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
             return Ok(result);
         }
-        [HttpGet("PropertiesByUser")]
-        public async Task<ActionResult<IEnumerable<Property>>> GetProjectDetailWithRelatedProperties()
-        {
-            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.GetPropertiesByUserIDAsync(c.UserId);
-            return Ok(result);
-        }
 
 
         ///test image
-        [HttpPost("Image")]
-        public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
-        {
+        //[HttpPost("Image")]
+        //public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
+        //{
 
-            var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
+        //    var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
-        [HttpPost("Images")]
-        public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
-        {
+        //[HttpPost("Images")]
+        //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
+        //{
 
-            var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
+        //    var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
-        [HttpPost("ImagesProper")]
-        public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
-        {
+        //[HttpPost("ImagesProper")]
+        //public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
+        //{
 
-            var result = await _imageService.UploadImagesForProperty(thumbnails, folderName);
+        //    var result = await _imageService.UploadImagesForProperty(thumbnails, folderName);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
-        [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
-        {
-            var result = await _propertyService.CreatePropertyAsync(propertyDTO);
-            return Ok(result);
-        }
+
     }
 }

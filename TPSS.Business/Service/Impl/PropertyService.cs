@@ -35,7 +35,17 @@ namespace TPSS.Business.Service.Impl
             try
             {
                 List<Error> Errors = new List<Error>();
+
+
+
+
+
+
                 Property property = new Property();
+
+
+
+
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
