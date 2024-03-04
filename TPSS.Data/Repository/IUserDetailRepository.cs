@@ -18,5 +18,6 @@ namespace TPSS.Data.Repository
         public Task<string> GetLatestUserDetailIdAsync();
         public Task<dynamic> UpdateUserDetailAsync(User user,UserDetail userDetail);
         public Task<dynamic> GetInforUserAsync(string userId);
+        
     }
 }

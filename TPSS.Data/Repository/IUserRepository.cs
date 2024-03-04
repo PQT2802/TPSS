@@ -23,5 +23,8 @@ namespace TPSS.Data.Repository
         public Task<string> GetExistEmailAsync(string email);
         public Task<string> GetExistPhoneAsync(string phone);
         public Task<string> GetExistPersonalIdAsync(string personalId);
+        public Task<int> UpdateUserRole(string userId,string roleId);
+        public Task<int> UpdateIsActive (string userId);
+
     }
 }

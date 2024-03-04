@@ -291,9 +291,44 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
-    }
-    
+        public async Task<int> UpdateUserRole(string userId,string roleId)
+        {
+            try
+            {
+                var query = "UPDATE [User] " +
+                    "SET RoleId = @roleIdValue " +
+                    "WHERE UserId = @userIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("roleIdValue", roleId);
+                parameter.Add("userIdValue", userId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> UpdateIsActive(string userId)
+        {
+            try
+            {
+                var query = "UPDATE [User] " +
+                    "SET IsActive = 1 " +
+                    "WHERE UserId = @userIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("userIdValue", userId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+    }
 }
 //public async Task<string> GetUserNameAsync(string username)
 //{
