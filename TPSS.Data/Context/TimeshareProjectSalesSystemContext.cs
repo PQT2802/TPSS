@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TPSS.Data.Models.Entities;
 
-namespace TPSS.Data.Context;
+namespace TPSS.Data.Models.Entities;
 
 public partial class TimeshareProjectSalesSystemContext : DbContext
 {
