@@ -108,7 +108,7 @@ namespace TPSS.Business.Service.Impl
         /// end test
         
         
-        public async Task<string> UploadImagesForProperty(IFormFileCollection images, string propertyID)
+        public async Task<List<string>> UploadImagesForProperty(IFormFileCollection images, string propertyID)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace TPSS.Business.Service.Impl
                     counter++;
                 }
 
-                return string.Join(",", downloadUrls);
+                return downloadUrls;
             }
             catch (Exception ex)
             {
@@ -190,7 +190,7 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<string> UploadImagesForProjectDetail(IFormFileCollection images, string projectID)
+        public async Task<List<string>> UploadImagesForProjectDetail(IFormFileCollection images, string projectID)
         {
             try
             {
@@ -221,7 +221,7 @@ namespace TPSS.Business.Service.Impl
                     counter++;
                 }
 
-                return string.Join(",", downloadUrls);
+                return downloadUrls;
             }
             catch (Exception ex)
             {
@@ -230,7 +230,7 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<string> LinkFolderCheck(IFormFileCollection images, string propertyID)
+        public async Task<List<string>> LinkFolderCheck(IFormFileCollection images, string propertyID)
         {
             try
             {
@@ -252,7 +252,7 @@ namespace TPSS.Business.Service.Impl
 
                 var downloadUrls = new List<string>();
                 int counter = 1;
-                var folderPath = $"Images/PropertyDetail/{propertyID}/";
+                
                 foreach (var image in images)
                 {
                     var fileName = $"{propertyID}-{counter:00}";
@@ -262,7 +262,10 @@ namespace TPSS.Business.Service.Impl
                     counter++;
                 }
 
-                return storage.Child(folderPath).ToString();
+
+
+                // Return the folder download URL
+                return downloadUrls;
             }
             catch (Exception ex)
             {

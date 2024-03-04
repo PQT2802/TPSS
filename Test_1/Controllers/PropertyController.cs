@@ -62,10 +62,10 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO, string id )
         {
-            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.CreatePropertyAsync(propertyDTO,c.UserId);
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO,id);
             return Ok(result);
         }
 

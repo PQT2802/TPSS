@@ -35,16 +35,13 @@ namespace TPSS.Business.Service.Impl
             try
             {
                 List<Error> Errors = new List<Error>();
-
-
                 Property property = new Property();
-
+                List<string> Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
                 property.Price = propertyDTO.Price;
-                property.Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
                 property.Area = propertyDTO.Area;
                 property.City = propertyDTO.City;
                 property.District = propertyDTO.District;
@@ -71,7 +68,7 @@ namespace TPSS.Business.Service.Impl
                     detail.Verify = false;
                     detail.VerifyBy = null;
                     detail.VerifyDate = null;
-                    detail.Status = "Normal";
+                    detail.Status = "Waiting";
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
                 }

@@ -13,8 +13,6 @@ public partial class Property
 
     public double? Price { get; set; }
 
-    public string? Images { get; set; }
-
     public double? Area { get; set; }
 
     public string? City { get; set; }

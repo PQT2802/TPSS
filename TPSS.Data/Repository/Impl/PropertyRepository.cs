@@ -31,15 +31,14 @@ namespace TPSS.Data.Repository.Impl
             try
             {
 
-                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Images, Area, City, District, Ward, Street, IsDelete) " +
-                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Images, @Area, @City, @District, @Ward, @Street, @IsDelete)";
+                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Area, City, District, Ward, Street, IsDelete) " +
+                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Area, @City, @District, @Ward, @Street, @IsDelete)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyID", property.PropertyId, DbType.String);
                 parameter.Add("ProjectID", property.ProjectId, DbType.String);
                 parameter.Add("PropertyTitle", property.PropertyTitle, DbType.String);
                 parameter.Add("Price", property.Price, DbType.Double);
-                parameter.Add("Images", property.Images, DbType.String);
                 parameter.Add("Area", property.Area, DbType.Double);
                 parameter.Add("City", property.City, DbType.String);
                 parameter.Add("District", property.District, DbType.String);
