@@ -12,8 +12,8 @@ using TPSS.Data.Context;
 namespace TPSS.Data.Migrations
 {
     [DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240304024149_init")]
-    partial class init
+    [Migration("20240304162757_v2")]
+    partial class v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,29 @@ namespace TPSS.Data.Migrations
                     b.ToTable("AddressDetail", (string)null);
                 });
 
+            modelBuilder.Entity("TPSS.Data.Models.Entities.Album", b =>
+                {
+                    b.Property<string>("ImageId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("Album", (string)null);
+                });
+
             modelBuilder.Entity("TPSS.Data.Models.Entities.Contract", b =>
                 {
                     b.Property<string>("ContractId")
@@ -69,16 +92,14 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("ContractID");
 
-                    b.Property<DateOnly?>("ContractDate")
-                        .HasColumnType("date");
+                    b.Property<string>("Contract1")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("Contract");
 
                     b.Property<string>("ContractStatus")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ContractTerms")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double?>("Deposit")
                         .HasColumnType("float");
@@ -90,6 +111,9 @@ namespace TPSS.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("ReservationID");
+
+                    b.Property<DateTime?>("SignDate")
+                        .HasColumnType("datetime");
 
                     b.HasKey("ContractId")
                         .HasName("PK__Contract__C90D34099AA800A1");
@@ -129,27 +153,33 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Payment", b =>
                 {
+                    b.Property<string>("PaymentId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
                     b.Property<double?>("Amount")
                         .HasColumnType("float");
+
+                    b.Property<double?>("CommissionCalculation")
+                        .HasColumnType("float")
+                        .HasColumnName("Commission_Calculation");
+
+                    b.Property<string>("ContractId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("ContractID");
 
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PaymentId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("PaymentID");
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
+                    b.HasKey("PaymentId")
+                        .HasName("PK__Transact__1B39A9762989D08C");
 
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("TransactionID");
-
-                    b.HasIndex("TransactionId");
+                    b.HasIndex(new[] { "ContractId" }, "IX_Transaction_Processing_ContractID");
 
                     b.ToTable("Payment", (string)null);
                 });
@@ -165,6 +195,9 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("District")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsDelete")
@@ -199,9 +232,6 @@ namespace TPSS.Data.Migrations
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("Images")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectDescription")
                         .HasColumnType("text");
@@ -244,9 +274,6 @@ namespace TPSS.Data.Migrations
                     b.Property<string>("District")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Images")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
@@ -273,60 +300,8 @@ namespace TPSS.Data.Migrations
                     b.HasIndex(new[] { "ProjectId" }, "IX_Property_ProjectID");
 
                     b.ToTable("Property", (string)null);
-                });
 
-            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
-                {
-                    b.Property<string>("PropertyDetailId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("PropertyDetailID");
-
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("ntext");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("OwnerID");
-
-                    b.Property<string>("PropertyId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("PropertyID");
-
-                    b.Property<string>("Service")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdateBy")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<bool?>("Verify")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("VerifyBy")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime?>("VerifyDate")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("PropertyDetailId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertyDetail", (string)null);
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Reservation", b =>
@@ -398,26 +373,24 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("TransactionID");
 
-                    b.Property<double?>("CommissionCalculation")
-                        .HasColumnType("float")
-                        .HasColumnName("Commission_Calculation");
-
-                    b.Property<string>("ContractId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("ContractID");
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("PaymentId")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("PaymentID");
 
-                    b.HasKey("TransactionId")
-                        .HasName("PK__Transact__1B39A9762989D08C");
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
 
-                    b.HasIndex(new[] { "ContractId" }, "IX_Transaction_Processing_ContractID");
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("PaymentId");
 
                     b.ToTable("Transaction", (string)null);
                 });
@@ -520,6 +493,57 @@ namespace TPSS.Data.Migrations
                     b.ToTable("UserDetail", (string)null);
                 });
 
+            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
+                {
+                    b.HasBaseType("TPSS.Data.Models.Entities.Property");
+
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("ntext");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("OwnerID");
+
+                    b.Property<string>("PropertyDetailId")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("PropertyDetailID");
+
+                    b.Property<string>("Service")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdateBy")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("Verify")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("VerifyBy")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime?>("VerifyDate")
+                        .HasColumnType("datetime");
+
+                    b.ToTable("PropertyDetail", (string)null);
+                });
+
             modelBuilder.Entity("TPSS.Data.Models.Entities.AddressDetail", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Address", "Address")
@@ -528,6 +552,16 @@ namespace TPSS.Data.Migrations
                         .HasConstraintName("FK_AddressDetail_Address");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("TPSS.Data.Models.Entities.Album", b =>
+                {
+                    b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
+                        .WithMany("Albums")
+                        .HasForeignKey("PropertyId")
+                        .HasConstraintName("FK_Album_Property");
+
+                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Contract", b =>
@@ -559,13 +593,12 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Payment", b =>
                 {
-                    b.HasOne("TPSS.Data.Models.Entities.Transaction", "Transaction")
-                        .WithMany()
-                        .HasForeignKey("TransactionId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Payment_Transaction");
+                    b.HasOne("TPSS.Data.Models.Entities.Contract", "Contract")
+                        .WithMany("Payments")
+                        .HasForeignKey("ContractId")
+                        .HasConstraintName("FK__Transacti__Contr__36B12243");
 
-                    b.Navigation("Transaction");
+                    b.Navigation("Contract");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.ProjectDetail", b =>
@@ -589,16 +622,6 @@ namespace TPSS.Data.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
-                {
-                    b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
-                        .WithMany("PropertyDetails")
-                        .HasForeignKey("PropertyId")
-                        .HasConstraintName("FK_PropertyDetail_Property");
-
-                    b.Navigation("Property");
-                });
-
             modelBuilder.Entity("TPSS.Data.Models.Entities.Reservation", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
@@ -611,12 +634,13 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Transaction", b =>
                 {
-                    b.HasOne("TPSS.Data.Models.Entities.Contract", "Contract")
+                    b.HasOne("TPSS.Data.Models.Entities.Payment", "Payment")
                         .WithMany("Transactions")
-                        .HasForeignKey("ContractId")
-                        .HasConstraintName("FK__Transacti__Contr__36B12243");
+                        .HasForeignKey("PaymentId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Transaction_Payment");
 
-                    b.Navigation("Contract");
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.User", b =>
@@ -640,12 +664,29 @@ namespace TPSS.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
+                {
+                    b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
+                        .WithMany("PropertyDetails")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_PropertyDetail_Property");
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("TPSS.Data.Models.Entities.Address", b =>
                 {
                     b.Navigation("AddressDetails");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Contract", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("TPSS.Data.Models.Entities.Payment", b =>
                 {
                     b.Navigation("Transactions");
                 });
@@ -659,6 +700,8 @@ namespace TPSS.Data.Migrations
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Property", b =>
                 {
+                    b.Navigation("Albums");
+
                     b.Navigation("LikeLists");
 
                     b.Navigation("PropertyDetails");

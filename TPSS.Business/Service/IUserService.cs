@@ -13,6 +13,8 @@ namespace TPSS.Business.Service
         public Task<int> DeleteUserAsync(String id);
         public Task<dynamic> GetUserAccountAsync(LoginDTO loginDTO);
         public  Task<dynamic> GetInforUserAsync(string userId);
-
+        public Task<int> UpdateUserRole(string userId, string roleId);
+        public Task<int> UpdateIsActive(string userId);
+        public Task<ResponseObject> GetTokenFirebase(string firebaseToken);
     }
 }

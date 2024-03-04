@@ -12,26 +12,17 @@ namespace TPSS.API.Helper
         {
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
-
             services.AddTransient<IPropertyRepository, PropertyRepository>();
-
-            services.AddTransient<IUserDetailRepository, UserDetailRepository>();
-
-
+            services.AddTransient<IAddressRepository, AddressRepository>();
+            services.AddTransient<IReservationRepository, ReservationRepository>();
             //Service
-
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IReservationService, ReservationService>();
+            services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IUserDetailRepository, UserDetailRepository>();
             services.AddTransient<IImageService, ImageService>();
             
-
-            //services.AddTransient<IUserService, UserService2>();
-
-
-
-            services.AddTransient<IReservationRepository, ReservationRepository>();
-            services.AddTransient<IPropertyRepository, PropertyRepository>();
-            
+    
             //Exception Handler
             ////
             ///

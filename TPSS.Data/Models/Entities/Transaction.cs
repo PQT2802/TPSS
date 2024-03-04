@@ -5,15 +5,15 @@ namespace TPSS.Data.Models.Entities;
 
 public partial class Transaction
 {
+    public string PaymentId { get; set; } = null!;
+
     public string TransactionId { get; set; } = null!;
 
-    public string? ContractId { get; set; }
+    public double? Amount { get; set; }
 
-    public string? Status { get; set; }
-
-    public double? CommissionCalculation { get; set; }
+    public bool? Status { get; set; }
 
     public bool? IsDelete { get; set; }
 
-    public virtual Contract? Contract { get; set; }
+    public virtual Payment Payment { get; set; } = null!;
 }

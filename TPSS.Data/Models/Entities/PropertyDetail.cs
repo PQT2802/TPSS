@@ -7,6 +7,8 @@ public partial class PropertyDetail : Property
 {
     public string PropertyDetailId { get; set; } = null!;
 
+    public string? PropertyId { get; set; }
+
     public string OwnerId { get; set; } = null!;
 
     public string? Description { get; set; }
@@ -26,6 +28,8 @@ public partial class PropertyDetail : Property
     public bool? Verify { get; set; }
 
     public string? Status { get; set; }
+
+    public string? CreateBy { get; set; }
 
     public virtual Property? Property { get; set; }
 }

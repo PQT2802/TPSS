@@ -41,7 +41,7 @@ namespace TPSS.Business.Common
         public List<Error> Errors { get; }
 
         public static Result Success() => new(true, Error.None);
-
+        public static Result Successes() => new(true, Error.None);
         public static Result Failure(Error error) => new(false, error);
 
         public static Result Failures(List<Error> errors) => new(false, errors);

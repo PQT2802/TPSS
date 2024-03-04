@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure;
+using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -270,6 +272,27 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+        public async Task<ResponseObject> GetTokenFirebase(string firebaseToken)
+        {
+            try
+            {
+                FirebaseToken decryptedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(firebaseToken);
+                string uid = decryptedToken.Uid;
+                UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid); // bien cua firebase
+                string email = userRecord.Email;
+                string lastName = userRecord.DisplayName;
+                string ImageUrl = userRecord.PhotoUrl.ToString();
+                User userObject = await _userRepository.GetUserByEmail(email);
+                ResponseObject response = new();
+                return null;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<int> DeleteUserAsync(string id)
         {
             try
@@ -439,7 +462,11 @@ namespace TPSS.Business.Service.Impl
                     user.UserId = updateUser.UserId;
                     userDetail.UserId = updateUser.UserId;
                     var result =await _userDetailRepository.UpdateUserDetailAsync(user,userDetail);
-                    return result;
+                    var result1 =  UpdateIsActive(user.UserId);
+                    return result1 + result;
+                    // 2 => isActive
+                    // 1 update success
+                    
                 }
                     return Result.Failures(errors);
             }
@@ -500,6 +527,52 @@ namespace TPSS.Business.Service.Impl
         {
             string existingPersonalId = await _userRepository.GetExistPersonalIdAsync(personalId);
             return personalId.Equals(existingPersonalId);
+        }
+        public async Task<int> UpdateUserRole(string userId, string roleId)
+        {
+            try
+            {
+                var result = await _userRepository.UpdateUserRole(userId, roleId);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> UpdateIsActive(string userId)
+        {
+            try
+            {
+                var user = await _userDetailRepository.GetInforUserAsync(userId);
+                if (user.Firstname != null 
+                    && user.Lastname != null
+                    && user.Email != null
+                    && user.Phone != null
+                    && user.PersonalId != null
+                    && user.Avatar != null
+                    && user.DateOfBirth != null
+                    && user.Address != null
+                    && user.Gender != null
+                    && user.TaxIdentificationNumber != null
+                    )
+                {
+                    var result = await _userRepository.UpdateIsActive(userId);
+                    return result;
+                }
+                else
+                {
+                    return 0;
+                }
+                
+                
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
         }
     }
 

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
 using TPSS.Data.Models.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -293,9 +294,54 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
-    }
-    
+        public async Task<int> UpdateUserRole(string userId,string roleId)
+        {
+            try
+            {
+                var query = "UPDATE [User] " +
+                    "SET RoleId = @roleIdValue " +
+                    "WHERE UserId = @userIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("roleIdValue", roleId);
+                parameter.Add("userIdValue", userId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> UpdateIsActive(string userId)
+        {
+            try
+            {
+                var query = "UPDATE [User] " +
+                    "SET IsActive = 1 " +
+                    "WHERE UserId = @userIdValue ";
+                var parameter = new DynamicParameters();
+                parameter.Add("userIdValue", userId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var query= "SELECT * " +
+                "FROM [User] " +
+                "WHERE Email = @emailValue ";
+            var parameter = new DynamicParameters();
+            parameter.Add("emailValue", email);
+            using var connection = CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<User>(query, parameter);
+        }
+    }
 }
 //public async Task<string> GetUserNameAsync(string username)
 //{

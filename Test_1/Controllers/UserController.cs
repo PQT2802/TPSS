@@ -24,15 +24,6 @@ namespace TPSS.API.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
  
-        [HttpDelete]
-        [Authorize]
-        public async Task<IActionResult> DeleteUserAsync(String id)
-        {
-            var result = await _userService.DeleteUserAsync(id);
-            return Ok(result);
-        }
-
-
         [HttpGet]
         
         public async Task<IActionResult> GetUserdAsync()
@@ -41,7 +32,7 @@ namespace TPSS.API.Controllers
             var result = await _userService.GetInforUserAsync(c.UserId);
             return Ok(result);
         }
-        [HttpPost("UpdateUserProfile")]
+        [HttpPut("UpdateUserProfile")]
         
         public async Task<IActionResult> UpdateUserProfileAsync(UpdateUserObject updateUser)
         {
