@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TPSS.Data.Helper;
 using TPSS.Data.Models.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -23,6 +24,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
+
                 var query = "INSERT INTO [User] (UserId, Email, Password, Firstname, Lastname, RoleId, IsActive, IsDelete) " +
                     "VALUES(@UserId, @Email, @Password, @Firstname, @Lastname, @RoleId, @IsActive, @IsDelete)";
                 var parameter = new DynamicParameters();
@@ -35,6 +37,7 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("IsActive", newUser.IsActive, DbType.Boolean);
                 parameter.Add("IsDelete", newUser.IsDelete, DbType.Boolean);
                 using var connection = CreateConnection();
+
                 return await connection.ExecuteAsync(query, parameter);
 
             }
@@ -68,7 +71,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT *" +
+                var query = "SELECT *" + 
                     "FROM [User]" +
                     "WHERE UserId = @UserId";
                 var parameter = new DynamicParameters();
@@ -327,6 +330,16 @@ namespace TPSS.Data.Repository.Impl
 
                 throw new Exception(e.Message, e);
             }
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var query= "SELECT * " +
+                "FROM [User] " +
+                "WHERE Email = @emailValue ";
+            var parameter = new DynamicParameters();
+            parameter.Add("emailValue", email);
+            using var connection = CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<User>(query, parameter);
         }
     }
 }

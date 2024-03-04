@@ -1,25 +1,41 @@
+
+
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TPSS.Data.Models.Entities;
+
+
 
 namespace TPSS.Data.Repository
 {
     public interface IPropertyRepository
     {
-        public Task<Property> GetPropertyByIDAsync(string id);
-        public Task<PropertyDetail> GetPropertyDetailByIDAsync(string id);
-        public Task<Property> SearchPropertyAsync(double price1, double price2, double Area, string Province, string City);
 
-        public Task<int> CreatePropertyAsync(Property property, PropertyDetail propertyDetail);
+        public Task<int> CreatePropertyAsync(Property property) ;
+        public Task<int> CreatePropertyDetailAsync(PropertyDetail detail);
         public Task<int> UpdatePropertyAsync(Property property);
-        public Task<int> DeletePropertyByIdAsync(string id);
+        public Task<int> DeletePropertyAsync(string id);
 
         public Task<string> GetLatestPropertyIdAsync();
         public Task<string> GetLatestPropertyDetailIdAsync();
+
+        public Task<string> GetProjectNameAsync(string projectID);
+
+        public Task<IEnumerable<dynamic>> GetPropertyForHomePage();
+        public Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID);
+        public Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city);
+        public Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province);
+        public Task<IEnumerable<Property>> GetRelatedPropertiesByProjectIDAsync(string projectID);
+        public Task<IEnumerable<Project>> GetAllProjects();
+        public Task<IEnumerable<Project>> GetLastestProject();
+
+        public Task<UserDetail> GetOwnerByIdAsync(string ownerId);
+        public Task<PropertyDetail> GetPropertyByIdAsync(string id);
+        public Task<ProjectDetail> GetProjectDetail(string id);
+
+
         
         public Task<string> GetOwnerIdAsync(string propertyId);
+
     }
 }

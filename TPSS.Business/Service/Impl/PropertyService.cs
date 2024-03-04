@@ -1,9 +1,14 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TPSS.Business.Common;
+using TPSS.Business.Exceptions.ErrorHandler;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
@@ -11,159 +16,277 @@ using TPSS.Data.Repository.Impl;
 
 namespace TPSS.Business.Service.Impl
 {
-    public sealed class PropertyService //: IPropertyService
+    public class PropertyService : IPropertyService
     {
-        //private readonly IPropertyRepository _propertyRepository;
-        //public PropertyService(IPropertyRepository propertyRepository) 
-        //{
-        //    _propertyRepository = propertyRepository;
-        //}
-
-        //public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
-        //{      
-        //    try
-        //    {
-        //        Property property = new Property
-        //        {
-        //            PropertyId = await AutoGeneratePropertyId(),
-        //            ProjectId = propertyDTO.ProjectId,
-        //            PropertyTitle = propertyDTO.PropertyTitle,
-        //            Price = propertyDTO.Price,
-        //            Image = propertyDTO.Image,
-        //            Area = propertyDTO.Area,
-        //            Province = propertyDTO.Province,
-        //            City = propertyDTO.City,
-        //            District = propertyDTO.District,
-        //            Ward = propertyDTO.Ward,
-        //            Street = propertyDTO.Street,
-        //            IsDelete = false
-        //        };
-
-        //        PropertyDetail propertyDetail = new PropertyDetail
-        //        {
-        //            PropertyDetailId = await AutoGeneratePropertyDetailId(),
-        //            PropertyId = property.PropertyId,
-        //            OwnerId = propertyDTO.OwnerId,
-        //            PropertyTitle = propertyDTO.PropertyTitle,
-        //            Description = propertyDTO.Description,
-        //            CreateDate = DateTime.Now,
-        //            UpdateDate = null,
-        //            CreateBy = propertyDTO.CreateBy,
-        //            UpdateBy = null,
-        //            Images = propertyDTO.Images,
-        //            Service = propertyDTO.Service,
-        //            VerifyBy = null,
-        //            VerifyDate = null
-        //        };
-        //        int result = await _propertyRepository.CreatePropertyAsync(property, propertyDetail);
-
-        //        return result;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message, ex);
-        //    }
-        //}
-
-        //public async Task<int> DeletePropertyAsync(string id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<dynamic> GetListPropertyAsync(SearchPropertyDTO search)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public async Task<int> UpdatePropertyAsync(UserDTO user)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //private async Task<string> AutoGeneratePropertyId()
-        //{
-        //    string newpropertyid = "";
-        //    string latestPropertyId = await _propertyRepository.GetLatestPropertyIdAsync();
-        //    if (latestPropertyId.IsNullOrEmpty())
-        //    {
-        //        newpropertyid = "PP00000000";
-        //    }
-        //    else
-        //    {
-        //        // giả sử định dạng user id của bạn là "USxxxxxxx"
-        //        // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-        //        int numericpart = int.Parse(latestPropertyId.Substring(2));
-        //        int newnumericpart = numericpart + 1;
-
-        //        // tạo ra user id mới
-        //        //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-        //        newpropertyid = $"PP{newnumericpart:d8}";
-        //    }
-        //    return newpropertyid;
-        //}
-
-        //private async Task<string> AutoGeneratePropertyDetailId()
-        //{
-        //    string newpropertyid = "";
-        //    string latestPropertyId = await _propertyRepository.GetLatestPropertyDetailIdAsync();
-        //    if (latestPropertyId.IsNullOrEmpty())
-        //    {
-        //        newpropertyid = "PD00000000";
-        //    }
-        //    else
-        //    {
-        //        // giả sử định dạng user id của bạn là "USxxxxxxx"
-        //        // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-        //        int numericpart = int.Parse(latestPropertyId.Substring(2));
-        //        int newnumericpart = numericpart + 1;
-
-        //        // tạo ra user id mới
-        //        //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-        //        newpropertyid = $"PD{newnumericpart:d8}";
-        //    }
-        //    return newpropertyid;
-        //}
+        private readonly IPropertyRepository _propertyRepository;
+        private readonly IImageService _imageService;
+        private readonly IConfiguration _configuration;
+        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration, IImageService imageService)
+        {
+            _propertyRepository = propertyRepository;
+            _imageService = imageService;
+        }
 
 
-        //public async Task<PropertyDTO> GetPropertyByIDAsync(String id)
-        //{
-        //    try
-        //    {
-        //        Property property = await _propertyRepository.GetPropertyByIDAsync(id);
-        //        PropertyDetail propertyDetail = await _propertyRepository.GetPropertyDetailByIDAsync(id);
-        //        PropertyDTO result = new PropertyDTO
-        //        {
-        //            PropertyId = property.PropertyId,
-        //            ProjectId = property.ProjectId,
-        //            PropertyTitle = property.PropertyTitle,
-        //            Price = property.Price,
-        //            Image = property.Image,
-        //            Area = property.Area,
-        //            Province = property.Province,
-        //            City = property.City,
-        //            District = property.District,
-        //            Ward = property.Ward,
-        //            Street = property.Street,
-        //            PropertyDetailId = propertyDetail.PropertyDetailId,
-        //            OwnerId = propertyDetail.OwnerId,
-        //            Description = propertyDetail.Description,
-        //            CreateDate = propertyDetail.CreateDate,
-        //            UpdateDate = propertyDetail.UpdateDate,
-        //            CreateBy = propertyDetail.CreateBy,
-        //            UpdateBy = propertyDetail.UpdateBy,
-        //            Images = propertyDetail.Images,
-        //            Service = propertyDetail.Service,
-        //            VerifyBy = propertyDetail.VerifyBy,
-        //            VerifyDate = propertyDetail.VerifyDate
-        //        };
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
 
-        //        throw new Exception(e.Message, e);
-        //    }
-        //}
+        
+        public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO, string userID)
+        {
+            try
+            {
+                List<Error> Errors = new List<Error>();
+
+
+                Property property = new Property();
+
+
+                property.PropertyId = await AutoGeneratePropertyId();
+                property.ProjectId = propertyDTO.ProjectId;
+                property.PropertyTitle = propertyDTO.PropertyTitle;
+                property.Price = propertyDTO.Price;
+                //property.Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
+                property.Area = propertyDTO.Area;
+                property.City = propertyDTO.City;
+                property.District = propertyDTO.District;
+                property.Ward = propertyDTO.Ward;
+                property.Street = propertyDTO.Street;
+                property.IsDelete = false;
+                int result1 = await _propertyRepository.CreatePropertyAsync(property);
+
+                if (result1 == 1)
+                {
+                    PropertyDetail detail = new PropertyDetail();
+
+                    detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
+                    detail.PropertyId = property.PropertyId;
+                    detail.OwnerId = userID;
+                    detail.Description = propertyDTO.Description;
+                    detail.UpdateDate = null;
+
+                    DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
+                    detail.CreateDate = currentDate;
+
+                    detail.UpdateBy = userID;
+                    detail.Service = propertyDTO.Service;
+                    detail.Verify = false;
+                    detail.VerifyBy = null;
+                    detail.VerifyDate = null;
+                    detail.Status = "Normal";
+
+                    int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
+                }
+                return result1;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+
+        public async Task<int> DeletePropertyAsync(string id)
+        {
+            try
+            {
+                int result = await _propertyRepository.DeletePropertyAsync(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<Property> GetPropertyByIdAsync(string id)
+        {
+            try
+            {
+                Property result = await _propertyRepository.GetPropertyByIdAsync(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
+        {
+            //update soon
+            throw new NotImplementedException();
+        }    
+
+        public async Task<IEnumerable<dynamic>> GetPropertyForHomePage()
+        {
+            try
+            {
+
+                var resultList = await _propertyRepository.GetPropertyForHomePage();
+
+                // Assuming that each item in resultList has an 'Images' property
+                foreach (var item in resultList)
+                {
+                    // Split the image string into an array
+                    string[] imageArray = item.Images.ToString().Split(',');
+
+                    // Create a List<string> from the array
+                    List<string> imageList = new List<string>(imageArray);
+
+                    item.ImageList = imageList;
+                }
+
+
+                return resultList;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        private async Task<string> AutoGeneratePropertyId()
+        {
+            string newPropertyid = "";
+            string latestPropertyId = await _propertyRepository.GetLatestPropertyIdAsync();
+            if (latestPropertyId.IsNullOrEmpty())
+            {
+                newPropertyid = "PP00000000";
+            }
+            else
+            {
+                int numericpart = int.Parse(latestPropertyId.Substring(2));
+                int newnumericpart = numericpart + 1;
+
+                newPropertyid = $"PP{newnumericpart:d8}";
+            }
+            return newPropertyid;
+        }
+
+        private async Task<string> AutoGeneratePropertyDetailId()
+        {
+            string newPropertyid = "";
+            string latestPropertyDetailId = await _propertyRepository.GetLatestPropertyDetailIdAsync();
+            if (latestPropertyDetailId.IsNullOrEmpty())
+            {
+                newPropertyid = "PD00000000";
+            }
+            else
+            {
+                int numericpart = int.Parse(latestPropertyDetailId.Substring(2));
+                int newnumericpart = numericpart + 1;
+
+                newPropertyid = $"PD{newnumericpart:d8}";
+            }
+            return newPropertyid;
+        }
+
+        public async Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID)
+        {
+            try
+            {
+
+                var propertyDetail = await _propertyRepository.GetPropertyByIdAsync(propertyID);
+
+                var owner = await _propertyRepository.GetOwnerByIdAsync(propertyDetail.OwnerId);
+
+                var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
+                
+                IEnumerable<Property> relatedProperties = null;
+
+                if (propertyDetail.City != null)
+                {
+                    relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
+                }
+               
+                // Tạo đối tượng chứa thông tin PropertyDetail và danh sách các Property khác
+                var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
+
+                return result;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetAllProjects()
+        {
+            try
+            {
+                IEnumerable<Project> result = await _propertyRepository.GetAllProjects();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<ProjectDetail> GetProjectDetail(string id)
+        {
+            try
+            {
+                ProjectDetail result = await _propertyRepository.GetProjectDetail(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID)
+        {
+            try
+            {
+                var projectDetail = await _propertyRepository.GetProjectDetail(projectID);
+
+                IEnumerable<Property> relatedProperties = await _propertyRepository.GetRelatedPropertiesByProjectIDAsync(projectID);
+
+                var result = new ProjectDetailWithRelatedProperties(projectDetail, relatedProperties);
+
+                return result;
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID)
+        {
+            try
+            {
+                IEnumerable<Property> result = await _propertyRepository.GetPropertiesByUserIDAsync(UserID);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetLastestProject()
+        {
+            try
+            {
+                IEnumerable<Project> result = await _propertyRepository.GetLastestProject();
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
     }
 }

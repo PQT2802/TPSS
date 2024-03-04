@@ -19,6 +19,8 @@ public partial class Project
 
     public string? Ward { get; set; }
 
+    public string? Image { get; set; }
+
     public virtual ICollection<ProjectDetail> ProjectDetails { get; set; } = new List<ProjectDetail>();
 
     public virtual ICollection<Property> Properties { get; set; } = new List<Property>();

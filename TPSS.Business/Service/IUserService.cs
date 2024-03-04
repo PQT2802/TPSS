@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 
@@ -19,6 +15,6 @@ namespace TPSS.Business.Service
         public  Task<dynamic> GetInforUserAsync(string userId);
         public Task<int> UpdateUserRole(string userId, string roleId);
         public Task<int> UpdateIsActive(string userId);
-
+        public Task<ResponseObject> GetTokenFirebase(string firebaseToken);
     }
 }

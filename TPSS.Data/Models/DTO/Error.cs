@@ -9,6 +9,10 @@ namespace TPSS.Data.Models.DTO
     public sealed record Error(string Code, string Description)
     {
         public static readonly Error None = new(string.Empty, string.Empty);
+
+        
+
         public static readonly List<Error> Failure = new List<Error>();
+
     }
 }

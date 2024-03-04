@@ -21,6 +21,9 @@ namespace Test_1
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddFirebaseSDK(builder.Configuration);
+
             builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -76,6 +79,7 @@ namespace Test_1
 
             builder.Services.AddServicesConfiguration();
             builder.Services.AddProblemDetails();
+            builder.Services.AddCors();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -85,7 +89,9 @@ namespace Test_1
                 app.UseSwaggerUI();
             }
 
+
             //app.UseCors("CorsPolicy");
+
             app.UseCors(builder =>
             {
                 builder

@@ -9,8 +9,6 @@ public partial class ProjectDetail
 
     public string ProjectDetailId { get; set; } = null!;
 
-    public string? Images { get; set; }
-
     public DateTime? CreateDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }

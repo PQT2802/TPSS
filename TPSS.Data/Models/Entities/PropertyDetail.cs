@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TPSS.Data.Models.Entities;
 
-public partial class PropertyDetail
+public partial class PropertyDetail : Property
 {
     public string PropertyDetailId { get; set; } = null!;
 
@@ -28,6 +28,8 @@ public partial class PropertyDetail
     public bool? Verify { get; set; }
 
     public string? Status { get; set; }
+
+    public string? CreateBy { get; set; }
 
     public virtual Property? Property { get; set; }
 }

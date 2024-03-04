@@ -13,8 +13,6 @@ public partial class Property
 
     public double? Price { get; set; }
 
-    public string? Images { get; set; }
-
     public double? Area { get; set; }
 
     public string? City { get; set; }
@@ -26,6 +24,8 @@ public partial class Property
     public string? Street { get; set; }
 
     public bool? IsDelete { get; set; }
+
+    public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
 
     public virtual ICollection<LikeList> LikeLists { get; set; } = new List<LikeList>();
 

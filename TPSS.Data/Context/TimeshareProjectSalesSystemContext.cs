@@ -20,6 +20,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
     public virtual DbSet<AddressDetail> AddressDetails { get; set; }
 
+    public virtual DbSet<Album> Albums { get; set; }
+
     public virtual DbSet<Contract> Contracts { get; set; }
 
     public virtual DbSet<LikeList> LikeLists { get; set; }
@@ -69,6 +71,20 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
                 .HasConstraintName("FK_AddressDetail_Address");
         });
 
+        modelBuilder.Entity<Album>(entity =>
+        {
+            entity.HasKey(e => e.ImageId);
+
+            entity.ToTable("Album");
+
+            entity.Property(e => e.ImageId).HasMaxLength(15);
+            entity.Property(e => e.PropertyId).HasMaxLength(15);
+
+            entity.HasOne(d => d.Property).WithMany(p => p.Albums)
+                .HasForeignKey(d => d.PropertyId)
+                .HasConstraintName("FK_Album_Property");
+        });
+
         modelBuilder.Entity<Contract>(entity =>
         {
             entity.HasKey(e => e.ContractId).HasName("PK__Contract__C90D34099AA800A1");
@@ -80,11 +96,14 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.ContractId)
                 .HasMaxLength(15)
                 .HasColumnName("ContractID");
+            entity.Property(e => e.Contract1)
+                .HasMaxLength(200)
+                .HasColumnName("Contract");
             entity.Property(e => e.ContractStatus).HasMaxLength(50);
-            entity.Property(e => e.ContractTerms).HasMaxLength(200);
             entity.Property(e => e.ReservationId)
                 .HasMaxLength(15)
                 .HasColumnName("ReservationID");
+            entity.Property(e => e.SignDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Reservation).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.ReservationId)
@@ -124,21 +143,22 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Payment");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Transact__1B39A9762989D08C");
 
-            entity.Property(e => e.PaymentId)
-                .HasMaxLength(15)
-                .HasColumnName("PaymentID");
-            entity.Property(e => e.TransactionId)
-                .HasMaxLength(15)
-                .HasColumnName("TransactionID");
+            entity.ToTable("Payment");
 
-            entity.HasOne(d => d.Transaction).WithMany()
-                .HasForeignKey(d => d.TransactionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Payment_Transaction");
+            entity.HasIndex(e => e.ContractId, "IX_Transaction_Processing_ContractID");
+
+            entity.Property(e => e.PaymentId).HasMaxLength(15);
+            entity.Property(e => e.CommissionCalculation).HasColumnName("Commission_Calculation");
+            entity.Property(e => e.ContractId)
+                .HasMaxLength(15)
+                .HasColumnName("ContractID");
+            entity.Property(e => e.Status).HasMaxLength(50);
+
+            entity.HasOne(d => d.Contract).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.ContractId)
+                .HasConstraintName("FK__Transacti__Contr__36B12243");
         });
 
         modelBuilder.Entity<Project>(entity =>
@@ -260,24 +280,19 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__1B39A9762989D08C");
-
             entity.ToTable("Transaction");
-
-            entity.HasIndex(e => e.ContractId, "IX_Transaction_Processing_ContractID");
 
             entity.Property(e => e.TransactionId)
                 .HasMaxLength(15)
                 .HasColumnName("TransactionID");
-            entity.Property(e => e.CommissionCalculation).HasColumnName("Commission_Calculation");
-            entity.Property(e => e.ContractId)
+            entity.Property(e => e.PaymentId)
                 .HasMaxLength(15)
-                .HasColumnName("ContractID");
-            entity.Property(e => e.Status).HasMaxLength(50);
+                .HasColumnName("PaymentID");
 
-            entity.HasOne(d => d.Contract).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.ContractId)
-                .HasConstraintName("FK__Transacti__Contr__36B12243");
+            entity.HasOne(d => d.Payment).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.PaymentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Transaction_Payment");
         });
 
         modelBuilder.Entity<User>(entity =>

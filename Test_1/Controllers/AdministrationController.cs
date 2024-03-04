@@ -22,6 +22,11 @@ namespace TPSS.API.Controllers
             var result = await _userService.UpdateUserRole(userId, roleId);
             return Ok(result);
         }
-
+        [HttpDelete("DeleteAccount")]
+        public async Task<IActionResult> DeleteUserAsynce(string userId)
+        {
+            var result = await _userService.DeleteUserAsync(userId);
+            return Ok(result);
+        }
     }
 }

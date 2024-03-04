@@ -9,9 +9,7 @@ public partial class Contract
 
     public string? ReservationId { get; set; }
 
-    public DateOnly? ContractDate { get; set; }
-
-    public string? ContractTerms { get; set; }
+    public DateTime? SignDate { get; set; }
 
     public double? Deposit { get; set; }
 
@@ -19,7 +17,9 @@ public partial class Contract
 
     public bool? IsDelete { get; set; }
 
-    public virtual Reservation? Reservation { get; set; }
+    public string? Contract1 { get; set; }
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual Reservation? Reservation { get; set; }
 }

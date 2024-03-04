@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure;
+using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -268,6 +270,27 @@ namespace TPSS.Business.Service.Impl
             catch (Exception e)
             {
                 throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<ResponseObject> GetTokenFirebase(string firebaseToken)
+        {
+            try
+            {
+                FirebaseToken decryptedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(firebaseToken);
+                string uid = decryptedToken.Uid;
+                UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid); // bien cua firebase
+                string email = userRecord.Email;
+                string lastName = userRecord.DisplayName;
+                string ImageUrl = userRecord.PhotoUrl.ToString();
+                User userObject = await _userRepository.GetUserByEmail(email);
+                ResponseObject response = new();
+                return null;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
         public async Task<int> DeleteUserAsync(string id)
