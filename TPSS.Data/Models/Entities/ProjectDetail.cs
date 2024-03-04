@@ -13,21 +13,11 @@ public partial class ProjectDetail
 
     public DateTime? CreateDate { get; set; }
 
-<<<<<<< HEAD
-    public DateTime? CreateDate { get; set; }
-
-    public DateTime? UpdateDate { get; set; }
-
-    public DateTime? CreateBy { get; set; }
-
-    public DateTime? UpdateBy { get; set; }
-=======
     public DateTime? UpdateDate { get; set; }
 
     public string? CreateBy { get; set; }
 
     public string? UpdateBy { get; set; }
->>>>>>> DEV_THANG
 
     public string? ProjectDescription { get; set; }
 

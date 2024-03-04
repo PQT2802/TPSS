@@ -16,6 +16,7 @@ using TPSS.Data.Helper;
 using TPSS.Data.Models.Entities;
 using System.Reflection.Metadata;
 using System.Data.Common;
+using System.Collections;
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -29,41 +30,22 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-<<<<<<< HEAD
-                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Image, Area, City, District, Ward, Street, IsDelete) " +
-                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Image, @Area, @City, @District, @Ward, @Street, @IsDelete)";
+
+                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Images, Area, City, District, Ward, Street, IsDelete) " +
+                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Images, @Area, @City, @District, @Ward, @Street, @IsDelete)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyID", property.PropertyId, DbType.String);
                 parameter.Add("ProjectID", property.ProjectId, DbType.String);
                 parameter.Add("PropertyTitle", property.PropertyTitle, DbType.String);
                 parameter.Add("Price", property.Price, DbType.Double);
-                parameter.Add("Image", property.Image, DbType.String);
+                parameter.Add("Images", property.Images, DbType.String);
                 parameter.Add("Area", property.Area, DbType.Double);
                 parameter.Add("City", property.City, DbType.String);
                 parameter.Add("District", property.District, DbType.String);
                 parameter.Add("Ward", property.Ward, DbType.String);
                 parameter.Add("Street", property.Street, DbType.String);
                 parameter.Add("IsDelete", property.IsDelete, DbType.Boolean);
-
-=======
-                
-                var propertyQuery = "INSERT INTO Property (PropertyId, ProjectId, PropertyTitle, Price, Image, Area, Province, City, District, Ward, Street, IsDelete) " +
-                                    "VALUES(@PropertyId, @ProjectId, @PropertyTitle, @Price, @Image, @Area, @Province, @City, @District, @Ward, @Street, @IsDelete)";
-                var propertyParameters = new DynamicParameters();
-                propertyParameters.Add("PropertyId", property.PropertyId, DbType.String);
-                propertyParameters.Add("ProjectId", property.ProjectId, DbType.String);
-                propertyParameters.Add("PropertyTitle", property.PropertyTitle, DbType.String);
-                propertyParameters.Add("Price", property.Price, DbType.Double);
-                //propertyParameters.Add("Image", property.Image, DbType.String);
-                propertyParameters.Add("Area", property.Area, DbType.Double);
-                //propertyParameters.Add("Province", property.Province, DbType.String);
-                propertyParameters.Add("City", property.City, DbType.String);
-                propertyParameters.Add("District", property.District, DbType.String);
-                propertyParameters.Add("Ward", property.Ward, DbType.String);
-                propertyParameters.Add("Street", property.Street, DbType.String);
-                propertyParameters.Add("IsDelete", property.IsDelete, DbType.Boolean);
->>>>>>> DEV_THANG
 
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
@@ -82,7 +64,7 @@ namespace TPSS.Data.Repository.Impl
 
         
 
-        public async Task<IEnumerable<HomePage>> GetPropertyForHomePage()
+        public async Task<IEnumerable<dynamic>> GetPropertyForHomePage()
         {
             try
             {
@@ -90,29 +72,10 @@ namespace TPSS.Data.Repository.Impl
                     "FROM [dbo].[Property] AS p " +
                     "INNER JOIN [dbo].[PropertyDetail] AS pd ON p.[PropertyID] = pd.[PropertyID]";
                 
-<<<<<<< HEAD
-                using var connection = CreateConnection();
-                return await connection.QueryAsync<HomePage>(query);
-=======
-                var propertyDetailQuery = "INSERT INTO PropertyDetail (PropertyDetailId, PropertyId, OwnerId, PropertyTitle, Description, CreateDate, UpdateDate, CreateBy, UpdateBy, Images, Service, VerifyBy, VerifyDate) " +
-                                          "VALUES(@PropertyDetailId, @PropertyId, @OwnerId, @PropertyTitle, @Description, @CreateDate, @UpdateDate, @CreateBy, @UpdateBy, @Images, @Service, @VerifyBy, @VerifyDate)";
-                var propertyDetailParameters = new DynamicParameters();
-                propertyDetailParameters.Add("PropertyDetailId", propertyDetail.PropertyDetailId, DbType.String);
-                propertyDetailParameters.Add("PropertyId", propertyDetail.PropertyId, DbType.String);
-                propertyDetailParameters.Add("OwnerId", propertyDetail.OwnerId, DbType.String);
-                //propertyDetailParameters.Add("PropertyTitle", propertyDetail.PropertyTitle, DbType.String);
-                propertyDetailParameters.Add("Description", propertyDetail.Description, DbType.String);
-                propertyDetailParameters.Add("CreateDate", propertyDetail.CreateDate, DbType.Date);
-                propertyDetailParameters.Add("UpdateDate", propertyDetail.UpdateDate, DbType.Date);
-                //propertyDetailParameters.Add("CreateBy", propertyDetail.CreateBy, DbType.String);
-                propertyDetailParameters.Add("UpdateBy", propertyDetail.UpdateBy, DbType.String);
-                //propertyDetailParameters.Add("Images", propertyDetail.Images, DbType.String);
-                propertyDetailParameters.Add("Service", propertyDetail.Service, DbType.String);
-                propertyDetailParameters.Add("VerifyBy", propertyDetail.VerifyBy, DbType.String);
-                propertyDetailParameters.Add("VerifyDate", propertyDetail.VerifyDate, DbType.Date);
 
-                return await connection.ExecuteAsync(propertyDetailQuery, propertyDetailParameters);
->>>>>>> DEV_THANG
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<dynamic>(query);
+
             }
             catch (Exception e)
             {
@@ -129,19 +92,17 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, PropertyTitle, Description, CreateDate, UpdateDate, UpdateBy, Image, Service, VerifyBy, VerifyDate, Verify, Status) " +
-                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @PropertyTitle, @Description, @CreateDate, @UpdateDate, @UpdateBy, @Image, @Service, @VerifyBy, @VerifyDate, @Verify, @Status)";
+                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, Description, CreateDate, UpdateDate, UpdateBy, Service, VerifyBy, VerifyDate, Verify, Status) " +
+                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @Description, @CreateDate, @UpdateDate, @UpdateBy, @Service, @VerifyBy, @VerifyDate, @Verify, @Status)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyDetailID", detail.PropertyDetailId, DbType.String);
                 parameter.Add("PropertyID", detail.PropertyId, DbType.String);
                 parameter.Add("OwnerID", detail.OwnerId, DbType.String);
-                parameter.Add("PropertyTitle", detail.PropertyTitle, DbType.String);
                 parameter.Add("Description", detail.Description, DbType.String);
                 parameter.Add("CreateDate", detail.CreateDate, DbType.DateTime);
                 parameter.Add("UpdateDate", detail.UpdateDate, DbType.DateTime);
                 parameter.Add("UpdateBy", detail.UpdateBy, DbType.String);
-                parameter.Add("Image", detail.Image, DbType.String);
                 parameter.Add("Service", detail.Service, DbType.String);
                 parameter.Add("VerifyBy", detail.VerifyBy, DbType.String);
                 parameter.Add("VerifyDate", detail.VerifyDate, DbType.DateTime);

@@ -10,11 +10,6 @@ namespace TPSS.Data.Models.Entities
     {
         public Property Property { get; set; }
         public PropertyDetail PropertyDetail { get; set; }
-
-        public HomePage(Property property, PropertyDetail propertyDetail) 
-        {
-            PropertyDetail = propertyDetail;
-            Property = property;
-        }
+        public HomePage() { }
     }
 }

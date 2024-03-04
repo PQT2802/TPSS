@@ -44,9 +44,8 @@ namespace TPSS.Business.Service.Impl
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
                 property.Price = propertyDTO.Price;
-                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
+                property.Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
                 property.Area = propertyDTO.Area;
-                ///property.Province = propertyDTO.Province;
                 property.City = propertyDTO.City;
                 property.District = propertyDTO.District;
                 property.Ward = propertyDTO.Ward;
@@ -118,13 +117,27 @@ namespace TPSS.Business.Service.Impl
             throw new NotImplementedException();
         }    
 
-        public async Task<IEnumerable<HomePage>> GetPropertyForHomePage()
+        public async Task<IEnumerable<dynamic>> GetPropertyForHomePage()
         {
             try
             {
 
-                IEnumerable<HomePage> result = await _propertyRepository.GetPropertyForHomePage();
-                return result;
+                var resultList = await _propertyRepository.GetPropertyForHomePage();
+
+                // Assuming that each item in resultList has an 'Images' property
+                foreach (var item in resultList)
+                {
+                    // Split the image string into an array
+                    string[] imageArray = item.Images.ToString().Split(',');
+
+                    // Create a List<string> from the array
+                    List<string> imageList = new List<string>(imageArray);
+
+                    item.ImageList = imageList;
+                }
+
+
+                return resultList;
             }
             catch (Exception e)
             {
@@ -274,5 +287,6 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
     }
 }
