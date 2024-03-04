@@ -8,6 +8,7 @@ namespace TPSS.Data.Models.DTO
 {
     public class ResponseObject
     {
+        public string UserId { get; set; }
         public string Avatar { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }

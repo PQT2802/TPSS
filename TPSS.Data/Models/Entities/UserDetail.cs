@@ -31,5 +31,7 @@ public partial class UserDetail
 
     public string UserDetailId { get; set; } = null!;
 
+    public bool? IsDelete { get; set; }
+
     public virtual User User { get; set; } = null!;
 }

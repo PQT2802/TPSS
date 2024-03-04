@@ -19,13 +19,22 @@ public partial class PropertyDetail : Property
 
     public string? Service { get; set; }
 
+<<<<<<< HEAD
     public bool? Verify { get; set; }
 
+=======
+>>>>>>> DEV_THANG
     public string? VerifyBy { get; set; }
 
     public DateTime? VerifyDate { get; set; }
 
+<<<<<<< HEAD
     public string? Status {  get; set; }
+=======
+    public bool? Verify { get; set; }
+
+    public string? Status { get; set; }
+>>>>>>> DEV_THANG
 
     public virtual Property? Property { get; set; }
 }

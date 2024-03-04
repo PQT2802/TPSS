@@ -34,15 +34,22 @@ namespace TPSS.API.Controllers
 
 
         [HttpGet]
-       
+        
         public async Task<IActionResult> GetUserdAsync()
         {
             CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
             var result = await _userService.GetInforUserAsync(c.UserId);
             return Ok(result);
         }
-
-
+        [HttpPost("UpdateUserProfile")]
+        
+        public async Task<IActionResult> UpdateUserProfileAsync(UpdateUserObject updateUser)
+        {
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            updateUser.UserId = c.UserId;
+            var result = await _userService.UpdateUserAsync(updateUser);
+            return Ok(result);
+        }
 
     }
 

@@ -12,13 +12,28 @@ namespace TPSS.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    AddressId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.AddressId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Project",
                 columns: table => new
                 {
                     ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ProjectName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: true)
+                    IsDelete = table.Column<bool>(type: "bit", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -38,17 +53,35 @@ namespace TPSS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AddressDetail",
+                columns: table => new
+                {
+                    AddressDetailId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    AddressId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AddressDetail", x => x.AddressDetailId);
+                    table.ForeignKey(
+                        name: "FK_AddressDetail_Address",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "AddressId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectDetail",
                 columns: table => new
                 {
                     ProjectDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreateDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    UpdateDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    CreateBy = table.Column<DateOnly>(type: "date", nullable: true),
-                    UpdateBy = table.Column<DateOnly>(type: "date", nullable: true),
+                    Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProjectDescription = table.Column<string>(type: "text", nullable: true),
                     Verify = table.Column<bool>(type: "bit", nullable: true)
                 },
@@ -67,12 +100,11 @@ namespace TPSS.Data.Migrations
                 columns: table => new
                 {
                     PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     PropertyTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Area = table.Column<double>(type: "float", nullable: true),
-                    Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     District = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -94,13 +126,13 @@ namespace TPSS.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: true),
-                    RoleId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     isActive = table.Column<bool>(type: "bit", nullable: true),
-                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,16 +151,15 @@ namespace TPSS.Data.Migrations
                     PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    PropertyTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "ntext", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    CreateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     UpdateBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Service = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VerifyBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    VerifyDate = table.Column<DateTime>(type: "datetime", nullable: true)
+                    VerifyBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    VerifyDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Verify = table.Column<bool>(type: "bit", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +233,8 @@ namespace TPSS.Data.Migrations
                     UpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     CreateBy = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     UpdateBy = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    TaxIdentificationNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    TaxIdentificationNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -276,6 +308,11 @@ namespace TPSS.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AddressDetail_AddressId",
+                table: "AddressDetail",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contract_ReservationID",
                 table: "Contract",
                 column: "ReservationID");
@@ -347,6 +384,9 @@ namespace TPSS.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AddressDetail");
+
+            migrationBuilder.DropTable(
                 name: "LikeList");
 
             migrationBuilder.DropTable(
@@ -360,6 +400,9 @@ namespace TPSS.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserDetail");
+
+            migrationBuilder.DropTable(
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "Transaction");

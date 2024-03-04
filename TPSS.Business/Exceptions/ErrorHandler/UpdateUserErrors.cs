@@ -21,6 +21,9 @@ namespace TPSS.Business.Exceptions.ErrorHandler
      "User.PhoneIsInvalid", $"The phone number:'{phone}' is invalid!!");
         public static Error PhoneAlreadyUsed(string phone) => new(
      "User.PhoneAlreadyUsed", $"The phone number:'{phone}' already used!!");
-
+        public static Error PersonalIdIsInvalid(string personalId) => new(
+     "User.PersonalIdIsInvalid", $"The personalID number:'{personalId}' is invalid!!");
+        public static Error PersonalIdAlreadyUsed(string personalId) => new(
+     "User.PersonalIdAlreadyUsed", $"The personalID number:'{personalId}' already used!!");
     }
 }

@@ -23,6 +23,7 @@ namespace TPSS.Business.Common
         private static readonly Regex regexPassword = new(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 
         private static readonly Regex regexPhone = new("^\\+?[1-9][0-9]{7,14}$");
+        private static readonly Regex regexPersonalId = new(@"^\d{12}$");
 
 
         public static bool IsValidUsername(string value) 
@@ -60,6 +61,13 @@ namespace TPSS.Business.Common
         {
             bool result;
             Match match = regexPhone.Match(value);
+            result = value.Length != 0 && match.Success;
+            return result;
+        }
+        public static bool IsValidPersonalId(string value)
+        {
+            bool result;
+            Match match = regexPersonalId.Match(value);
             result = value.Length != 0 && match.Success;
             return result;
         }
