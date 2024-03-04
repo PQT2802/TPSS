@@ -16,6 +16,10 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
     {
     }
 
+    public virtual DbSet<Address> Addresses { get; set; }
+
+    public virtual DbSet<AddressDetail> AddressDetails { get; set; }
+
     public virtual DbSet<Contract> Contracts { get; set; }
 
     public virtual DbSet<LikeList> LikeLists { get; set; }
@@ -46,6 +50,25 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.ToTable("Address");
+
+            entity.Property(e => e.AddressId).HasMaxLength(15);
+        });
+
+        modelBuilder.Entity<AddressDetail>(entity =>
+        {
+            entity.ToTable("AddressDetail");
+
+            entity.Property(e => e.AddressDetailId).HasMaxLength(15);
+            entity.Property(e => e.AddressId).HasMaxLength(15);
+
+            entity.HasOne(d => d.Address).WithMany(p => p.AddressDetails)
+                .HasForeignKey(d => d.AddressId)
+                .HasConstraintName("FK_AddressDetail_Address");
+        });
+
         modelBuilder.Entity<Contract>(entity =>
         {
             entity.HasKey(e => e.ContractId).HasName("PK__Contract__C90D34099AA800A1");
@@ -138,10 +161,12 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.ProjectDetailId)
                 .HasMaxLength(15)
                 .HasColumnName("ProjectDetailID");
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.ProjectDescription).HasColumnType("text");
             entity.Property(e => e.ProjectId)
                 .HasMaxLength(15)
                 .HasColumnName("ProjectID");
+            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Project).WithMany(p => p.ProjectDetails)
                 .HasForeignKey(d => d.ProjectId)
@@ -166,7 +191,6 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.Properties)
                 .HasForeignKey(d => d.ProjectId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Property__Projec__2B3F6F97");
         });
 
@@ -177,7 +201,6 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.PropertyDetailId)
                 .HasMaxLength(15)
                 .HasColumnName("PropertyDetailID");
-            entity.Property(e => e.CreateBy).HasMaxLength(15);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasColumnType("ntext");
             entity.Property(e => e.OwnerId)
@@ -269,7 +292,6 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_User_Role");
         });
 

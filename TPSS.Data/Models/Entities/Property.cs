@@ -7,17 +7,15 @@ public partial class Property
 {
     public string PropertyId { get; set; } = null!;
 
-    public string ProjectId { get; set; } = null!;
+    public string? ProjectId { get; set; }
 
     public string? PropertyTitle { get; set; }
 
     public double? Price { get; set; }
 
-    public string? Image { get; set; }
+    public string? Images { get; set; }
 
     public double? Area { get; set; }
-
-    public string? Province { get; set; }
 
     public string? City { get; set; }
 
@@ -31,7 +29,7 @@ public partial class Property
 
     public virtual ICollection<LikeList> LikeLists { get; set; } = new List<LikeList>();
 
-    public virtual Project Project { get; set; } = null!;
+    public virtual Project? Project { get; set; }
 
     public virtual ICollection<PropertyDetail> PropertyDetails { get; set; } = new List<PropertyDetail>();
 

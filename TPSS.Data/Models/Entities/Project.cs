@@ -13,6 +13,12 @@ public partial class Project
 
     public bool? IsDelete { get; set; }
 
+    public string? City { get; set; }
+
+    public string? District { get; set; }
+
+    public string? Ward { get; set; }
+
     public virtual ICollection<ProjectDetail> ProjectDetails { get; set; } = new List<ProjectDetail>();
 
     public virtual ICollection<Property> Properties { get; set; } = new List<Property>();

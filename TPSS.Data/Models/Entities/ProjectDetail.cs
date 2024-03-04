@@ -9,17 +9,15 @@ public partial class ProjectDetail
 
     public string ProjectDetailId { get; set; } = null!;
 
-    public string? ProjectName { get; set; }
+    public string? Images { get; set; }
 
-    public string? Image { get; set; }
+    public DateTime? CreateDate { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
-    public DateOnly? UpdateDate { get; set; }
+    public string? CreateBy { get; set; }
 
-    public DateOnly? CreateBy { get; set; }
-
-    public DateOnly? UpdateBy { get; set; }
+    public string? UpdateBy { get; set; }
 
     public string? ProjectDescription { get; set; }
 

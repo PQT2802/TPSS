@@ -29,9 +29,9 @@ namespace TPSS.Data.Repository.Impl
                 propertyParameters.Add("ProjectId", property.ProjectId, DbType.String);
                 propertyParameters.Add("PropertyTitle", property.PropertyTitle, DbType.String);
                 propertyParameters.Add("Price", property.Price, DbType.Double);
-                propertyParameters.Add("Image", property.Image, DbType.String);
+                //propertyParameters.Add("Image", property.Image, DbType.String);
                 propertyParameters.Add("Area", property.Area, DbType.Double);
-                propertyParameters.Add("Province", property.Province, DbType.String);
+                //propertyParameters.Add("Province", property.Province, DbType.String);
                 propertyParameters.Add("City", property.City, DbType.String);
                 propertyParameters.Add("District", property.District, DbType.String);
                 propertyParameters.Add("Ward", property.Ward, DbType.String);
@@ -48,11 +48,11 @@ namespace TPSS.Data.Repository.Impl
                 propertyDetailParameters.Add("PropertyDetailId", propertyDetail.PropertyDetailId, DbType.String);
                 propertyDetailParameters.Add("PropertyId", propertyDetail.PropertyId, DbType.String);
                 propertyDetailParameters.Add("OwnerId", propertyDetail.OwnerId, DbType.String);
-                propertyDetailParameters.Add("PropertyTitle", propertyDetail.PropertyTitle, DbType.String);
+                //propertyDetailParameters.Add("PropertyTitle", propertyDetail.PropertyTitle, DbType.String);
                 propertyDetailParameters.Add("Description", propertyDetail.Description, DbType.String);
                 propertyDetailParameters.Add("CreateDate", propertyDetail.CreateDate, DbType.Date);
                 propertyDetailParameters.Add("UpdateDate", propertyDetail.UpdateDate, DbType.Date);
-                propertyDetailParameters.Add("CreateBy", propertyDetail.CreateBy, DbType.String);
+                //propertyDetailParameters.Add("CreateBy", propertyDetail.CreateBy, DbType.String);
                 propertyDetailParameters.Add("UpdateBy", propertyDetail.UpdateBy, DbType.String);
                 //propertyDetailParameters.Add("Images", propertyDetail.Images, DbType.String);
                 propertyDetailParameters.Add("Service", propertyDetail.Service, DbType.String);
