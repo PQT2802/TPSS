@@ -68,9 +68,12 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT * " +
-                    "FROM [dbo].[Property] AS p " +
-                    "INNER JOIN [dbo].[PropertyDetail] AS pd ON p.[PropertyID] = pd.[PropertyID]";
+                var query = "SELECT p.*,proj.ProjectName, ud.Phone, u.Firstname, u.Lastname " +
+                    "FROM dbo.Property AS p " +
+                    "INNER JOIN dbo.Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN dbo.PropertyDetail AS pd ON p.PropertyID = pd.PropertyID " +
+                    "LEFT JOIN dbo.[User] AS u ON pd.OwnerID = u.UserID " +
+                    "LEFT JOIN dbo.UserDetail AS ud ON u.UserID = ud.UserID;";
                 
 
                 using var connection = CreateConnection();
