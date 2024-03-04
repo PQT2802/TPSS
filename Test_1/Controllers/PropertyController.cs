@@ -40,7 +40,7 @@ namespace TPSS.API.Controllers
         }
 
         [HttpGet("HomePage")]
-        public async Task<ActionResult<IEnumerable<Property>>> GetPropertyForHomePage()
+        public async Task<ActionResult<IEnumerable<HomePage>>> GetPropertyForHomePage()
         {
             var result = await _propertyService.GetPropertyForHomePage();
             return Ok(result);
@@ -62,9 +62,10 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync( [FromForm]PropertyDTO propertyDTO)
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
         {
-            var result = await _propertyService.CreatePropertyAsync(propertyDTO);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO,c.UserId);
             return Ok(result);
         }
 
@@ -75,6 +76,7 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.GetAllProjects();
             return Ok(result);
         }
+
         [HttpGet("ProjectDetail")]
         public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
         {
@@ -82,25 +84,32 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
-
-        ///test image
-        //[httppost("image")]
-        //public async task<iactionresult> uploadimagetofirebasestorage( iformfile image, string foldername)
-        //{
-
-        //    var result = await _imageservice.uploadimagetofirebasestorage(image, foldername);
-
-        //    return ok(result);
-        //}
-
-        [HttpPost("Images")]
-        public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage([FromBody] List<IFormFile> files)
+        [HttpGet("LastestProject")]
+        public async Task<ActionResult<IEnumerable<Project>>> GetLastestProject()
         {
-
-            var result = await _imageService.UploadMultipleImagesToFirebaseStorage(files);
-
+            var result = await _propertyService.GetLastestProject();
             return Ok(result);
         }
+
+
+        ///test image
+        //[HttpPost("Image")]
+        //public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
+        //{
+
+        //    var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
+
+        //    return Ok(result);
+        //}
+
+        //[HttpPost("Images")]
+        //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
+        //{
+
+        //    var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
+
+        //    return Ok(result);
+        //}
 
         //[HttpPost("ImagesProper")]
         //public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)

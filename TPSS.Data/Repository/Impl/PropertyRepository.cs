@@ -29,8 +29,8 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Image, Area, Province, City, District, Ward, Street, IsDelete) " +
-                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Image, @Area, @Province, @City, @District, @Ward, @Street, @IsDelete)";
+                var query = "INSERT INTO [Property] (PropertyID, ProjectID, PropertyTitle, Price, Image, Area, City, District, Ward, Street, IsDelete) " +
+                    "VALUES(@PropertyID, @ProjectID, @PropertyTitle, @Price, @Image, @Area, @City, @District, @Ward, @Street, @IsDelete)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyID", property.PropertyId, DbType.String);
@@ -39,7 +39,6 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("Price", property.Price, DbType.Double);
                 parameter.Add("Image", property.Image, DbType.String);
                 parameter.Add("Area", property.Area, DbType.Double);
-                parameter.Add("Province", property.Province, DbType.String);
                 parameter.Add("City", property.City, DbType.String);
                 parameter.Add("District", property.District, DbType.String);
                 parameter.Add("Ward", property.Ward, DbType.String);
@@ -64,14 +63,16 @@ namespace TPSS.Data.Repository.Impl
 
         
 
-        public async Task<IEnumerable<Property>> GetPropertyForHomePage()
+        public async Task<IEnumerable<HomePage>> GetPropertyForHomePage()
         {
             try
             {
-                var query = "SELECT * FROM dbo.Property";
+                var query = "SELECT * " +
+                    "FROM [dbo].[Property] AS p " +
+                    "INNER JOIN [dbo].[PropertyDetail] AS pd ON p.[PropertyID] = pd.[PropertyID]";
                 
                 using var connection = CreateConnection();
-                return await connection.QueryAsync<Property>(query);
+                return await connection.QueryAsync<HomePage>(query);
             }
             catch (Exception e)
             {
@@ -88,8 +89,8 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, PropertyTitle, Description, CreateDate, UpdateDate, CreateBy, UpdateBy, Image, Service, VerifyBy, VerifyDate) " +
-                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @PropertyTitle, @Description, @CreateDate, @UpdateDate, @CreateBy, @UpdateBy, @Image, @Service, @VerifyBy, @VerifyDate)";
+                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, PropertyTitle, Description, CreateDate, UpdateDate, UpdateBy, Image, Service, VerifyBy, VerifyDate, Verify, Status) " +
+                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @PropertyTitle, @Description, @CreateDate, @UpdateDate, @UpdateBy, @Image, @Service, @VerifyBy, @VerifyDate, @Verify, @Status)";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyDetailID", detail.PropertyDetailId, DbType.String);
@@ -99,12 +100,13 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("Description", detail.Description, DbType.String);
                 parameter.Add("CreateDate", detail.CreateDate, DbType.DateTime);
                 parameter.Add("UpdateDate", detail.UpdateDate, DbType.DateTime);
-                parameter.Add("CreateBy", detail.CreateBy, DbType.String);
                 parameter.Add("UpdateBy", detail.UpdateBy, DbType.String);
                 parameter.Add("Image", detail.Image, DbType.String);
                 parameter.Add("Service", detail.Service, DbType.String);
                 parameter.Add("VerifyBy", detail.VerifyBy, DbType.String);
                 parameter.Add("VerifyDate", detail.VerifyDate, DbType.DateTime);
+                parameter.Add("Verify", detail.Verify, DbType.Boolean);
+                parameter.Add("Status", detail.Status, DbType.String);
 
 
                 using var connection = CreateConnection();
@@ -329,6 +331,21 @@ namespace TPSS.Data.Repository.Impl
             catch (Exception e)
             {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetLastestProject()
+        {
+            try
+            {
+                var query = "SELECT TOP 10 * FROM dbo.Project";
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Project>(query);
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message, e);
             }
         }

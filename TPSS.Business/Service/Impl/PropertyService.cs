@@ -30,30 +30,23 @@ namespace TPSS.Business.Service.Impl
 
 
         
-        public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO)
+        public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO, string userID)
         {
             try
             {
                 List<Error> Errors = new List<Error>();
 
 
-
-
-
-
                 Property property = new Property();
-
-
-
 
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
                 property.Price = propertyDTO.Price;
-                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.images, property.PropertyId);
+                property.Image = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
                 property.Area = propertyDTO.Area;
-                property.Province = propertyDTO.Province;
+                ///property.Province = propertyDTO.Province;
                 property.City = propertyDTO.City;
                 property.District = propertyDTO.District;
                 property.Ward = propertyDTO.Ward;
@@ -67,22 +60,19 @@ namespace TPSS.Business.Service.Impl
 
                     detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
                     detail.PropertyId = property.PropertyId;
-                    detail.OwnerId = propertyDTO.OwnerID;
+                    detail.OwnerId = userID;
                     detail.Description = propertyDTO.Description;
-                    detail.PropertyTitle = null;
                     detail.UpdateDate = null;
-                    detail.Image= null;
-                    detail.Verify = null;
 
                     DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
                     detail.CreateDate = currentDate;
 
-                    detail.CreateBy = propertyDTO.OwnerID;
-                    detail.UpdateBy = propertyDTO.OwnerID;
+                    detail.UpdateBy = userID;
                     detail.Service = propertyDTO.Service;
-                    //detail.Verify = false;
-                    detail.VerifyBy = propertyDTO.OwnerID;
+                    detail.Verify = false;
+                    detail.VerifyBy = null;
                     detail.VerifyDate = null;
+                    detail.Status = "Normal";
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
                 }
@@ -128,12 +118,12 @@ namespace TPSS.Business.Service.Impl
             throw new NotImplementedException();
         }    
 
-        public async Task<IEnumerable<Property>> GetPropertyForHomePage()
+        public async Task<IEnumerable<HomePage>> GetPropertyForHomePage()
         {
             try
             {
 
-                IEnumerable<Property> result = await _propertyRepository.GetPropertyForHomePage();
+                IEnumerable<HomePage> result = await _propertyRepository.GetPropertyForHomePage();
                 return result;
             }
             catch (Exception e)
@@ -192,13 +182,9 @@ namespace TPSS.Business.Service.Impl
                 
                 IEnumerable<Property> relatedProperties = null;
 
-                if (propertyDetail.City == null)
+                if (propertyDetail.City != null)
                 {
-                     relatedProperties = await _propertyRepository.GetRelatedPropertiesByProvinceAsync(propertyDetail.Province);
-                }
-                else
-                {
-                     relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
+                    relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
                 }
                
                 // Tạo đối tượng chứa thông tin PropertyDetail và danh sách các Property khác
@@ -266,6 +252,20 @@ namespace TPSS.Business.Service.Impl
             try
             {
                 IEnumerable<Property> result = await _propertyRepository.GetPropertiesByUserIDAsync(UserID);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetLastestProject()
+        {
+            try
+            {
+                IEnumerable<Project> result = await _propertyRepository.GetLastestProject();
                 return result;
             }
             catch (Exception e)

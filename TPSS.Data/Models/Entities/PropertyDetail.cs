@@ -9,27 +9,23 @@ public partial class PropertyDetail : Property
 
     public string OwnerId { get; set; } = null!;
 
-    public string? PropertyTitle { get; set; }
-
     public string? Description { get; set; }
 
     public DateTime? CreateDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 
-    public string? CreateBy { get; set; }
-
     public string? UpdateBy { get; set; }
-
-    public string? Image { get; set; }
 
     public string? Service { get; set; }
 
     public bool? Verify { get; set; }
 
-    public string VerifyBy { get; set; } = null!;
+    public string? VerifyBy { get; set; }
 
     public DateTime? VerifyDate { get; set; }
+
+    public string? Status {  get; set; }
 
     public virtual Property? Property { get; set; }
 }

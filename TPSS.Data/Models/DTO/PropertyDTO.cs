@@ -11,15 +11,11 @@ namespace TPSS.Data.Models.DTO
     {
         public string ProjectId { get; set; } = null!;
 
-        public string OwnerID { get; set; } = null!;
-
         public string? PropertyTitle { get; set; }
 
         public double? Price { get; set; }
 
         public double? Area { get; set; }
-
-        public string? Province { get; set; }
 
         public string? City { get; set; }
 
@@ -33,7 +29,7 @@ namespace TPSS.Data.Models.DTO
         
         public string? Service { get; set; }
 
-        public List<IFormFile>? images {  get; set; }         
+        public IFormFileCollection? Images { get; set; }
 
     }
 }

@@ -108,7 +108,7 @@ namespace TPSS.Business.Service.Impl
         /// end test
         
         
-        public async Task<string> UploadImagesForProperty(List<IFormFile> images, string propertyID)
+        public async Task<string> UploadImagesForProperty(IFormFileCollection images, string propertyID)
         {
             try
             {
@@ -228,11 +228,6 @@ namespace TPSS.Business.Service.Impl
                 _logger.LogError(ex.StackTrace, ex);
                 throw;
             }
-        }
-
-        public Task<string> UploadMultipleImagesToFirebaseStorage(List<IFormFile> files)
-        {
-            throw new NotImplementedException();
         }
     }
 }
