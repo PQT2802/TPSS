@@ -62,10 +62,10 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO, string id )
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
         {
-            ///CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.CreatePropertyAsync(propertyDTO,id);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO,c.UserId);
             return Ok(result);
         }
 
@@ -93,14 +93,14 @@ namespace TPSS.API.Controllers
 
 
         ///test image
-        //[HttpPost("Image")]
-        //public async Task<IActionResult> UploadImageToFirebaseStorage( IFormFile image, string folderName)
-        //{
+        [HttpPost("Image")]
+        public async Task<IActionResult> LinkFolderCheck(IFormFileCollection image, string folderName)
+        {
 
-        //    var result = await _imageService.UploadImageToFirebaseStorage(image, folderName);
+            var result = await _imageService.LinkFolderCheck(image, folderName);
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
         //[HttpPost("Images")]
         //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
