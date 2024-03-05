@@ -238,8 +238,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.PropertyDetails)
                 .HasForeignKey(d => d.PropertyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PropertyDetail_Property2");
+                .HasConstraintName("FK_PropertyDetail_Property");
         });
 
         modelBuilder.Entity<Reservation>(entity =>

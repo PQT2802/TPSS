@@ -13,7 +13,7 @@ using TPSS.Data.Models.Entities;
 namespace TPSS.Data.Migrations
 {
     [DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240305033811_init")]
+    [Migration("20240305035516_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -326,7 +326,6 @@ namespace TPSS.Data.Migrations
                         .HasColumnName("OwnerID");
 
                     b.Property<string>("PropertyId")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("PropertyID");
@@ -634,8 +633,7 @@ namespace TPSS.Data.Migrations
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
                         .WithMany("PropertyDetails")
                         .HasForeignKey("PropertyId")
-                        .IsRequired()
-                        .HasConstraintName("FK_PropertyDetail_Property2");
+                        .HasConstraintName("FK_PropertyDetail_Property");
 
                     b.Navigation("Property");
                 });

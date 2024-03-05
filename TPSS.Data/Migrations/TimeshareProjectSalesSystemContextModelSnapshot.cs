@@ -323,7 +323,6 @@ namespace TPSS.Data.Migrations
                         .HasColumnName("OwnerID");
 
                     b.Property<string>("PropertyId")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("PropertyID");
@@ -631,8 +630,7 @@ namespace TPSS.Data.Migrations
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
                         .WithMany("PropertyDetails")
                         .HasForeignKey("PropertyId")
-                        .IsRequired()
-                        .HasConstraintName("FK_PropertyDetail_Property2");
+                        .HasConstraintName("FK_PropertyDetail_Property");
 
                     b.Navigation("Property");
                 });
