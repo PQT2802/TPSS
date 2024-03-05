@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPSS.Data.Context;
+using TPSS.Data.Models.Entities;
 
 #nullable disable
 
 namespace TPSS.Data.Migrations
 {
     [DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240305031437_init")]
+    [Migration("20240305035516_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -300,8 +301,64 @@ namespace TPSS.Data.Migrations
                     b.HasIndex(new[] { "ProjectId" }, "IX_Property_ProjectID");
 
                     b.ToTable("Property", (string)null);
+                });
 
-                    b.UseTptMappingStrategy();
+            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
+                {
+                    b.Property<string>("PropertyDetailId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("PropertyDetailID");
+
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("ntext");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("OwnerID");
+
+                    b.Property<string>("PropertyId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("PropertyID");
+
+                    b.Property<string>("Service")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdateBy")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("Verify")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("VerifyBy")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<DateTime?>("VerifyDate")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("PropertyDetailId")
+                        .HasName("PK_PropertyDetail_1");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("PropertyDetail", (string)null);
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Reservation", b =>
@@ -493,57 +550,6 @@ namespace TPSS.Data.Migrations
                     b.ToTable("UserDetail", (string)null);
                 });
 
-            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
-                {
-                    b.HasBaseType("TPSS.Data.Models.Entities.Property");
-
-                    b.Property<string>("CreateBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("ntext");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("OwnerID");
-
-                    b.Property<string>("PropertyDetailId")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
-                        .HasColumnName("PropertyDetailID");
-
-                    b.Property<string>("Service")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdateBy")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<bool?>("Verify")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("VerifyBy")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime?>("VerifyDate")
-                        .HasColumnType("datetime");
-
-                    b.ToTable("PropertyDetail", (string)null);
-                });
-
             modelBuilder.Entity("TPSS.Data.Models.Entities.AddressDetail", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Address", "Address")
@@ -622,6 +628,16 @@ namespace TPSS.Data.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
+                {
+                    b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
+                        .WithMany("PropertyDetails")
+                        .HasForeignKey("PropertyId")
+                        .HasConstraintName("FK_PropertyDetail_Property");
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("TPSS.Data.Models.Entities.Reservation", b =>
                 {
                     b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
@@ -662,18 +678,6 @@ namespace TPSS.Data.Migrations
                         .HasConstraintName("FK_UserDetail_User");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TPSS.Data.Models.Entities.PropertyDetail", b =>
-                {
-                    b.HasOne("TPSS.Data.Models.Entities.Property", "Property")
-                        .WithMany("PropertyDetails")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_PropertyDetail_Property");
-
-                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("TPSS.Data.Models.Entities.Address", b =>

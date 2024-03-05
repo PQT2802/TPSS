@@ -216,6 +216,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
         modelBuilder.Entity<PropertyDetail>(entity =>
         {
+            entity.HasKey(e => e.PropertyDetailId).HasName("PK_PropertyDetail_1");
+
             entity.ToTable("PropertyDetail");
 
             entity.Property(e => e.PropertyDetailId)
