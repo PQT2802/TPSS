@@ -25,20 +25,6 @@ namespace TPSS.API.Controllers
             _imageService = imageService;
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUserAsync(String id)
-        {
-            var result = await _propertyService.DeletePropertyAsync(id);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetUserByIdAsync(String id)
-        {
-            var result = await _propertyService.GetPropertyByIdAsync(id);
-            return Ok(result);
-        }
-
         [HttpGet("HomePage")]
         public async Task<ActionResult<IEnumerable<dynamic>>> GetPropertyForHomePage()
         {
@@ -46,12 +32,12 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("PropertyDetail")]
-        public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
-        {
-            var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
-            return Ok(result);
-        }
+        //[HttpGet("PropertyDetail")]
+        //public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
+        //{
+        //    var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
+        //    return Ok(result);
+        //}
 
         [HttpGet("PropertiesByUser")]
         public async Task<ActionResult<IEnumerable<Property>>> GetProjectDetailWithRelatedProperties()
@@ -69,6 +55,20 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
+        // test add with no cockies
+        [HttpPost("CreatePropertyTEST")]
+        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO)
+        {
+            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO);
+            return Ok(result);
+        }
+
+
+
+
+
+
+        //Project
 
         [HttpGet("Project")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
