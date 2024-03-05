@@ -33,7 +33,8 @@ namespace TPSS.Data.Migrations
                     IsDelete = table.Column<bool>(type: "bit", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     District = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Ward = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,7 +78,6 @@ namespace TPSS.Data.Migrations
                 {
                     ProjectDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -103,7 +103,6 @@ namespace TPSS.Data.Migrations
                     ProjectID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     PropertyTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: true),
-                    Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Area = table.Column<double>(type: "float", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     District = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -145,11 +144,30 @@ namespace TPSS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Album",
+                columns: table => new
+                {
+                    ImageId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PropertyId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageDescription = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Album", x => x.ImageId);
+                    table.ForeignKey(
+                        name: "FK_Album_Property",
+                        column: x => x.PropertyId,
+                        principalTable: "Property",
+                        principalColumn: "PropertyID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PropertyDetail",
                 columns: table => new
                 {
+                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "ntext", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -159,16 +177,18 @@ namespace TPSS.Data.Migrations
                     VerifyBy = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     VerifyDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     Verify = table.Column<bool>(type: "bit", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PropertyDetail", x => x.PropertyDetailID);
+                    table.PrimaryKey("PK__Property__70C9A755F657A2CD", x => x.PropertyID);
                     table.ForeignKey(
                         name: "FK_PropertyDetail_Property",
                         column: x => x.PropertyID,
                         principalTable: "Property",
-                        principalColumn: "PropertyID");
+                        principalColumn: "PropertyID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,11 +272,11 @@ namespace TPSS.Data.Migrations
                 {
                     ContractID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ReservationID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    ContractDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    ContractTerms = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    SignDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     Deposit = table.Column<double>(type: "float", nullable: true),
                     ContractStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: true)
+                    IsDelete = table.Column<bool>(type: "bit", nullable: true),
+                    Contract = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -269,18 +289,19 @@ namespace TPSS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transaction",
+                name: "Payment",
                 columns: table => new
                 {
-                    TransactionID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PaymentId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ContractID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Commission_Calculation = table.Column<double>(type: "float", nullable: true),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: true)
+                    IsDelete = table.Column<bool>(type: "bit", nullable: true),
+                    Amount = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Transact__1B39A9762989D08C", x => x.TransactionID);
+                    table.PrimaryKey("PK__Transact__1B39A9762989D08C", x => x.PaymentId);
                     table.ForeignKey(
                         name: "FK__Transacti__Contr__36B12243",
                         column: x => x.ContractID,
@@ -289,28 +310,34 @@ namespace TPSS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payment",
+                name: "Transaction",
                 columns: table => new
                 {
-                    PaymentID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     TransactionID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PaymentID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Transaction", x => x.TransactionID);
                     table.ForeignKey(
-                        name: "FK_Payment_Transaction",
-                        column: x => x.TransactionID,
-                        principalTable: "Transaction",
-                        principalColumn: "TransactionID");
+                        name: "FK_Transaction_Payment",
+                        column: x => x.PaymentID,
+                        principalTable: "Payment",
+                        principalColumn: "PaymentId");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AddressDetail_AddressId",
                 table: "AddressDetail",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Album_PropertyId",
+                table: "Album",
+                column: "PropertyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contract_ReservationID",
@@ -330,9 +357,9 @@ namespace TPSS.Data.Migrations
                 filter: "([UserID] IS NOT NULL AND [PropertyID] IS NOT NULL)");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payment_TransactionID",
+                name: "IX_Transaction_Processing_ContractID",
                 table: "Payment",
-                column: "TransactionID");
+                column: "ContractID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectDetail_ProjectID",
@@ -343,11 +370,6 @@ namespace TPSS.Data.Migrations
                 name: "IX_Property_ProjectID",
                 table: "Property",
                 column: "ProjectID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyDetail_PropertyID",
-                table: "PropertyDetail",
-                column: "PropertyID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_BuyerID",
@@ -365,9 +387,9 @@ namespace TPSS.Data.Migrations
                 column: "SellerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transaction_Processing_ContractID",
+                name: "IX_Transaction_PaymentID",
                 table: "Transaction",
-                column: "ContractID");
+                column: "PaymentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_RoleId",
@@ -387,10 +409,10 @@ namespace TPSS.Data.Migrations
                 name: "AddressDetail");
 
             migrationBuilder.DropTable(
-                name: "LikeList");
+                name: "Album");
 
             migrationBuilder.DropTable(
-                name: "Payment");
+                name: "LikeList");
 
             migrationBuilder.DropTable(
                 name: "ProjectDetail");
@@ -399,13 +421,16 @@ namespace TPSS.Data.Migrations
                 name: "PropertyDetail");
 
             migrationBuilder.DropTable(
+                name: "Transaction");
+
+            migrationBuilder.DropTable(
                 name: "UserDetail");
 
             migrationBuilder.DropTable(
                 name: "Address");
 
             migrationBuilder.DropTable(
-                name: "Transaction");
+                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "User");
