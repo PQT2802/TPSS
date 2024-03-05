@@ -167,7 +167,7 @@ namespace TPSS.Data.Migrations
                 columns: table => new
                 {
                     PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "ntext", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -184,7 +184,7 @@ namespace TPSS.Data.Migrations
                 {
                     table.PrimaryKey("PK_PropertyDetail_1", x => x.PropertyDetailID);
                     table.ForeignKey(
-                        name: "FK_PropertyDetail_Property2",
+                        name: "FK_PropertyDetail_Property",
                         column: x => x.PropertyID,
                         principalTable: "Property",
                         principalColumn: "PropertyID");
