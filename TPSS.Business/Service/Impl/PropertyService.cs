@@ -99,7 +99,7 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-<<<<<<< HEAD
+
         //public async Task<Property> GetPropertyByIdAsync(string id)
         //{
         //    try
@@ -112,7 +112,7 @@ namespace TPSS.Business.Service.Impl
         //        throw new Exception(e.Message, e);
         //    }
         //}
-=======
+
         public async Task<Property> GetPropertyByIdAsync(string id)
         {
             try
@@ -126,7 +126,7 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
->>>>>>> a8d861c84f7d8328af825b5759d9fa11e2b48057
+
 
         public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
         {
@@ -208,15 +208,15 @@ namespace TPSS.Business.Service.Impl
 
         //        var owner = await _propertyRepository.GetOwnerByIdAsync(propertyDetail.OwnerId);
 
-<<<<<<< HEAD
+
         //        var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
-=======
+
                 //var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
->>>>>>> a8d861c84f7d8328af825b5759d9fa11e2b48057
+
                 
         //        IEnumerable<Property> relatedProperties = null;
 
-<<<<<<< HEAD
+
         //        if (propertyDetail.City != null)
         //        {
         //            relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
@@ -226,7 +226,7 @@ namespace TPSS.Business.Service.Impl
         //        var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
 
         //        return result;
-=======
+
                 //if (propertyDetail.City != null)
                 //{
                 //    relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
@@ -236,8 +236,7 @@ namespace TPSS.Business.Service.Impl
                 //var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
 
                 //return result;
-                return null;
->>>>>>> a8d861c84f7d8328af825b5759d9fa11e2b48057
+
 
         //    }
         //    catch (Exception e)
