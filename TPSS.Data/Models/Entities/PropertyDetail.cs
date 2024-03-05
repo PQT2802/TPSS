@@ -7,8 +7,6 @@ public partial class PropertyDetail : Property
 {
     public string PropertyDetailId { get; set; } = null!;
 
-    public string? PropertyId { get; set; }
-
     public string OwnerId { get; set; } = null!;
 
     public string? Description { get; set; }
