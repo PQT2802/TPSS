@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace TPSS.Data.Models.Entities;
 
-public partial class PropertyDetail : Property
+public partial class PropertyDetail
 {
     public string PropertyDetailId { get; set; } = null!;
 
-    public string? PropertyId { get; set; }
+    public string PropertyId { get; set; } = null!;
 
     public string OwnerId { get; set; } = null!;
 
@@ -31,5 +31,5 @@ public partial class PropertyDetail : Property
 
     public string? CreateBy { get; set; }
 
-    public virtual Property? Property { get; set; }
+    public virtual Property Property { get; set; } = null!;
 }

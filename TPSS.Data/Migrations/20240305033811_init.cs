@@ -166,8 +166,8 @@ namespace TPSS.Data.Migrations
                 name: "PropertyDetail",
                 columns: table => new
                 {
-                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     PropertyDetailID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PropertyID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     OwnerID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Description = table.Column<string>(type: "ntext", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -182,13 +182,12 @@ namespace TPSS.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Property__70C9A755F657A2CD", x => x.PropertyID);
+                    table.PrimaryKey("PK_PropertyDetail_1", x => x.PropertyDetailID);
                     table.ForeignKey(
-                        name: "FK_PropertyDetail_Property",
+                        name: "FK_PropertyDetail_Property2",
                         column: x => x.PropertyID,
                         principalTable: "Property",
-                        principalColumn: "PropertyID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "PropertyID");
                 });
 
             migrationBuilder.CreateTable(
@@ -370,6 +369,11 @@ namespace TPSS.Data.Migrations
                 name: "IX_Property_ProjectID",
                 table: "Property",
                 column: "ProjectID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertyDetail_PropertyID",
+                table: "PropertyDetail",
+                column: "PropertyID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_BuyerID",

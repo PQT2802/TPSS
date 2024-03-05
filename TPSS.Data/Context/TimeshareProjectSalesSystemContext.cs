@@ -216,6 +216,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
         modelBuilder.Entity<PropertyDetail>(entity =>
         {
+            entity.HasKey(e => e.PropertyDetailId).HasName("PK_PropertyDetail_1");
+
             entity.ToTable("PropertyDetail");
 
             entity.Property(e => e.PropertyDetailId)
@@ -236,7 +238,8 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.PropertyDetails)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK_PropertyDetail_Property");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PropertyDetail_Property2");
         });
 
         modelBuilder.Entity<Reservation>(entity =>
