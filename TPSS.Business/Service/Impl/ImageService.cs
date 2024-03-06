@@ -273,6 +273,44 @@ namespace TPSS.Business.Service.Impl
                 throw;
             }
         }
+        public async Task<List<string>> UploadImagesForPropertyTest(IFormFileCollection images, string propertyID)
+        {
+            try
+            {
+                var tokenDescriptor = new Dictionary<string, object>()
+        {
+            {"permission", "allow" }
+        };
 
+                var auth = new FirebaseAuthProvider(new FirebaseConfig(_firebaseSetting.ApiKey));
+                var token = await auth.SignInWithEmailAndPasswordAsync(_firebaseSetting.Email, _firebaseSetting.Password);
+
+                var storage = new FirebaseStorage(
+                    _firebaseSetting.Bucket,
+                    new FirebaseStorageOptions
+                    {
+                        AuthTokenAsyncFactory = () => Task.FromResult(token.FirebaseToken),
+                        ThrowOnCancel = true,
+                    });
+
+                var downloadUrls = new List<string>();
+                int counter = 1;
+                foreach (var image in images)
+                {
+                    var fileName = $"{propertyID}-{counter:00}";
+                    var uploadTask = storage.Child("Images").Child("PropertyDetail").Child(propertyID).Child(fileName).PutAsync(image.OpenReadStream());
+                    var downloadUrl = await uploadTask;
+                    downloadUrls.Add(downloadUrl.ToString());
+                    counter++;
+                }
+
+                return downloadUrls;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace, ex);
+                throw;
+            }
+        }
     }
 }

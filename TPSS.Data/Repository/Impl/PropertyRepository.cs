@@ -17,6 +17,8 @@ using TPSS.Data.Models.Entities;
 using System.Reflection.Metadata;
 using System.Data.Common;
 using System.Collections;
+using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TPSS.Data.Repository.Impl
 {
@@ -67,13 +69,14 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = "SELECT p.*,proj.ProjectName, ud.Phone, u.Firstname, u.Lastname " +
-                    "FROM dbo.Property AS p " +
-                    "INNER JOIN dbo.Project AS proj ON p.ProjectID = proj.ProjectID " +
-                    "INNER JOIN dbo.PropertyDetail AS pd ON p.PropertyID = pd.PropertyID " +
-                    "LEFT JOIN dbo.[User] AS u ON pd.OwnerID = u.UserID " +
-                    "LEFT JOIN dbo.UserDetail AS ud ON u.UserID = ud.UserID;";
-                
+                var query = "SELECT P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
+                    "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage';";   
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query);
@@ -132,7 +135,7 @@ namespace TPSS.Data.Repository.Impl
                     "CAST(SUBSTRING(PropertyID, 8, LEN(PropertyID)) AS NVARCHAR) DESC, " +
                     "PropertyID DESC";
                 using var connection = CreateConnection();
-                return await connection.QuerySingleOrDefaultAsync<string>(query);
+                return await connection.QuerySingleOrDefaultAsync<string>(query);   
             }
             catch (Exception e)
             {
@@ -176,6 +179,25 @@ namespace TPSS.Data.Repository.Impl
             }
             catch (Exception e)
             {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        private async Task<string> GetLatestImageIdAsync()
+        {
+            try
+            {
+                var query = "SELECT TOP 1 ImageId " +
+                    "FROM [Album] " +
+                    "ORDER BY " +
+                    "CAST(SUBSTRING(ImageId, 8, LEN(ImageId)) AS NVARCHAR) DESC, " +
+                    "ImageId DESC";
+                using var connection = CreateConnection();
+                return await connection.QuerySingleOrDefaultAsync<string>(query);
+            }
+            catch (Exception e)
+            {
+
                 throw new Exception(e.Message, e);
             }
         }
@@ -353,5 +375,90 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
+
+        public async Task<int> CreateAlbumAsync(string propertyId, List<string> images)
+        {
+            try
+            {
+                string latestImageId = await GetLatestImageIdAsync();
+                int newImageNumericPart = 1 + (latestImageId.IsNullOrEmpty() ? 0 : int.Parse(latestImageId.Substring(2)));
+
+
+                using var connection = CreateConnection() as SqlConnection;
+
+                await connection.OpenAsync();
+
+                using var bulkCopy = new SqlBulkCopy(connection);
+
+                bulkCopy.DestinationTableName = "Album";
+                bulkCopy.WriteToServerAsync(PrepareDataTable(propertyId, images, newImageNumericPart));
+
+                return images.Count; // Assuming all inserts were successful
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        private DataTable PrepareDataTable(string propertyId, List<string> images, int startingImageId)
+        {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("ImageId", typeof(string));
+            dataTable.Columns.Add("PropertyId", typeof(string));
+            dataTable.Columns.Add("Image", typeof(string));
+            dataTable.Columns.Add("ImageDescription", typeof(string)); // Adjust based on your needs
+
+            for (int i = 0; i < images.Count; i++)
+            {
+                string imageId = $"IM{startingImageId++:d8}";
+                string description = i == 0 ? "HomePage" : "DetailPage";
+                dataTable.Rows.Add(imageId, propertyId, images[i], description); // Update description as needed
+            }
+
+            return dataTable;
+        }
+
+        public async Task<IEnumerable<dynamic>> MyProperties(string userID)
+        {
+            try
+            {
+                var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage';";
+
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<dynamic>(query);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> MyPropertiesImages(string userID)
+        {
+            try
+            {
+                var query = "SELECT A.[ImageId], A.[PropertyId], A.[Image] " +
+                    "FROM [dbo].[Album] A " +
+                    "JOIN [dbo].[Property] P ON A.[PropertyId] = P.[PropertyID] " +
+                    "JOIN [dbo].[PropertyDetail] PD ON P.[PropertyID] = PD.[PropertyID] " +
+                    "WHERE A.[ImageDescription] = 'DetailPage' AND PD.[OwnerID] = @UserID;";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("UserID", userID, DbType.String);
+                using var connection = CreateConnection();
+                
+                return await connection.QueryAsync<dynamic>(query,parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

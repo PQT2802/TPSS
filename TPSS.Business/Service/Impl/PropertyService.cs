@@ -1,6 +1,7 @@
 ﻿
 using Firebase.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -37,8 +38,7 @@ namespace TPSS.Business.Service.Impl
             {
                 List<Error> Errors = new List<Error>();
                 Property property = new Property();
-                List<string> Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
-
+                
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
@@ -50,6 +50,7 @@ namespace TPSS.Business.Service.Impl
                 property.Street = propertyDTO.Street;
                 property.IsDelete = false;
                 int result1 = await _propertyRepository.CreatePropertyAsync(property);
+                int result3 = 0;
 
                 if (result1 == 1)
                 {
@@ -96,21 +97,6 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-<<<<<<< HEAD
-=======
-
-        //public async Task<Property> GetPropertyByIdAsync(string id)
-        //{
-        //    try
-        //    {
-        //        Property result = await _propertyRepository.GetPropertyByIdAsync(id);
-        //        return result;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message, e);
-        //    }
-        //}
 
         public async Task<Property> GetPropertyByIdAsync(string id)
         {
@@ -127,7 +113,7 @@ namespace TPSS.Business.Service.Impl
         }
 
 
->>>>>>> DEV_THANG
+
         public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
         {
             //update soon
@@ -140,19 +126,6 @@ namespace TPSS.Business.Service.Impl
             {
 
                 var resultList = await _propertyRepository.GetPropertyForHomePage();
-
-                // Assuming that each item in resultList has an 'Images' property
-                foreach (var item in resultList)
-                {
-                    // Split the image string into an array
-                    string[] imageArray = item.Images.ToString().Split(',');
-
-                    // Create a List<string> from the array
-                    List<string> imageList = new List<string>(imageArray);
-
-                    item.ImageList = imageList;
-                }
-
 
                 return resultList;
             }
@@ -216,10 +189,6 @@ namespace TPSS.Business.Service.Impl
                 
         //        IEnumerable<Property> relatedProperties = null;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> DEV_THANG
         //        if (propertyDetail.City != null)
         //        {
         //            relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
@@ -239,10 +208,7 @@ namespace TPSS.Business.Service.Impl
                 //var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
 
                 //return result;
-<<<<<<< HEAD
-                //return null;
-=======
->>>>>>> DEV_THANG
+
 
 
         //    }
@@ -327,15 +293,32 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
-        
-        
+
+        public async Task<IEnumerable<dynamic>> MyProperties(string userID)
+        {
+            try
+            {
+                IEnumerable<dynamic> result1 = await _propertyRepository.MyProperties(userID);
+
+                IEnumerable <dynamic> result2 = await _propertyRepository.MyPropertiesImages(userID);
+
+
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+
         // test
-        public async Task<dynamic> CreatePropertyTESTAsync(PropertyDTO propertyDTO)
+        public async Task<dynamic> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
         {
             try
             {
                 List<Error> Errors = new List<Error>();
-
 
                 Property property = new Property();
 
@@ -344,7 +327,6 @@ namespace TPSS.Business.Service.Impl
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;
                 property.Price = propertyDTO.Price;
-                //property.Images = await _imageService.UploadImagesForProperty(propertyDTO.Images, property.PropertyId);
                 property.Area = propertyDTO.Area;
                 property.City = propertyDTO.City;
                 property.District = propertyDTO.District;
@@ -352,14 +334,14 @@ namespace TPSS.Business.Service.Impl
                 property.Street = propertyDTO.Street;
                 property.IsDelete = false;
                 int result1 = await _propertyRepository.CreatePropertyAsync(property);
-
+                int result3 = 0;
                 if (result1 == 1)
                 {
                     PropertyDetail detail = new PropertyDetail();
 
                     detail.PropertyDetailId = await AutoGeneratePropertyDetailId();
                     detail.PropertyId = property.PropertyId;
-                    detail.OwnerId = property.PropertyId;
+                    detail.OwnerId = uid;
                     detail.Description = propertyDTO.Description;
                     detail.UpdateDate = null;
 
@@ -374,8 +356,15 @@ namespace TPSS.Business.Service.Impl
                     detail.Status = "Normal";
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
+
+                    if (result2 == 1)
+                    {
+                        result3 = await _propertyRepository .CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForPropertyTest(propertyDTO.Images, property.PropertyId));
+                    }
+
                 }
-                return result1;
+                
+                return result3;
 
             }
             catch (Exception e)
@@ -383,5 +372,7 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        
     }
 }

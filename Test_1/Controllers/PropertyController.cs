@@ -39,27 +39,27 @@ namespace TPSS.API.Controllers
         //    return Ok(result);
         //}
 
-        [HttpGet("PropertiesByUser")]
-        public async Task<ActionResult<IEnumerable<Property>>> GetProjectDetailWithRelatedProperties()
+        [HttpGet("MyProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties()
         {
             CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.GetPropertiesByUserIDAsync(c.UserId);
+            var result = await _propertyService.MyProperties(c.UserId);
             return Ok(result);
         }
 
         [HttpPost("CreateProperty")]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO, string id )
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
         {
-            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.CreatePropertyAsync(propertyDTO,id);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO,c.UserId);
             return Ok(result);
         }
 
         // test add with no cockies
         [HttpPost("CreatePropertyTEST")]
-        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO)
+        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
         {
-            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO);
+            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO,uid);
             return Ok(result);
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TPSS.Data.Models.DTO;
 
 namespace TPSS.Business.Service
 {
@@ -13,5 +14,6 @@ namespace TPSS.Business.Service
         public Task<string> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName);
         public Task<List<string>> UploadImagesForProperty(IFormFileCollection images, string propertyID);
         public Task<List<string>> LinkFolderCheck(IFormFileCollection images, string propertyID);
+        public Task<List<string>> UploadImagesForPropertyTest(IFormFileCollection images, string propertyID);
     }
 }

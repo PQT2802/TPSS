@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,19 @@ namespace TPSS.Business.Service
         public Task<IEnumerable<dynamic>> GetPropertyForHomePage();
         public Task<dynamic> CreatePropertyAsync(PropertyDTO user, string userID);
 
+        //MyProperties
+        public Task<IEnumerable<dynamic>> MyProperties(string userID);
+
         public Task<dynamic> UpdatePropertyAsync(PropertyDTO user);
         public Task<int> DeletePropertyAsync(String id);
         //public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
         public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
         public Task<IEnumerable<Project>> GetLastestProject();
-        public Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID);
+        
         public Task<ProjectDetail> GetProjectDetail(string id);
 
         //test
-        public Task<dynamic> CreatePropertyTESTAsync(PropertyDTO user);
+        public Task<dynamic> CreatePropertyTESTAsync(PropertyDTO property, string uid);
     }
 }

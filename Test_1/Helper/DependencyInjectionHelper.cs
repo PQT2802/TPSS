@@ -21,8 +21,7 @@ namespace TPSS.API.Helper
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IUserDetailRepository, UserDetailRepository>();
             services.AddTransient<IImageService, ImageService>();
-            
-    
+            services.AddTransient<IPropertyService, PropertyService>();
             //Exception Handler
             ////
             ///

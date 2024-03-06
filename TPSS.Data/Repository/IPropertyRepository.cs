@@ -22,6 +22,11 @@ namespace TPSS.Data.Repository
         public Task<string> GetProjectNameAsync(string projectID);
 
         public Task<IEnumerable<dynamic>> GetPropertyForHomePage();
+
+        public Task<IEnumerable<dynamic>> MyProperties(string userID);
+        public Task<IEnumerable<dynamic>> MyPropertiesImages(string userID);
+
+
         public Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID);
         public Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city);
         public Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province);
@@ -33,8 +38,9 @@ namespace TPSS.Data.Repository
         public Task<PropertyDetail> GetPropertyByIdAsync(string id);
         public Task<ProjectDetail> GetProjectDetail(string id);
 
+        public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
 
-        
+
         public Task<string> GetOwnerIdAsync(string propertyId);
 
     }
