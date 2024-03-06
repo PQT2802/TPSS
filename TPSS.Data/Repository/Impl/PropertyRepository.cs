@@ -58,9 +58,40 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public async Task<int> DeletePropertyAsync(string id)
+        public async Task<dynamic> DeletePropertyAsync(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = @"IF EXISTS (SELECT 1 FROM [dbo].[Reservation] WHERE [PropertyID] = @propertyIDToDelete)
+BEGIN
+    SELECT 'Reservation exists, do nothing' AS [Message]
+END
+ELSE
+BEGIN
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        DELETE FROM [dbo].[PropertyDetail] WHERE [PropertyId] = @propertyIDToDelete;
+        DELETE FROM [dbo].[Album] WHERE [PropertyId] = @propertyIDToDelete;
+        DELETE FROM [dbo].[Property] WHERE [PropertyID] = @propertyIDToDelete;
+        COMMIT;
+        SELECT 'Records deleted successfully' AS [Message]
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SELECT 'Error occurred during delete' AS [Message]
+    END CATCH
+END";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("propertyIDToDelete", id, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         
@@ -460,5 +491,8 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        
+
     }
 }

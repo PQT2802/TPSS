@@ -14,7 +14,7 @@ namespace TPSS.Data.Repository
         public Task<int> CreatePropertyAsync(Property property) ;
         public Task<int> CreatePropertyDetailAsync(PropertyDetail detail);
         public Task<int> UpdatePropertyAsync(Property property);
-        public Task<int> DeletePropertyAsync(string id);
+        public Task<dynamic> DeletePropertyAsync(string id);
 
         public Task<string> GetLatestPropertyIdAsync();
         public Task<string> GetLatestPropertyDetailIdAsync();

@@ -105,9 +105,47 @@ namespace TPSS.Business.Service.Impl
                 throw;
             }
         }
+        public async Task<dynamic> DeleteImagePropertyAsync(string imageName, string propertyID)
+        {
+            try
+            {
+
+                // Get Firebase authentication token
+                var tokenDescriptor = new Dictionary<string, object>()
+                {
+                     {"permission", "allow" }
+                };
+
+                var auth = new FirebaseAuthProvider(new FirebaseConfig(_firebaseSetting.ApiKey));
+                var token = await auth.SignInWithEmailAndPasswordAsync(_firebaseSetting.Email, _firebaseSetting.Password);
+
+                // Create a new FirebaseStorage instance with the token
+                var storage = new FirebaseStorage(
+                  _firebaseSetting.Bucket,
+                  new FirebaseStorageOptions
+                  {
+                      AuthTokenAsyncFactory = () => Task.FromResult(token.FirebaseToken),
+                      ThrowOnCancel = true
+                  });
+
+                string fileName = imageName;
+                string newGuid = Guid.NewGuid().ToString();
+                await storage.Child("Images").Child("PropertyDetail").Child(propertyID).Child(fileName).DeleteAsync();
+                return new { Message = "Image deleted successfully" };
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace, ex);
+                throw;
+            }
+        }
+
+
+
         /// end test
-        
-        
+
+
         public async Task<List<string>> UploadImagesForProperty(IFormFileCollection images, string propertyID)
         {
             try
@@ -190,14 +228,14 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<List<string>> UploadImagesForProjectDetail(IFormFileCollection images, string projectID)
+        public async Task<List<string>> UploadImagesForProjectDetail(IFormFileCollection images, string projectID, string latestImageID)
         {
             try
             {
                 var tokenDescriptor = new Dictionary<string, object>()
-        {
-            {"permission", "allow" }
-        };
+                {
+                    {"permission", "allow" }
+                };
 
                 var auth = new FirebaseAuthProvider(new FirebaseConfig(_firebaseSetting.ApiKey));
                 var token = await auth.SignInWithEmailAndPasswordAsync(_firebaseSetting.Email, _firebaseSetting.Password);
@@ -211,10 +249,11 @@ namespace TPSS.Business.Service.Impl
                     });
 
                 var downloadUrls = new List<string>();
+                int nextImageNumber = int.Parse(latestImageID.Substring(2)) + 1;
                 int counter = 1;
                 foreach (var image in images)
                 {
-                    var fileName = $"{projectID}-{counter:00}";
+                    var fileName = $"IM{nextImageNumber:00000000}";
                     var uploadTask = storage.Child("Images").Child("ProjectDetail").Child(projectID).Child(fileName).PutAsync(image.OpenReadStream());
                     var downloadUrl = await uploadTask;
                     downloadUrls.Add(downloadUrl.ToString());

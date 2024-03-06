@@ -13,14 +13,20 @@ namespace TPSS.Business.Service
     public interface IPropertyService
     {
         //public Task<Property> GetPropertyByIdAsync(String id);
+        
         public Task<IEnumerable<dynamic>> GetPropertyForHomePage();
-        public Task<dynamic> CreatePropertyAsync(PropertyDTO user, string userID);
 
+        public Task<dynamic> CreatePropertyAsync(PropertyDTO user, string userID);
+        public Task<dynamic> DeletePropertyAsync(string propertyId);
+        public Task<dynamic> UpdatePropertyAsync(PropertyDTO user);
+        
+        
+        
         //MyProperties
         public Task<IEnumerable<dynamic>> MyProperties(string userID);
 
-        public Task<dynamic> UpdatePropertyAsync(PropertyDTO user);
-        public Task<int> DeletePropertyAsync(String id);
+        
+
         //public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
         public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();

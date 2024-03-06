@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel;
 using TPSS.Business.Common;
 using TPSS.Business.Service;
@@ -40,10 +41,10 @@ namespace TPSS.API.Controllers
         //}
 
         [HttpGet("MyProperties")]
-        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties()
+        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties(string UserID)
         {
-            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.MyProperties(c.UserId);
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.MyProperties(UserID);
             return Ok(result);
         }
 
@@ -55,13 +56,35 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
-        // test add with no cockies
-        [HttpPost("CreatePropertyTEST")]
-        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
+        [HttpDelete("DeleteProperty")]
+        public async Task<IActionResult> DeletePropertyAsync(string propertyId)
         {
-            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO,uid);
+            var result = await _propertyService.DeletePropertyAsync(propertyId);
             return Ok(result);
         }
+
+        //[HttpPost("UpdateProperty")]
+        //public async Task<IActionResult> UpdatePropertyAsync(string propertyId)
+        //{
+        //    var result = await _propertyService.UpdatePropertyAsync(propertyId);
+        //    return Ok(result);
+        //}
+        //Bonus
+        [HttpPost("DeleteImageProperty")]
+        public async Task<IActionResult> DeleteImagePropertyAsync(string imageName, string propertyID)
+        {
+            var result = await _imageService.DeleteImagePropertyAsync( imageName,  propertyID);
+            return Ok(result);
+        }
+
+        //// test add with no cockies
+        //[HttpPost("CreatePropertyTEST")]
+        //public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
+        //{
+        //    var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO,uid);
+        //    return Ok(result);
+        //}
+
 
 
 

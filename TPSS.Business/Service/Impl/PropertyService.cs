@@ -84,11 +84,11 @@ namespace TPSS.Business.Service.Impl
         }
 
 
-        public async Task<int> DeletePropertyAsync(string id)
+        public async Task<dynamic> DeletePropertyAsync(string id)
         {
             try
             {
-                int result = await _propertyRepository.DeletePropertyAsync(id);
+                var result = await _propertyRepository.DeletePropertyAsync(id);
                 return result;
             }
             catch (Exception e)
@@ -298,10 +298,23 @@ namespace TPSS.Business.Service.Impl
         {
             try
             {
-                IEnumerable<dynamic> result1 = await _propertyRepository.MyProperties(userID);
+                var properties = await _propertyRepository.MyProperties(userID);
+                var propertyImages = await _propertyRepository.MyPropertiesImages(userID);
 
-                IEnumerable <dynamic> result2 = await _propertyRepository.MyPropertiesImages(userID);
+                var groupedImages = propertyImages.GroupBy(img => img.PropertyId);
 
+                var result = properties.Select(property =>
+                {
+                    var propertyId = property.PropertyID.ToString();
+                    var imagesGroup = groupedImages.FirstOrDefault(group => group.Key == propertyId);
+                    var images = imagesGroup != null ? imagesGroup.ToList() : new List<dynamic>();
+
+                    return new
+                    {
+                        Property = property,
+                        Images = images
+                    };
+                });
 
                 return result;
             }
@@ -311,6 +324,7 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
 
 
         // test
