@@ -32,9 +32,6 @@ namespace TPSS.Data.Repository
         public Task<UserDetail> GetOwnerByIdAsync(string ownerId);
         public Task<PropertyDetail> GetPropertyByIdAsync(string id);
         public Task<ProjectDetail> GetProjectDetail(string id);
-
-
-        
         public Task<string> GetOwnerIdAsync(string propertyId);
 
     }

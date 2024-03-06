@@ -19,7 +19,7 @@ public partial class Contract
 
     public bool? IsDelete { get; set; }
 
-    public string? Contract1 { get; set; }
+    public string? ContractScript { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 

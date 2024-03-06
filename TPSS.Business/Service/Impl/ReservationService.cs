@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +103,7 @@ namespace TPSS.Business.Service.Impl
             {
                 var contract = await _contractRepository.GetContractsByReservationIdAsync(reservationId);
 
-                if (!contract.Any() || contract == null)
+            if (!contract.Any() || contract == null)
                 {
                     var result = await _reservationRepository.DeleteReservation(reservationId);
                     return result;

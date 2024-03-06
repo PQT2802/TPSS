@@ -276,7 +276,7 @@ namespace TPSS.Data.Migrations
                     Deposit = table.Column<double>(type: "float", nullable: true),
                     ContractStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: true),
-                    Contract = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                    ContractScript = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {

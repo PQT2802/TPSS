@@ -90,10 +90,9 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("ContractID");
 
-                    b.Property<string>("Contract1")
+                    b.Property<string>("ContractScript")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Contract");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ContractStatus")
                         .HasMaxLength(50)
