@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace TPSS.Data.Models.Entities;
 
-public partial class PropertyDetail 
+public partial class PropertyDetail
 {
     public string PropertyDetailId { get; set; } = null!;
+
+    public string? PropertyId { get; set; }
 
     public string OwnerId { get; set; } = null!;
 
