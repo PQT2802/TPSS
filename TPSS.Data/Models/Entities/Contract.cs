@@ -9,6 +9,8 @@ public partial class Contract
 
     public string? ReservationId { get; set; }
 
+    public string? Thirdparty { get; set; }
+
     public DateTime? SignDate { get; set; }
 
     public double? Deposit { get; set; }

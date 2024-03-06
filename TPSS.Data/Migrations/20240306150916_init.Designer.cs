@@ -13,7 +13,7 @@ using TPSS.Data.Models.Entities;
 namespace TPSS.Data.Migrations
 {
     [DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240305035516_init")]
+    [Migration("20240306150916_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -115,6 +115,9 @@ namespace TPSS.Data.Migrations
 
                     b.Property<DateTime?>("SignDate")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("Thirdparty")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContractId")
                         .HasName("PK__Contract__C90D34099AA800A1");

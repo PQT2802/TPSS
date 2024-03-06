@@ -15,6 +15,7 @@ namespace TPSS.API.Helper
             services.AddTransient<IPropertyRepository, PropertyRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
             services.AddTransient<IReservationRepository, ReservationRepository>();
+            services.AddTransient<IContractRepository, ContractRepository>();
             //Service
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReservationService, ReservationService>();

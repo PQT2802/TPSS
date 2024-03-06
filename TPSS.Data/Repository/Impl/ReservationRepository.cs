@@ -104,21 +104,22 @@ namespace TPSS.Data.Repository.Impl
             try
             {
                 var query = @"
-            SELECT
-                p.Image,
-                p.PropertyTitle,
-                p.PropertyID,
-                pd.OwnerID,
-                owner.Firstname AS OwnerFirstname,
-                owner.Lastname AS OwnerLastname,
-                r.Status,
-                r.BookingDate
-            FROM Reservation r
-            INNER JOIN [User] buyer ON r.BuyerID = buyer.UserId
-            INNER JOIN Property p ON r.PropertyID = p.PropertyID
-            INNER JOIN [dbo].[PropertyDetail] pd ON p.PropertyID = pd.PropertyID
-            INNER JOIN [User] owner ON pd.OwnerID = owner.UserId
-            WHERE buyer.UserId = @userId";
+        SELECT
+            p.PropertyTitle,
+            p.PropertyID,
+            pd.OwnerID,
+            owner.Firstname AS OwnerFirstname,
+            owner.Lastname AS OwnerLastname,
+            r.Status,
+            r.BookingDate,
+            a.Image
+        FROM Reservation r
+        INNER JOIN [User] buyer ON r.BuyerID = buyer.UserId
+        INNER JOIN Property p ON r.PropertyID = p.PropertyID
+        INNER JOIN [dbo].[PropertyDetail] pd ON p.PropertyID = pd.PropertyID
+        INNER JOIN [User] owner ON pd.OwnerID = owner.UserId
+        LEFT JOIN Album a ON p.PropertyID = a.PropertyID AND a.ImageDescription = 'Homepage'
+        WHERE buyer.UserId = @userId AND r.IsDelete = 0 ";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("userId", userId, DbType.String);
@@ -137,7 +138,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = @"
             SELECT
-                p.Image,
+                a.Image,
                 p.PropertyTitle,
                 p.PropertyId,
                 buyer.UserId AS BuyerId,
@@ -149,7 +150,8 @@ namespace TPSS.Data.Repository.Impl
             INNER JOIN [User] seller ON r.SellerId = seller.UserId
             INNER JOIN Property p ON r.PropertyId = p.PropertyId
             INNER JOIN [User] buyer ON r.BuyerId = buyer.UserId
-            WHERE r.SellerID = @userId AND r.PropertyId = @PropertyIdValue";
+            LEFT JOIN Album a ON p.PropertyID = a.PropertyID AND a.ImageDescription = 'Homepage'
+            WHERE r.SellerID = @userId AND r.PropertyId = @PropertyIdValue AND r.IsDelete = 0 ";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("userId", userId, DbType.String);
@@ -160,6 +162,65 @@ namespace TPSS.Data.Repository.Impl
             }
             catch (Exception e)
             {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> DeleteReservation(string reservationId)
+        {
+            try
+            {
+                var query = @"
+UPDATE Reservation
+SET IsDelete = 1
+WHERE ReservationId = @reservationIdValue
+";
+                var parameter = new DynamicParameters();
+                parameter.Add("reservationIdValue", reservationId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> AccpectReservation(string reservationId)
+        {
+            try
+            {
+                var query = @"
+UPDATE Reservation 
+SET Status = 'Accepted'
+WHERE ReservationId = @reservationIdValue AND IsDelete = 0
+";
+                var parameter = new DynamicParameters();
+                parameter.Add("reservationIdValue", reservationId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> RejectReservation(string reservationId)
+        {
+            try
+            {
+                var query = @"
+UPDATE Reservation 
+SET Status = 'Rejected'
+WHERE ReservationId = @reservationIdValue AND IsDelete = 0
+";
+                var parameter = new DynamicParameters();
+                parameter.Add("reservationIdValue", reservationId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
                 throw new Exception(e.Message, e);
             }
         }

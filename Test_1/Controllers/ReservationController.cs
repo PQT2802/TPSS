@@ -39,6 +39,24 @@ namespace TPSS.API.Controllers
             var result = await _reservationService.GetReservationForSellerAsync(c.UserId, propertyId);
             return Ok(result);
         }
+        [HttpDelete("DeleteReservation")]
+        public async Task<IActionResult> DeleteReservation(string reservationId)
+        {
+            var result = await _reservationService.DeleteReservation(reservationId);
+            return Ok(result);
+        }
+        [HttpPut("AccpectReservation")]
+        public async Task<IActionResult> AccpectReservation(string reservationId)
+        {
+            var result = await _reservationService.AccpectReservation(reservationId);
+            return Ok(result);
+        }
+        [HttpPut("RejectReservation")]
+        public async Task<IActionResult> RejectReservation(string reservationId)
+        {
+            var result = await _reservationService.RejectReservation(reservationId);
+            return Ok(result);
+        }
 
     }
 }
