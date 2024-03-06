@@ -96,6 +96,38 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
+<<<<<<< HEAD
+=======
+
+        //public async Task<Property> GetPropertyByIdAsync(string id)
+        //{
+        //    try
+        //    {
+        //        Property result = await _propertyRepository.GetPropertyByIdAsync(id);
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        public async Task<Property> GetPropertyByIdAsync(string id)
+        {
+            try
+            {
+                //Property result = await _propertyRepository.GetPropertyByIdAsync(id);
+                //return result;
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+
+>>>>>>> DEV_THANG
         public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
         {
             //update soon
@@ -184,6 +216,10 @@ namespace TPSS.Business.Service.Impl
                 
         //        IEnumerable<Property> relatedProperties = null;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> DEV_THANG
         //        if (propertyDetail.City != null)
         //        {
         //            relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
@@ -203,7 +239,10 @@ namespace TPSS.Business.Service.Impl
                 //var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
 
                 //return result;
+<<<<<<< HEAD
                 //return null;
+=======
+>>>>>>> DEV_THANG
 
 
         //    }
