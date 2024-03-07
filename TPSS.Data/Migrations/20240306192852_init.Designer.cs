@@ -13,7 +13,7 @@ using TPSS.Data.Models.Entities;
 namespace TPSS.Data.Migrations
 {
     [DbContext(typeof(TimeshareProjectSalesSystemContext))]
-    [Migration("20240305035516_init")]
+    [Migration("20240306192852_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -93,10 +93,9 @@ namespace TPSS.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasColumnName("ContractID");
 
-                    b.Property<string>("Contract1")
+                    b.Property<string>("ContractScript")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Contract");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ContractStatus")
                         .HasMaxLength(50)
@@ -115,6 +114,9 @@ namespace TPSS.Data.Migrations
 
                     b.Property<DateTime?>("SignDate")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("Thirdparty")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContractId")
                         .HasName("PK__Contract__C90D34099AA800A1");

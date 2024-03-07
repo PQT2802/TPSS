@@ -28,17 +28,13 @@ namespace TPSS.Business.Service.Impl
             _propertyRepository = propertyRepository;
             _imageService = imageService;
         }
-
-
-
-        
         public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO, string userID)
         {
             try
             {
                 List<Error> Errors = new List<Error>();
                 Property property = new Property();
-                
+
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
                 property.PropertyTitle = propertyDTO.PropertyTitle;

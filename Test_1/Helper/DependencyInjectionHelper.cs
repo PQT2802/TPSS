@@ -15,11 +15,15 @@ namespace TPSS.API.Helper
             services.AddTransient<IPropertyRepository, PropertyRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
             services.AddTransient<IReservationRepository, ReservationRepository>();
+            services.AddTransient<IContractRepository, ContractRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
             //Service
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReservationService, ReservationService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IUserDetailRepository, UserDetailRepository>();
+            services.AddTransient<IContractService, ContractService>();
+            services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IPropertyService, PropertyService>();
             //Exception Handler

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,12 @@ namespace TPSS.Business.Service.Impl
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IPropertyRepository _propertyRepository;
-        public ReservationService(IReservationRepository reservationRepository, IPropertyRepository propertyRepository) 
+        private readonly IContractRepository _contractRepository;
+        public ReservationService(IReservationRepository reservationRepository, IPropertyRepository propertyRepository, IContractRepository contractRepository) 
         { 
             _reservationRepository = reservationRepository;
             _propertyRepository = propertyRepository;
+            _contractRepository = contractRepository;
         }
         public async Task<dynamic> CreateReservationAsynce(string userId, string propertyId)
         {
@@ -61,10 +64,10 @@ namespace TPSS.Business.Service.Impl
                 var result = await _reservationRepository.GetReservationForBuyerAsync(userId);
                 return  result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw new Exception(e.Message, e);
             }
         }
         public async Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId)
@@ -74,10 +77,10 @@ namespace TPSS.Business.Service.Impl
                 var result = await _reservationRepository.GetReservationForSellerAsync(userId, propertyId);
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw new Exception(e.Message, e);
             }
         }
         private async Task<bool> CheckExistReservation(string userId, string propertyId)
@@ -94,7 +97,52 @@ namespace TPSS.Business.Service.Impl
                 return false;
             }
         }
+        public async Task<int> DeleteReservation(string reservationId)
+        {
+            try
+            {
+                var contract = await _contractRepository.GetContractsByReservationIdAsync(reservationId);
 
+            if (!contract.Any() || contract == null)
+                {
+                    var result = await _reservationRepository.DeleteReservation(reservationId);
+                    return result;
+                }
+                else
+                {
+                    return 0;   
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> AccpectReservation(string reservationId)
+        {
+            try
+            {
+                var result = await _reservationRepository.AccpectReservation(reservationId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<int> RejectReservation(string reservationId)
+        {
+            try
+            {
+                var result = await _reservationRepository.RejectReservation(reservationId); return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
         private async Task<string> AutoGenerateReservationId()
         {
             string newReservationId = "";

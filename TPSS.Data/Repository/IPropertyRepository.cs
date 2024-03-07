@@ -41,6 +41,7 @@ namespace TPSS.Data.Repository
         public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
 
 
+
         public Task<string> GetOwnerIdAsync(string propertyId);
 
     }

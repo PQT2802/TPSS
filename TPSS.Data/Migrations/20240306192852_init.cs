@@ -271,11 +271,12 @@ namespace TPSS.Data.Migrations
                 {
                     ContractID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     ReservationID = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Thirdparty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SignDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     Deposit = table.Column<double>(type: "float", nullable: true),
                     ContractStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: true),
-                    Contract = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                    ContractScript = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {

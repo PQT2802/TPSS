@@ -96,9 +96,7 @@ public partial class TimeshareProjectSalesSystemContext : DbContext
             entity.Property(e => e.ContractId)
                 .HasMaxLength(15)
                 .HasColumnName("ContractID");
-            entity.Property(e => e.Contract1)
-                .HasMaxLength(200)
-                .HasColumnName("Contract");
+            entity.Property(e => e.ContractScript).HasMaxLength(200);
             entity.Property(e => e.ContractStatus).HasMaxLength(50);
             entity.Property(e => e.ReservationId)
                 .HasMaxLength(15)

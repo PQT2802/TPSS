@@ -69,6 +69,7 @@ namespace TPSS.API.Controllers
         //    var result = await _propertyService.UpdatePropertyAsync(propertyId);
         //    return Ok(result);
         //}
+
         //Bonus
         [HttpPost("DeleteImageProperty")]
         public async Task<IActionResult> DeleteImagePropertyAsync(string imageName, string propertyID)
