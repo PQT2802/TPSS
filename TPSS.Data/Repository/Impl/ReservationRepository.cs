@@ -105,6 +105,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = @"
         SELECT
+            r.ReservationId
             p.PropertyTitle,
             p.PropertyID,
             pd.OwnerID,
@@ -138,6 +139,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = @"
             SELECT
+                r.ReservationId
                 a.Image,
                 p.PropertyTitle,
                 p.PropertyId,

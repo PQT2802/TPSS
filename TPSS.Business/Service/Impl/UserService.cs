@@ -10,6 +10,8 @@ using System.Data;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -39,128 +41,53 @@ namespace TPSS.Business.Service.Impl
         }
 
 
-        public async Task<dynamic> RegistUserAsync(RegisterDTO registerDTO)
+        public async Task<dynamic> RegistUserAsync(RegisterDTO registerDTO,string confirmCode)
         {
             try
             {
-
                 List<Error> errors = new List<Error>();
                 User user = new User();
-                bool isValidName = true;
 
-                if (!string.IsNullOrEmpty(registerDTO.Firstname))
-                {
-                    // Check empty
-                    errors.Add(null);
-                    if (!Validator.IsValidName(registerDTO.Firstname))
-                    {
-                        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
-                        isValidName = false;
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(RegisterErrors.FirstNameIsEmpty);
-                    errors.Add(null);
-                    isValidName = false;
-                }
+                errors.AddRange(
+                    string.IsNullOrEmpty(registerDTO.Firstname)
+                    ? new Error[] { RegisterErrors.FirstNameIsEmpty }
+                    : !Validator.IsValidName(registerDTO.Firstname)
+                        ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Firstname) }
+                        : Enumerable.Empty<Error>()
+                    );
+                errors.AddRange(
+                    string.IsNullOrEmpty(registerDTO.Lastname)
+                    ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Lastname) }
+                    : !Validator.IsValidUsername(registerDTO.Lastname)
+                        ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Lastname) }
+                        : Enumerable.Empty<Error>()
+                    );
+                errors.AddRange(
+                    string.IsNullOrEmpty(registerDTO.Email)
+                    ? new Error[] { RegisterErrors.EmailIsInvalid(registerDTO.Email) }
+                    : !Validator.IsValidEmail(registerDTO.Email)
+                      ? new Error[] { RegisterErrors.EmailIsInvalid(registerDTO.Email) }
+                      : await CheckEmailExistAsync(registerDTO.Email)
+                        ? new Error[] { RegisterErrors.EmailAlreadyUsed(registerDTO.Email) }
+                        : Enumerable.Empty<Error>()
 
-                if (!string.IsNullOrEmpty(registerDTO.Lastname))
-                {
-                    // Check empty
-                    errors.Add(null);
-                    if (!Validator.IsValidUsername(registerDTO.Lastname))
-                    {
-                        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
-                        isValidName = false;
-                    }
-                    else
-                    {
-                        // Check valid
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(RegisterErrors.LastNameIsEmpty);
-                    errors.Add(null);
-                    isValidName = false;
-                }
+                    );
+                errors.AddRange(
+                    string.IsNullOrEmpty(registerDTO.Password)
+                    ? new Error[] { RegisterErrors.PasswordIsEmpty }
+                    : !Validator.IsValidPassword(registerDTO.Password)
+                      ? new Error[] { RegisterErrors.PasswordIsInvalid(registerDTO.Password) }
+                      : Enumerable.Empty<Error>()
+                    );
+                errors.AddRange(
+                    string.IsNullOrEmpty(registerDTO.ConfirmPassword)
+                    ? new Error[] { RegisterErrors.ConfirmPasswordIsEmpty }
+                    : !registerDTO.Password.Equals(registerDTO.ConfirmPassword)
+                       ? new Error[] { RegisterErrors.ConfirmPasswordIsInvalid }
+                       : Enumerable.Empty<Error>()
+                    );
 
-                errors.Add(null);
-                errors.Add(null);
-                // Email validation
-                if (!string.IsNullOrEmpty(registerDTO.Email))
-                {
-                    errors.Add(null);
-                    if (!Validator.IsValidEmail(registerDTO.Email))
-                    {
-                        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-
-                    if (await CheckEmailExistAsync(registerDTO.Email))
-                    {
-                        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(RegisterErrors.EmailIsEmpty);
-                    errors.Add(null);
-                    errors.Add(null);
-                }
-
-                // Password validation
-                if (!string.IsNullOrEmpty(registerDTO.Password))
-                {
-                    errors.Add(null);
-                    if (!Validator.IsValidPassword(registerDTO.Password))
-                    {
-                        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(RegisterErrors.PasswordIsEmpty); // Add the error for passwordIsEmpty only if password is empty
-                    errors.Add(null);
-                }
-
-                // Confirm password validation
-                if (!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
-                {
-                    errors.Add(null);
-                    if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
-                    {
-                        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
-                    }
-                    else
-                    {
-                        errors.Add(null);
-                    }
-                }
-                else
-                {
-                    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
-                    errors.Add(null);
-                }
-
-                if (errors.All(error => error == null))
+                if (errors == null || !errors.Any())
                 {
                     user.UserId = await AutoGenerateUserId();
                     user.Firstname = registerDTO.Firstname;
@@ -187,7 +114,45 @@ namespace TPSS.Business.Service.Impl
                 throw new Exception(ex.Message, ex);
             }
         }
+        public async Task SendConfirmationEmail(string toEmailAddress)
+        {
+            // Email account information
+            string smtpServer = _configuration["SMTP:Server"];
+            int port = int.Parse(_configuration["SMTP:Port"]);
+            string senderEmail = _configuration["Sender:Email"];
+            string password = _configuration["Sender:Password"];
 
+            // Create an SmtpClient object to send email
+            SmtpClient smtpClient = new SmtpClient(smtpServer, port);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, password);
+            smtpClient.EnableSsl = true;
+
+            // Generate a confirmation code using GUID
+            string currentConfirmationCode = Guid.NewGuid().ToString().Substring(0, 6);
+
+            // Email content
+            string subject = "Email Confirmation";
+            string body = "Your confirmation code is: " + currentConfirmationCode;
+
+            // Create a MailMessage object
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(senderEmail);
+            mailMessage.To.Add(toEmailAddress);
+            mailMessage.Subject = subject;
+            mailMessage.Body = body;
+
+            // Send email
+            try
+            {
+                smtpClient.Send(mailMessage);
+                Common.TemporaryDataStorage.SaveConfirmationCode(toEmailAddress, currentConfirmationCode);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending confirmation email: " + ex.Message);
+            }
+        }
         public async Task<dynamic> CreateUserAsync(UserDTO userDTO)
         {
             try
@@ -838,4 +803,76 @@ namespace TPSS.Business.Service.Impl
 
 //        return false;
 //    }
+//}
+
+//if (string.IsNullOrEmpty(registerDTO.Firstname))
+//{
+//    errors.Add(RegisterErrors.FirstNameIsEmpty);
+//}
+//else if (!Validator.IsValidName(registerDTO.Firstname))
+//{
+//    errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Firstname));
+//}
+
+//if (!string.IsNullOrEmpty(registerDTO.Lastname))
+//{
+//    if (!Validator.IsValidUsername(registerDTO.Lastname))
+//    {
+//        errors.Add(RegisterErrors.UsernameIsInvalid(registerDTO.Lastname));
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.LastNameIsEmpty);
+//}
+//if (!string.IsNullOrEmpty(registerDTO.Email))
+//{
+//    if (!Validator.IsValidEmail(registerDTO.Email))
+//    {
+//        errors.Add(RegisterErrors.EmailIsInvalid(registerDTO.Email));
+//    }
+
+//    if (await CheckEmailExistAsync(registerDTO.Email))
+//    {
+//        errors.Add(RegisterErrors.EmailAlreadyUsed(registerDTO.Email));
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.EmailIsEmpty);
+//}
+//if (!string.IsNullOrEmpty(registerDTO.Password))
+//{
+//    errors.Add(null);
+//    if (!Validator.IsValidPassword(registerDTO.Password))
+//    {
+//        errors.Add(RegisterErrors.PasswordIsInvalid(registerDTO.Password));
+//    }
+//    else
+//    {
+//        errors.Add(null);
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.PasswordIsEmpty); // Add the error for passwordIsEmpty only if password is empty
+//    errors.Add(null);
+//}
+//// Confirm password validation
+//if (!string.IsNullOrEmpty(registerDTO.ConfirmPassword))
+//{
+//    errors.Add(null);
+//    if (!registerDTO.Password.Equals(registerDTO.ConfirmPassword))
+//    {
+//        errors.Add(RegisterErrors.ConfirmPasswordIsInvalid);
+//    }
+//    else
+//    {
+//        errors.Add(null);
+//    }
+//}
+//else
+//{
+//    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
+//    errors.Add(null);
 //}

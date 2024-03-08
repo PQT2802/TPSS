@@ -21,9 +21,9 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("Regist")]
-        public async Task<IActionResult> RegisterUserAsync(RegisterDTO registerDTO)
+        public async Task<IActionResult> RegisterUserAsync(RegisterDTO registerDTO, string confirmCode)
         {
-            var result = await _userService.RegistUserAsync(registerDTO);
+            var result = await _userService.RegistUserAsync(registerDTO, confirmCode);
             return Ok(result);
         }
 
@@ -32,6 +32,12 @@ namespace TPSS.API.Controllers
         {
             var result = await _userService.GetUserAccountAsync(loginDTO);
             return Ok(result);
+        }
+        [HttpPost("SendConfirmEmailCode")]
+        public async Task<IActionResult> SendConfirmationEmail(string toEmailAddress)
+        {
+            await _userService.SendConfirmationEmail(toEmailAddress);
+            return Ok("Verify code is sending to your email");
         }
 
 
