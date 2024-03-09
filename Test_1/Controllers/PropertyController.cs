@@ -63,28 +63,29 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
-        //[HttpPost("UpdateProperty")]
-        //public async Task<IActionResult> UpdatePropertyAsync(string propertyId)
-        //{
-        //    var result = await _propertyService.UpdatePropertyAsync(propertyId);
-        //    return Ok(result);
-        //}
-
-        //Bonus
-        [HttpPost("DeleteImageProperty")]
-        public async Task<IActionResult> DeleteImagePropertyAsync(string imageName, string propertyID)
+        [HttpPost("UpdateProperty")]
+        public async Task<IActionResult> UpdatePropertyAsync(PropertyDTO propertyDTO)
         {
-            var result = await _imageService.DeleteImagePropertyAsync(imageName,  propertyID);
+            var result = await _propertyService.UpdatePropertyAsync(propertyDTO);
             return Ok(result);
         }
 
-        //// test add with no cockies
-        //[HttpPost("CreatePropertyTEST")]
-        //public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
-        //{
-        //    var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO,uid);
-        //    return Ok(result);
-        //}
+        //Bonus
+        [HttpPost("DeleteImageProperty")]
+        public async Task<IActionResult> DeleteImagePropertyAsync(string url)
+        {
+            var result = await _imageService.DeleteImagePropertyAsync(url);
+            //var result2 = await _propertyService.DeleteImagePropertyAsync(imageID);
+            return Ok(result);
+        }
+
+        // test add with no cockies
+        [HttpPost("CreatePropertyTEST")]
+        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
+        {
+            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO, uid);
+            return Ok(result);
+        }
 
 
 

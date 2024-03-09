@@ -12,6 +12,7 @@ using Firebase.Auth;
 using Firebase.Storage;
 using Azure.Core;
 using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
 
 namespace TPSS.Business.Service.Impl
 {
@@ -105,10 +106,17 @@ namespace TPSS.Business.Service.Impl
                 throw;
             }
         }
-        public async Task<dynamic> DeleteImagePropertyAsync(string imageName, string propertyID)
+        public async Task<dynamic> DeleteImagePropertyAsync(string url)
         {
             try
             {
+                string pattern = @"/Images%2F([^%]+)%2F([^%]+)%2F([^?]+)";
+                Match match = Regex.Match(url, pattern);
+                string folder = match.Groups[1].Value;
+                string propertyId = match.Groups[2].Value;
+                string imageId = match.Groups[3].Value;
+
+                
 
                 // Get Firebase authentication token
                 var tokenDescriptor = new Dictionary<string, object>()
@@ -125,13 +133,14 @@ namespace TPSS.Business.Service.Impl
                   new FirebaseStorageOptions
                   {
                       AuthTokenAsyncFactory = () => Task.FromResult(token.FirebaseToken),
-                      ThrowOnCancel = true
+                      ThrowOnCancel = true  
                   });
 
-                string fileName = imageName;
-                string newGuid = Guid.NewGuid().ToString();
-                await storage.Child("Images").Child("PropertyDetail").Child(propertyID).Child(fileName).DeleteAsync();
-                return new { Message = "Image deleted successfully" };
+                //string fileName = imageName;
+                //string newGuid = Guid.NewGuid().ToString();
+                await storage.Child("Images").Child(folder).Child(propertyId).Child(imageId).DeleteAsync();
+                return new { Message = "Image deleted successfully" }; 
+
 
             }
             catch (Exception ex)
@@ -250,14 +259,13 @@ namespace TPSS.Business.Service.Impl
 
                 var downloadUrls = new List<string>();
                 int nextImageNumber = int.Parse(latestImageID.Substring(2)) + 1;
-                int counter = 1;
                 foreach (var image in images)
                 {
                     var fileName = $"IM{nextImageNumber:00000000}";
                     var uploadTask = storage.Child("Images").Child("ProjectDetail").Child(projectID).Child(fileName).PutAsync(image.OpenReadStream());
                     var downloadUrl = await uploadTask;
                     downloadUrls.Add(downloadUrl.ToString());
-                    counter++;
+                    nextImageNumber++;
                 }
 
                 return downloadUrls;

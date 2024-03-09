@@ -9,7 +9,7 @@ namespace TPSS.Data.Models.DTO
 {
     public class PropertyDTO
     {
-        public string ProjectId { get; set; } = null!;
+        public string? ProjectId { get; set; }
 
         public string? PropertyTitle { get; set; }
 

@@ -15,6 +15,7 @@ namespace TPSS.Business.Service
         public Task<List<string>> UploadImagesForProperty(IFormFileCollection images, string propertyID);
         public Task<List<string>> LinkFolderCheck(IFormFileCollection images, string propertyID);
         public Task<List<string>> UploadImagesForPropertyTest(IFormFileCollection images, string propertyID);
-        public Task<dynamic> DeleteImagePropertyAsync(string imageName, string propertyID);
+        public Task<dynamic> DeleteImagePropertyAsync(string url);
+        public Task<List<string>> UploadImagesForProjectDetail(IFormFileCollection images, string projectID, string latestImageID);
     }
 }

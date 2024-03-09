@@ -18,6 +18,7 @@ namespace TPSS.Data.Repository
 
         public Task<string> GetLatestPropertyIdAsync();
         public Task<string> GetLatestPropertyDetailIdAsync();
+        public Task<string> GetLatestImageIdAsync();
 
         public Task<string> GetProjectNameAsync(string projectID);
 

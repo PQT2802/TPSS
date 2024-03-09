@@ -58,6 +58,39 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
+        public async Task<int> CreatePropertyDetailAsync(PropertyDetail detail)
+        {
+            try
+            {
+                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, Description, CreateDate, UpdateDate, UpdateBy, Service, VerifyBy, VerifyDate, Verify, Status, CreateBy) " +
+                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @Description, @CreateDate, @UpdateDate, @UpdateBy, @Service, @VerifyBy, @VerifyDate, @Verify, @Status, @CreateBy)";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("PropertyDetailID", detail.PropertyDetailId, DbType.String);
+                parameter.Add("PropertyID", detail.PropertyId, DbType.String);
+                parameter.Add("OwnerID", detail.OwnerId, DbType.String);
+                parameter.Add("Description", detail.Description, DbType.String);
+                parameter.Add("CreateDate", detail.CreateDate, DbType.DateTime);
+                parameter.Add("UpdateDate", detail.UpdateDate, DbType.DateTime);
+                parameter.Add("UpdateBy", detail.UpdateBy, DbType.String);
+                parameter.Add("Service", detail.Service, DbType.String);
+                parameter.Add("VerifyBy", detail.VerifyBy, DbType.String);
+                parameter.Add("VerifyDate", detail.VerifyDate, DbType.DateTime);
+                parameter.Add("Verify", detail.Verify, DbType.Boolean);
+                parameter.Add("Status", detail.Status, DbType.String);
+                parameter.Add("CreateBy", detail.CreateBy, DbType.String);
+
+
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
         public async Task<dynamic> DeletePropertyAsync(string id)
         {
             try
@@ -94,8 +127,6 @@ END";
             }
         }
 
-        
-
         public async Task<IEnumerable<dynamic>> GetPropertyForHomePage()
         {
             try
@@ -124,37 +155,7 @@ END";
             throw new NotImplementedException();
         }
 
-        public async Task<int> CreatePropertyDetailAsync(PropertyDetail detail)
-        {
-            try
-            {
-                var query = "INSERT INTO [PropertyDetail] (PropertyDetailID, PropertyID, OwnerID, Description, CreateDate, UpdateDate, UpdateBy, Service, VerifyBy, VerifyDate, Verify, Status) " +
-                    "VALUES(@PropertyDetailID, @PropertyID, @OwnerID, @Description, @CreateDate, @UpdateDate, @UpdateBy, @Service, @VerifyBy, @VerifyDate, @Verify, @Status)";
 
-                var parameter = new DynamicParameters();
-                parameter.Add("PropertyDetailID", detail.PropertyDetailId, DbType.String);
-                parameter.Add("PropertyID", detail.PropertyId, DbType.String);
-                parameter.Add("OwnerID", detail.OwnerId, DbType.String);
-                parameter.Add("Description", detail.Description, DbType.String);
-                parameter.Add("CreateDate", detail.CreateDate, DbType.DateTime);
-                parameter.Add("UpdateDate", detail.UpdateDate, DbType.DateTime);
-                parameter.Add("UpdateBy", detail.UpdateBy, DbType.String);
-                parameter.Add("Service", detail.Service, DbType.String);
-                parameter.Add("VerifyBy", detail.VerifyBy, DbType.String);
-                parameter.Add("VerifyDate", detail.VerifyDate, DbType.DateTime);
-                parameter.Add("Verify", detail.Verify, DbType.Boolean);
-                parameter.Add("Status", detail.Status, DbType.String);
-
-
-                using var connection = CreateConnection();
-                return await connection.ExecuteAsync(query, parameter);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
-        }
 
         public async Task<string> GetLatestPropertyIdAsync()
         {
@@ -214,7 +215,7 @@ END";
             }
         }
 
-        private async Task<string> GetLatestImageIdAsync()
+        public async Task<string> GetLatestImageIdAsync()
         {
             try
             {
@@ -493,6 +494,5 @@ END";
         }
 
         
-
     }
 }

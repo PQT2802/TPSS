@@ -12,15 +12,24 @@ namespace TPSS.Business.Exceptions.ErrorHandler
         
         public static Error ProjectID(string ProjectID) => new(
             "Property.ProjectIDNotExist", $"The property with ProjectID '{ProjectID}' is not exist!!");
-        public static Error PasswordIsWrong => new(
-            "User.PasswordIsWrong", $"The password is wrong !!!");
-        public static Error AccountIsDelete => new(
-            "User.AccountIsDelete", $"The account was deleted !!!");
-
-        public static Error EmailIsEmpty => new(
-            "User.EmailIsEmpty", $"Email should not be empty !!!");
-        public static Error PasswordIsEmpty => new(
-            "User.PasswordIsEmpty", $"Password should not be empty !!!");
+        public static Error AreaIsEmpty => new(
+            "Property.AreaIsEmpty", $"Area should not be empty !!!");
+        public static Error PropertyTitleIsEmpty => new(
+            "Property.PropertyTitleIsEmpty", $"PropertyTitle should not be empty !!!");
+        public static Error PriceIsEmpty => new(
+            "Property.PriceIsEmpty", $"Price should not be empty !!!");
+        public static Error CityIsEmpty => new(
+            "Property.CityIsEmpty", $"City should not be empty !!!");
+        public static Error DistrictIsEmpty => new(
+            "Property.DistrictIsEmpty", $"District should not be empty !!!");
+        public static Error WardIsEmpty => new(
+            "Property.WardIsEmpty", $"Ward should not be empty !!!");
+        public static Error StreetIsEmpty => new(
+            "Property.StreetIsEmpty", $"Street should not be empty !!!");
+        public static Error DescriptionIsEmpty => new(
+            "Property.DescriptionIsEmpty", $"Description should not be empty !!!");
+        public static Error ImagesIsEmpty => new(
+            "Property.ImagesIsEmpty", $"Images should not be empty !!!");
     }
 
 }

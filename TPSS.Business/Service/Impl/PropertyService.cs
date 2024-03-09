@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TPSS.Business.Common;
@@ -33,7 +34,46 @@ namespace TPSS.Business.Service.Impl
             try
             {
                 List<Error> Errors = new List<Error>();
+
                 Property property = new Property();
+
+                if (propertyDTO.Area == null)
+                {
+                    Errors.Add(CreateErrors.AreaIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.PropertyTitle))
+                {
+                    Errors.Add(CreateErrors.PropertyTitleIsEmpty);
+                }
+                if (propertyDTO.Price == null)
+                {
+                    Errors.Add(CreateErrors.PriceIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.City))
+                {
+                    Errors.Add(CreateErrors.CityIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.District))
+                {
+                    Errors.Add(CreateErrors.DistrictIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Ward))
+                {
+                    Errors.Add(CreateErrors.WardIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Street))
+                {
+                    Errors.Add(CreateErrors.StreetIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Description))
+                {
+                    Errors.Add(CreateErrors.DescriptionIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Service))
+                {
+                    propertyDTO.Service = "Normal";
+                }
+
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
@@ -56,21 +96,28 @@ namespace TPSS.Business.Service.Impl
                     detail.PropertyId = property.PropertyId;
                     detail.OwnerId = userID;
                     detail.Description = propertyDTO.Description;
-                    detail.UpdateDate = null;
 
                     DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
                     detail.CreateDate = currentDate;
-
-                    detail.UpdateBy = userID;
+                    detail.UpdateDate = null;
+                    detail.UpdateBy = null;
                     detail.Service = propertyDTO.Service;
-                    detail.Verify = false;
+                    detail.Verify = null;
                     detail.VerifyBy = null;
                     detail.VerifyDate = null;
-                    detail.Status = "Waiting";
+                    detail.Status = "Normal";
+                    detail.CreateBy = userID;
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
+
+                    if (result2 == 1)
+                    {
+                        result3 = await _propertyRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForPropertyTest(propertyDTO.Images, property.PropertyId));
+                    }
+
                 }
-                return result1;
+
+                return result3;
 
             }
             catch (Exception e)
@@ -332,6 +379,51 @@ namespace TPSS.Business.Service.Impl
 
                 Property property = new Property();
 
+                if (propertyDTO.Area == null)
+                {
+                    Errors.Add(CreateErrors.AreaIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.PropertyTitle))
+                {
+                    Errors.Add(CreateErrors.PropertyTitleIsEmpty);
+                }
+                if (propertyDTO.Price == null)
+                {
+                    Errors.Add(CreateErrors.PriceIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.City))
+                {
+                    Errors.Add(CreateErrors.CityIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.District))
+                {
+                    Errors.Add(CreateErrors.DistrictIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Ward))
+                {
+                    Errors.Add(CreateErrors.WardIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Street))
+                {
+                    Errors.Add(CreateErrors.StreetIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Description))
+                {
+                    Errors.Add(CreateErrors.DescriptionIsEmpty);
+                }
+                if (string.IsNullOrEmpty(propertyDTO.Service))
+                {
+                    propertyDTO.Service = "Normal";
+                }
+                if (propertyDTO.Images ==null)
+                {
+                    Errors.Add(CreateErrors.ImagesIsEmpty);
+                }
+
+                if (Errors.Count > 0)
+                {
+                    return Result.Failures(Errors);
+                }
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
@@ -345,6 +437,7 @@ namespace TPSS.Business.Service.Impl
                 property.IsDelete = false;
                 int result1 = await _propertyRepository.CreatePropertyAsync(property);
                 int result3 = 0;
+
                 if (result1 == 1)
                 {
                     PropertyDetail detail = new PropertyDetail();
@@ -353,27 +446,28 @@ namespace TPSS.Business.Service.Impl
                     detail.PropertyId = property.PropertyId;
                     detail.OwnerId = uid;
                     detail.Description = propertyDTO.Description;
-                    detail.UpdateDate = null;
 
                     DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
                     detail.CreateDate = currentDate;
-
-                    detail.UpdateBy = property.PropertyId;
+                    detail.UpdateDate = null;
+                    detail.UpdateBy = null;
                     detail.Service = propertyDTO.Service;
-                    detail.Verify = false;
+                    detail.Verify = null;
                     detail.VerifyBy = null;
                     detail.VerifyDate = null;
                     detail.Status = "Normal";
+                    detail.CreateBy = uid;
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
 
                     if (result2 == 1)
                     {
-                        result3 = await _propertyRepository .CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForPropertyTest(propertyDTO.Images, property.PropertyId));
+                        string latestImageID = await _propertyRepository.GetLatestImageIdAsync();
+                        result3 = await _propertyRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForProjectDetail(propertyDTO.Images, property.PropertyId, latestImageID));
                     }
 
                 }
-                
+
                 return result3;
 
             }
@@ -383,6 +477,9 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        
+        public Task<dynamic> DeleteImagePropertyAsync(string imageID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
