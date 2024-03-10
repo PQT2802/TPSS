@@ -14,11 +14,11 @@ namespace TPSS.Data.Repository
         public Task<int> CreatePropertyAsync(Property property) ;
         public Task<int> CreatePropertyDetailAsync(PropertyDetail detail);
         public Task<int> UpdatePropertyAsync(Property property);
+        public Task<int> UpdatePropertyDetailAsync(PropertyDetail property);
         public Task<dynamic> DeletePropertyAsync(string id);
 
         public Task<string> GetLatestPropertyIdAsync();
         public Task<string> GetLatestPropertyDetailIdAsync();
-        public Task<string> GetLatestImageIdAsync();
 
         public Task<string> GetProjectNameAsync(string projectID);
 
@@ -39,7 +39,7 @@ namespace TPSS.Data.Repository
         public Task<PropertyDetail> GetPropertyByIdAsync(string id);
         public Task<ProjectDetail> GetProjectDetail(string id);
 
-        public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
+        //public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
 
 
 

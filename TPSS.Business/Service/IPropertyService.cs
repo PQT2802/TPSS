@@ -18,7 +18,7 @@ namespace TPSS.Business.Service
 
         public Task<dynamic> CreatePropertyAsync(PropertyDTO user, string userID);
         public Task<dynamic> DeletePropertyAsync(string propertyId);
-        public Task<dynamic> UpdatePropertyAsync(PropertyDTO user);
+        public Task<dynamic> UpdatePropertyAsync(PropertyDTO user, List<string> URLs, string propertyId, string propertyDetailId, string uid);
         public Task<dynamic> DeleteImagePropertyAsync(string imageID);
 
 

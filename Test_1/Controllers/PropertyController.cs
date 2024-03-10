@@ -64,20 +64,12 @@ namespace TPSS.API.Controllers
         }
 
         [HttpPost("UpdateProperty")]
-        public async Task<IActionResult> UpdatePropertyAsync(PropertyDTO propertyDTO)
+        public async Task<IActionResult> UpdatePropertyAsync([FromForm] PropertyDTO propertyDTO , [FromForm] List<string> URLs, string propertyId, string propertyDetailId, string uid)
         {
-            var result = await _propertyService.UpdatePropertyAsync(propertyDTO);
+            var result = await _propertyService.UpdatePropertyAsync(propertyDTO, URLs, propertyId,propertyDetailId, uid);
             return Ok(result);
         }
 
-        //Bonus
-        [HttpPost("DeleteImageProperty")]
-        public async Task<IActionResult> DeleteImagePropertyAsync(string url)
-        {
-            var result = await _imageService.DeleteImagePropertyAsync(url);
-            //var result2 = await _propertyService.DeleteImagePropertyAsync(imageID);
-            return Ok(result);
-        }
 
         // test add with no cockies
         [HttpPost("CreatePropertyTEST")]
@@ -117,15 +109,6 @@ namespace TPSS.API.Controllers
         }
 
 
-        ///test image
-        [HttpPost("Image")]
-        public async Task<IActionResult> LinkFolderCheck(IFormFileCollection image, string folderName)
-        {
-
-            var result = await _imageService.LinkFolderCheck(image, folderName);
-
-            return Ok(result);
-        }
 
         //[HttpPost("Images")]
         //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)

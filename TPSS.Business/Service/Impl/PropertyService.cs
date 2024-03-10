@@ -1,6 +1,7 @@
 ﻿
 using Firebase.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,12 +23,14 @@ namespace TPSS.Business.Service.Impl
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IAlbumRepository _albumRepository;
         private readonly IImageService _imageService;
         private readonly IConfiguration _configuration;
-        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration, IImageService imageService)
+        public PropertyService(IPropertyRepository propertyRepository, IConfiguration configuration, IImageService imageService, IAlbumRepository albumRepository)
         {
             _propertyRepository = propertyRepository;
             _imageService = imageService;
+            _albumRepository = albumRepository;
         }
         public async Task<dynamic> CreatePropertyAsync(PropertyDTO propertyDTO, string userID)
         {
@@ -73,7 +76,15 @@ namespace TPSS.Business.Service.Impl
                 {
                     propertyDTO.Service = "Normal";
                 }
+                if (propertyDTO.Images == null)
+                {
+                    Errors.Add(CreateErrors.ImagesIsEmpty);
+                }
 
+                if (Errors.Count > 0)
+                {
+                    return Result.Failures(Errors);
+                }
 
                 property.PropertyId = await AutoGeneratePropertyId();
                 property.ProjectId = propertyDTO.ProjectId;
@@ -112,7 +123,8 @@ namespace TPSS.Business.Service.Impl
 
                     if (result2 == 1)
                     {
-                        result3 = await _propertyRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForPropertyTest(propertyDTO.Images, property.PropertyId));
+                        
+                        result3 = await _albumRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesAsync(propertyDTO.Images, "Properties", property.PropertyId));
                     }
 
                 }
@@ -157,11 +169,64 @@ namespace TPSS.Business.Service.Impl
 
 
 
-        public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
-        {
-            //update soon
-            throw new NotImplementedException();
-        }    
+            public async Task<dynamic> UpdatePropertyAsync(PropertyDTO propertyDTO, List<string> URLs, string propertyId, string propertyDetailId, string uid)
+            {
+                try
+                {
+                    Property property = new Property();
+                    property.PropertyId = propertyId;
+                    property.ProjectId = propertyDTO.ProjectId;
+                    property.PropertyTitle = propertyDTO.PropertyTitle;
+                    property.Price = propertyDTO.Price;
+                    property.Area = propertyDTO.Area;
+                    property.City = propertyDTO.City;
+                    property.District = propertyDTO.District;
+                    property.Ward = propertyDTO.Ward;
+                    property.Street = propertyDTO.Street;
+                    property.IsDelete = false;
+                    int result1 = await _propertyRepository.UpdatePropertyAsync(property);
+                    int result3 = 0;
+                    int result4 = 0;
+
+                    if (result1 == 1)
+                    {
+                        PropertyDetail detail = new PropertyDetail();
+
+                        detail.PropertyDetailId = propertyDetailId;
+                        detail.PropertyId = property.PropertyId;
+                        detail.OwnerId = uid;
+                        detail.Description = propertyDTO.Description;
+                        DateTime currentDate = DateTime.Now; // hoặc DateTime.Now nếu bạn muốn sử dụng múi giờ địa phương
+                        detail.UpdateDate = currentDate;
+                        detail.UpdateBy = uid;
+
+                        int result2 = await _propertyRepository.UpdatePropertyDetailAsync(detail);
+                        if (result2 == 1)
+                        {
+                            if(URLs != null)
+                            {
+                                List<string> deletedImageIds = await _imageService.DeleteImagesAsync(URLs);
+                                result4 = await _albumRepository.DeleteImagesAsync(deletedImageIds);
+                            }
+                        
+                            if(propertyDTO.Images != null)
+                            {
+                                result3 = await _albumRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesAsync(propertyDTO.Images, "Properties", property.PropertyId));
+
+                            }
+
+                        }
+
+                    }
+
+                    return new { ImagesDelete = result4, ImagesAdd = result3 };
+
+            }
+                catch(Exception e)
+                {
+                    throw new Exception(e.Message, e);
+                }
+            }    
 
         public async Task<IEnumerable<dynamic>> GetPropertyForHomePage()
         {
@@ -462,8 +527,8 @@ namespace TPSS.Business.Service.Impl
 
                     if (result2 == 1)
                     {
-                        string latestImageID = await _propertyRepository.GetLatestImageIdAsync();
-                        result3 = await _propertyRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesForProjectDetail(propertyDTO.Images, property.PropertyId, latestImageID));
+                       
+                        result3 = await _albumRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesAsync(propertyDTO.Images,"Properties",property.PropertyId));
                     }
 
                 }

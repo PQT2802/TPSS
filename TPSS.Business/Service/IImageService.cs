@@ -10,12 +10,9 @@ namespace TPSS.Business.Service
 {
     public interface IImageService
     {
-        public Task<string> UploadImageToFirebaseStorage(IFormFile image, string folderName);
-        public Task<string> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName);
-        public Task<List<string>> UploadImagesForProperty(IFormFileCollection images, string propertyID);
-        public Task<List<string>> LinkFolderCheck(IFormFileCollection images, string propertyID);
-        public Task<List<string>> UploadImagesForPropertyTest(IFormFileCollection images, string propertyID);
-        public Task<dynamic> DeleteImagePropertyAsync(string url);
-        public Task<List<string>> UploadImagesForProjectDetail(IFormFileCollection images, string projectID, string latestImageID);
+        public Task<List<string>> UploadImagesAsync(IFormFileCollection images, string folderName, string typeID);
+        public Task<List<string>> DeleteImagesAsync(List<string> URLs);
+        
+
     }
 }

@@ -150,9 +150,42 @@ END";
             }
         }
 
-        Task<int> IPropertyRepository.UpdatePropertyAsync(Property property)
+        public async Task<int> UpdatePropertyAsync(Property property)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "UPDATE [Property] SET " +
+                            "ProjectID = @ProjectID, " +
+                            "PropertyTitle = @PropertyTitle, " +
+                            "Price = @Price, " +
+                            "Area = @Area, " +
+                            "City = @City, " +
+                            "District = @District, " +
+                            "Ward = @Ward, " +
+                            "Street = @Street, " +
+                            "IsDelete = @IsDelete " +
+                            "WHERE PropertyID = @PropertyID";
+
+                var parameters = new DynamicParameters();
+                
+                parameters.Add("ProjectID", property.ProjectId, DbType.String);
+                parameters.Add("PropertyTitle", property.PropertyTitle, DbType.String);
+                parameters.Add("Price", property.Price, DbType.Double);
+                parameters.Add("Area", property.Area, DbType.Double);
+                parameters.Add("City", property.City, DbType.String);
+                parameters.Add("District", property.District, DbType.String);
+                parameters.Add("Ward", property.Ward, DbType.String);
+                parameters.Add("Street", property.Street, DbType.String);
+                parameters.Add("IsDelete", property.IsDelete, DbType.Boolean);
+                parameters.Add("PropertyID", property.PropertyId, DbType.String);
+
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
 
 
@@ -408,49 +441,6 @@ END";
         }
 
 
-        public async Task<int> CreateAlbumAsync(string propertyId, List<string> images)
-        {
-            try
-            {
-                string latestImageId = await GetLatestImageIdAsync();
-                int newImageNumericPart = 1 + (latestImageId.IsNullOrEmpty() ? 0 : int.Parse(latestImageId.Substring(2)));
-
-
-                using var connection = CreateConnection() as SqlConnection;
-
-                await connection.OpenAsync();
-
-                using var bulkCopy = new SqlBulkCopy(connection);
-
-                bulkCopy.DestinationTableName = "Album";
-                bulkCopy.WriteToServerAsync(PrepareDataTable(propertyId, images, newImageNumericPart));
-
-                return images.Count; // Assuming all inserts were successful
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
-        }
-
-        private DataTable PrepareDataTable(string propertyId, List<string> images, int startingImageId)
-        {
-            var dataTable = new DataTable();
-            dataTable.Columns.Add("ImageId", typeof(string));
-            dataTable.Columns.Add("PropertyId", typeof(string));
-            dataTable.Columns.Add("Image", typeof(string));
-            dataTable.Columns.Add("ImageDescription", typeof(string)); // Adjust based on your needs
-
-            for (int i = 0; i < images.Count; i++)
-            {
-                string imageId = $"IM{startingImageId++:d8}";
-                string description = i == 0 ? "HomePage" : "DetailPage";
-                dataTable.Rows.Add(imageId, propertyId, images[i], description); // Update description as needed
-            }
-
-            return dataTable;
-        }
-
         public async Task<IEnumerable<dynamic>> MyProperties(string userID)
         {
             try
@@ -493,6 +483,29 @@ END";
             }
         }
 
-        
+        public async Task<int> UpdatePropertyDetailAsync(PropertyDetail detail)
+        {
+            try
+            {
+                var query = "UPDATE [PropertyDetail] SET " +
+                            "Description = @Description, " +
+                            "UpdateDate = @UpdateDate, " +
+                            "UpdateBy = @UpdateBy " +
+                            "WHERE PropertyDetailID = @PropertyDetailID";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("Description", detail.Description, DbType.String);
+                parameters.Add("UpdateDate", detail.UpdateDate, DbType.DateTime);
+                parameters.Add("UpdateBy", detail.UpdateBy, DbType.String);
+                parameters.Add("PropertyDetailID", detail.PropertyDetailId, DbType.String);
+
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
