@@ -114,10 +114,10 @@ namespace TPSS.Business.Service.Impl
                     detail.UpdateDate = null;
                     detail.UpdateBy = null;
                     detail.Service = propertyDTO.Service;
-                    detail.Verify = null;
+                    detail.Verify = false;
                     detail.VerifyBy = null;
                     detail.VerifyDate = null;
-                    detail.Status = "Normal";
+                    detail.Status = "Waiting";
                     detail.CreateBy = userID;
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
@@ -239,7 +239,7 @@ namespace TPSS.Business.Service.Impl
             string latestPropertyId = await _propertyRepository.GetLatestPropertyIdAsync();
             if (latestPropertyId.IsNullOrEmpty())
             {
-                newPropertyid = "PP00000000";
+                newPropertyid = "PP00000001";
             }
             else
             {
@@ -257,7 +257,7 @@ namespace TPSS.Business.Service.Impl
             string latestPropertyDetailId = await _propertyRepository.GetLatestPropertyDetailIdAsync();
             if (latestPropertyDetailId.IsNullOrEmpty())
             {
-                newPropertyid = "PD00000000";
+                newPropertyid = "PD00000001";
             }
             else
             {
@@ -386,7 +386,7 @@ namespace TPSS.Business.Service.Impl
             try
             {
                 var properties = await _propertyRepository.MyProperties(userID);
-                var propertyImages = await _propertyRepository.MyPropertiesImages(userID);
+                var propertyImages = await _albumRepository.MyPropertiesImages(userID);
 
                 var groupedImages = propertyImages.GroupBy(img => img.PropertyId);
 
@@ -412,7 +412,61 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
+        public async Task<IEnumerable<dynamic>> GetVerifyPropertiesAsync()
+        {
+            try
+            {
+                var properties = await _propertyRepository.GetVerifyPropertiesAsync();
+                return properties;
+            }
+            catch (Exception e)
+            {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetWaitingPropertiesAsync()
+        {
+            try
+            {
+                var properties = await _propertyRepository.GetWaitingPropertiesAsync();
+                return properties;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> VerifyPropertiesAsync(List<string> propertiesID)
+        {
+            try
+            {
+                var properties = await _propertyRepository.VerifyPropertiesAsync(propertiesID);
+                return properties;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);  
+            }
+        }
+
+        public async Task<dynamic> AcceptedPropertiesAsync(List<string> propertiesID)
+        {
+            try
+            {
+                var properties = await _propertyRepository.AcceptedPropertiesAsync(propertiesID);
+                return properties;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
 
         // test
         public async Task<dynamic> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
@@ -459,7 +513,7 @@ namespace TPSS.Business.Service.Impl
                 {
                     propertyDTO.Service = "Normal";
                 }
-                if (propertyDTO.Images ==null)
+                if (propertyDTO.Images == null)
                 {
                     Errors.Add(CreateErrors.ImagesIsEmpty);
                 }
@@ -496,18 +550,18 @@ namespace TPSS.Business.Service.Impl
                     detail.UpdateDate = null;
                     detail.UpdateBy = null;
                     detail.Service = propertyDTO.Service;
-                    detail.Verify = null;
+                    detail.Verify = false;
                     detail.VerifyBy = null;
                     detail.VerifyDate = null;
-                    detail.Status = "Normal";
+                    detail.Status = "Waiting";
                     detail.CreateBy = uid;
 
                     int result2 = await _propertyRepository.CreatePropertyDetailAsync(detail);
 
                     if (result2 == 1)
                     {
-                       
-                        result3 = await _albumRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesAsync(propertyDTO.Images,"Properties",property.PropertyId));
+
+                        result3 = await _albumRepository.CreateAlbumAsync(property.PropertyId, await _imageService.UploadImagesAsync(propertyDTO.Images, "Properties", property.PropertyId));
                     }
 
                 }
@@ -521,9 +575,6 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public Task<dynamic> DeleteImagePropertyAsync(string imageID)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

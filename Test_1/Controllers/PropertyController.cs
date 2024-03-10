@@ -41,12 +41,46 @@ namespace TPSS.API.Controllers
         }
 
         [HttpGet("MyProperties")]
-        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties(string UserID)
+        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties()
         {
-            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
-            var result = await _propertyService.MyProperties(UserID);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.MyProperties(c.UserId);
             return Ok(result);
         }
+
+        [HttpGet("ListVerifyProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> ListVerifyPropertiesAsync()
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetVerifyPropertiesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ListWaitingProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> ListWaitingPropertiesAsync()
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetWaitingPropertiesAsync();
+            return Ok(result);
+        }
+
+
+        [HttpPost("VerifyProperties")]
+        public async Task<ActionResult<dynamic>> VerifyPropertiesAsync([FromForm] List<string> propertiesID)
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.VerifyPropertiesAsync(propertiesID);
+            return Ok(result);
+        }
+
+        [HttpPost("AcceptedProperties")]
+        public async Task<ActionResult<dynamic>> AcceptedPropertiesAsync([FromForm] List<string> propertiesID)
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.AcceptedPropertiesAsync(propertiesID);
+            return Ok(result);
+        }
+
 
         [HttpPost("CreateProperty")]
         public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
@@ -69,6 +103,8 @@ namespace TPSS.API.Controllers
             var result = await _propertyService.UpdatePropertyAsync(propertyDTO, URLs, propertyId,propertyDetailId, uid);
             return Ok(result);
         }
+
+
 
 
         // test add with no cockies

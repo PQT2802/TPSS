@@ -120,7 +120,7 @@ namespace TPSS.Data.Repository.Impl
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
-                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0;";   
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND PD.Status = 'Accepted';";   
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query);
@@ -279,7 +279,7 @@ namespace TPSS.Data.Repository.Impl
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
-                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.City =@City;";
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.City =@City AND PD.Status = 'Accepted';";
                 var parameter = new DynamicParameters();
                 parameter.Add("City", city, DbType.String);
                 using var connection = CreateConnection();
@@ -302,7 +302,7 @@ namespace TPSS.Data.Repository.Impl
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
-                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.District =@District;";
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.District =@District AND PD.Status = 'Accepted';";
                 var parameter = new DynamicParameters();
                 parameter.Add("District", District, DbType.String);
                 using var connection = CreateConnection();
@@ -447,7 +447,29 @@ namespace TPSS.Data.Repository.Impl
                     "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
-                    "WHERE A.ImageDescription = 'HomePage';";
+                    "WHERE A.ImageDescription = 'HomePage' AND PD.OwnerID =@OwnerID;";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("OwnerID", userID, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<Property>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> GetVerifyPropertiesAsync()
+        {
+            try
+            {
+                var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage' AND PD.Verify = 'False';";
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query);
@@ -458,27 +480,81 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public async Task<IEnumerable<dynamic>> MyPropertiesImages(string userID)
+        public async Task<IEnumerable<dynamic>> GetWaitingPropertiesAsync()
         {
             try
             {
-                var query = "SELECT A.[ImageId], A.[PropertyId], A.[Image] " +
-                    "FROM [dbo].[Album] A " +
-                    "JOIN [dbo].[Property] P ON A.[PropertyId] = P.[PropertyID] " +
-                    "JOIN [dbo].[PropertyDetail] PD ON P.[PropertyID] = PD.[PropertyID] " +
-                    "WHERE A.[ImageDescription] = 'DetailPage' AND PD.[OwnerID] = @UserID;";
+                var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage' AND PD.Status = 'Waiting';";
 
-                var parameter = new DynamicParameters();
-                parameter.Add("UserID", userID, DbType.String);
                 using var connection = CreateConnection();
-                
-                return await connection.QueryAsync<dynamic>(query,parameter);
+                return await connection.QueryAsync<dynamic>(query);
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<dynamic> VerifyPropertiesAsync(List<string> propertiesID)
+        {
+            try
+            {
+                using var connection = CreateConnection() as SqlConnection;
+                await connection.OpenAsync();
+
+                foreach (string propertyID in propertiesID)
+                {
+                    
+                    string updateQuery = "UPDATE [dbo].[PropertyDetail] SET " +
+                        "Verify = 1 " +
+                        "WHERE PropertyID = @PropertyID;";
+
+                    
+                    await connection.ExecuteAsync(updateQuery, new { PropertyID = propertyID });
+                }
+
+                return propertiesID.Count;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> AcceptedPropertiesAsync(List<string> propertiesID)
+        {
+            try
+            {
+                
+                using var connection = CreateConnection() as SqlConnection;
+                await connection.OpenAsync();
+
+                foreach (string propertyID in propertiesID)
+                {
+                    
+                    string updateQuery = "UPDATE [dbo].[PropertyDetail] SET " +
+                        "Status = 'Accepted' " +
+                        "WHERE PropertyID = @PropertyID;";
+
+                    
+                    await connection.ExecuteAsync(updateQuery, new { PropertyID = propertyID });
+                }
+
+                return propertiesID.Count;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+
+
+
 
         public async Task<int> UpdatePropertyDetailAsync(PropertyDetail detail)
         {
@@ -505,6 +581,6 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-
+        
     }
 }

@@ -114,6 +114,10 @@ namespace TPSS.Business.Service.Impl
                         ThrowOnCancel = true,
                     });
                 string latestImageID = await GetLatestImageIdAsync();
+                if(latestImageID == null)
+                {
+                    latestImageID = "IM00000000";
+                }
                 var downloadUrls = new List<string>();
                 int nextImageNumber = int.Parse(latestImageID.Substring(2)) + 1;
                 foreach (var image in images)

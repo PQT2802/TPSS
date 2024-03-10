@@ -19,16 +19,19 @@ namespace TPSS.Business.Service
         public Task<dynamic> CreatePropertyAsync(PropertyDTO user, string userID);
         public Task<dynamic> DeletePropertyAsync(string propertyId);
         public Task<dynamic> UpdatePropertyAsync(PropertyDTO user, List<string> URLs, string propertyId, string propertyDetailId, string uid);
-        public Task<dynamic> DeleteImagePropertyAsync(string imageID);
+
         public Task<dynamic> GetPropertyByIdAsync(string propertyID);
 
 
         //MyProperties
         public Task<IEnumerable<dynamic>> MyProperties(string userID);
+        public Task<IEnumerable<dynamic>> GetVerifyPropertiesAsync();
+        public Task<IEnumerable<dynamic>> GetWaitingPropertiesAsync();
 
-        
+        public Task<dynamic> VerifyPropertiesAsync(List<string> propertiesID);
+        public Task<dynamic> AcceptedPropertiesAsync(List<string> propertiesID);
 
-        
+
         public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
         public Task<IEnumerable<Project>> GetLastestProject();

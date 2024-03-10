@@ -145,5 +145,27 @@ namespace TPSS.Data.Repository.Impl
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<IEnumerable<dynamic>> MyPropertiesImages(string userID)
+        {
+            try
+            {
+                var query = "SELECT A.[ImageId], A.[PropertyId], A.[Image] " +
+                    "FROM [dbo].[Album] A " +
+                    "JOIN [dbo].[Property] P ON A.[PropertyId] = P.[PropertyID] " +
+                    "JOIN [dbo].[PropertyDetail] PD ON P.[PropertyID] = PD.[PropertyID] " +
+                    "WHERE A.[ImageDescription] = 'DetailPage' AND PD.[OwnerID] = @UserID;";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("UserID", userID, DbType.String);
+                using var connection = CreateConnection();
+
+                return await connection.QueryAsync<dynamic>(query, parameter);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
