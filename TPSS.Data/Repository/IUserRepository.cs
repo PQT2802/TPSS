@@ -26,5 +26,6 @@ namespace TPSS.Data.Repository
         public Task<int> UpdateUserRole(string userId,string roleId);
         public Task<int> UpdateIsActive (string userId);
         public Task<User> GetUserByEmail(string email);
+        public Task<int> UpdatePasswordAsync(string userId, string password);
     }
 }

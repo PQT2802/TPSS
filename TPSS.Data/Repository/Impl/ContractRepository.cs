@@ -249,7 +249,8 @@ WHERE c.IsDelete = 0 AND c.ContractId = @contractIdValue ";
                 var query = @"
 UPDATE [dbo].[Contract]
    SET 
-      [Thirdparty] = @userIdValue     
+      [Thirdparty] = @userIdValue
+        ,ContractStatus = 'Processing'
       ,[ContractScript] = @contractValue
  WHERE ContractID = @contractIdValue
 ";
