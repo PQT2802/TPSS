@@ -33,12 +33,12 @@ namespace TPSS.API.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("PropertyDetail")]
-        //public async Task<ActionResult<PropertyDetailWithRelatedProperties>> GetPropertyDetailWithRelatedProperties(string propertyID)
-        //{
-        //    var result = await _propertyService.GetPropertyDetailWithRelatedProperties(propertyID);
-        //    return Ok(result);
-        //}
+        [HttpGet("PropertyDetail")]
+        public async Task<ActionResult<dynamic>> GetPropertyByIdAsync(string propertyid)
+        {
+            var result = await _propertyService.GetPropertyByIdAsync(propertyid);
+            return Ok(result);
+        }
 
         [HttpGet("MyProperties")]
         public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties(string UserID)

@@ -95,28 +95,10 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = @"IF EXISTS (SELECT 1 FROM [dbo].[Reservation] WHERE [PropertyID] = @propertyIDToDelete)
-BEGIN
-    SELECT 'Reservation exists, do nothing' AS [Message]
-END
-ELSE
-BEGIN
-    BEGIN TRANSACTION;
-    BEGIN TRY
-        DELETE FROM [dbo].[PropertyDetail] WHERE [PropertyId] = @propertyIDToDelete;
-        DELETE FROM [dbo].[Album] WHERE [PropertyId] = @propertyIDToDelete;
-        DELETE FROM [dbo].[Property] WHERE [PropertyID] = @propertyIDToDelete;
-        COMMIT;
-        SELECT 'Records deleted successfully' AS [Message]
-    END TRY
-    BEGIN CATCH
-        ROLLBACK;
-        SELECT 'Error occurred during delete' AS [Message]
-    END CATCH
-END";
+                var query = @"UPDATE [dbo].[Property] SET IsDelete = 'True' WHERE PropertyID = @PropertyID;";
 
                 var parameter = new DynamicParameters();
-                parameter.Add("propertyIDToDelete", id, DbType.String);
+                parameter.Add("PropertyID", id, DbType.String);
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
 
@@ -138,7 +120,7 @@ END";
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
-                    "WHERE A.ImageDescription = 'HomePage';";   
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0;";   
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query);
@@ -228,19 +210,22 @@ END";
             }
         }
 
-        public async Task<PropertyDetail> GetPropertyByIdAsync(string id)
+        public async Task<dynamic> GetPropertyByIdAsync(string id)
         {
             try
             {
-                var query = "SELECT * " +
-                    "FROM dbo.Property AS P " +
-                    "JOIN dbo.PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
-                    "WHERE P.PropertyID = @PropertyID";
+                var query = "SELECT P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, PD.Verify, PD.Status, PD.Service " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
+                    "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
+                    "WHERE P.PropertyID = @PropertyID;";
 
                 var parameter = new DynamicParameters();
                 parameter.Add("PropertyID", id, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QuerySingleAsync<PropertyDetail>(query, parameter);
+                return await connection.QuerySingleAsync<dynamic>(query, parameter);
             }
             catch (Exception e)
             {
@@ -283,16 +268,22 @@ END";
             }
         }
 
-        public async Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city)
+        public async Task<IEnumerable<dynamic>> GetRelatedPropertiesByCityAsync(string city)
         {
             try
             {
-                var query = "SELECT TOP 5 * FROM dbo.Property " +
-                    "WHERE City = @City";
+                var query = "SELECT TOP 10 P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
+                    "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.City =@City;";
                 var parameter = new DynamicParameters();
                 parameter.Add("City", city, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QueryAsync<Property>(query, parameter);
+                return await connection.QueryAsync<dynamic>(query, parameter);
             }
             catch (Exception e)
             {
@@ -300,16 +291,22 @@ END";
             }
         }
 
-        public async Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province)
+        public async Task<IEnumerable<dynamic>> GetRelatedPropertiesByDistrictAsync(string District)
         {
             try
             {
-                var query = "SELECT TOP 5 * FROM dbo.Property " +
-                    "WHERE Province = @Province";
+                var query = "SELECT TOP 10 P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
+                    "FROM Property AS P " +
+                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
+                    "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
+                    "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
+                    "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
+                    "WHERE A.ImageDescription = 'HomePage' AND P.IsDelete = 0 AND P.District =@District;";
                 var parameter = new DynamicParameters();
-                parameter.Add("Province", province, DbType.String);
+                parameter.Add("District", District, DbType.String);
                 using var connection = CreateConnection();
-                return await connection.QueryAsync<Property>(query, parameter);
+                return await connection.QueryAsync<dynamic>(query, parameter);
             }
             catch (Exception e)
             {
@@ -507,5 +504,7 @@ END";
                 throw new Exception(ex.Message, ex);
             }
         }
+
+
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using TPSS.Business.Common;
 using TPSS.Business.Exceptions.ErrorHandler;
 using TPSS.Data.Models.DTO;
@@ -139,11 +140,11 @@ namespace TPSS.Business.Service.Impl
         }
 
 
-        public async Task<dynamic> DeletePropertyAsync(string id)
+        public async Task<dynamic> DeletePropertyAsync(string propertyId)
         {
             try
             {
-                var result = await _propertyRepository.DeletePropertyAsync(id);
+                var result = await _propertyRepository.DeletePropertyAsync(propertyId);
                 return result;
             }
             catch (Exception e)
@@ -153,19 +154,7 @@ namespace TPSS.Business.Service.Impl
         }
 
 
-        public async Task<Property> GetPropertyByIdAsync(string id)
-        {
-            try
-            {
-                //Property result = await _propertyRepository.GetPropertyByIdAsync(id);
-                //return result;
-                return null;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message, e);
-            }
-        }
+
 
 
 
@@ -280,51 +269,41 @@ namespace TPSS.Business.Service.Impl
             return newPropertyid;
         }
 
-        //public async Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID)
-        //{
-        //    try
-        //    {
+        public async Task<dynamic> GetPropertyByIdAsync(string propertyID)
+        {
+            try
+            {
 
-        //        var propertyDetail = await _propertyRepository.GetPropertyByIdAsync(propertyID);
+                var propertyDetail = await _propertyRepository.GetPropertyByIdAsync(propertyID);
 
-        //        var owner = await _propertyRepository.GetOwnerByIdAsync(propertyDetail.OwnerId);
+                var albumImages = await _albumRepository.GetAlbumByPropertyID(propertyID);
 
+                IEnumerable<dynamic> relatedProperties = null;
 
-        //        var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
+                if (propertyDetail.City != null)
+                {
+                    relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
+                }
+                else
+                {
+                    relatedProperties = await _propertyRepository.GetRelatedPropertiesByDistrictAsync(propertyDetail.District);
+                }
 
-                //var project = await _propertyRepository.GetProjectNameAsync(propertyDetail.ProjectId);
+                var result = new 
+                {
+                    PropertyDetail = propertyDetail,
+                    AlbumImages = albumImages,
+                    RelatedProperties = relatedProperties
+                }; 
 
-                
-        //        IEnumerable<Property> relatedProperties = null;
+                return result;
 
-        //        if (propertyDetail.City != null)
-        //        {
-        //            relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
-        //        }
-               
-        //        // Tạo đối tượng chứa thông tin PropertyDetail và danh sách các Property khác
-        //        var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
-
-        //        return result;
-
-                //if (propertyDetail.City != null)
-                //{
-                //    relatedProperties = await _propertyRepository.GetRelatedPropertiesByCityAsync(propertyDetail.City);
-                //}
-
-                // Tạo đối tượng chứa thông tin PropertyDetail và danh sách các Property khác
-                //var result = new PropertyDetailWithRelatedProperties(propertyDetail, relatedProperties,owner,project);
-
-                //return result;
-
-
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message, e);
-        //    }
-        //}
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<IEnumerable<Project>> GetAllProjects()
         {

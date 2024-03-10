@@ -20,7 +20,7 @@ namespace TPSS.Business.Service
         public Task<dynamic> DeletePropertyAsync(string propertyId);
         public Task<dynamic> UpdatePropertyAsync(PropertyDTO user, List<string> URLs, string propertyId, string propertyDetailId, string uid);
         public Task<dynamic> DeleteImagePropertyAsync(string imageID);
-
+        public Task<dynamic> GetPropertyByIdAsync(string propertyID);
 
 
         //MyProperties
@@ -28,7 +28,7 @@ namespace TPSS.Business.Service
 
         
 
-        //public Task<PropertyDetailWithRelatedProperties> GetPropertyDetailWithRelatedProperties(string propertyID);
+        
         public Task<ProjectDetailWithRelatedProperties> GetProjectDetailWithRelatedProperties(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
         public Task<IEnumerable<Project>> GetLastestProject();

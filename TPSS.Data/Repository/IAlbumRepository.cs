@@ -10,5 +10,6 @@ namespace TPSS.Data.Repository
         public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
         public Task<int> UpdateAlbumAsync(string propertyId, List<string> images);
         public Task<int> DeleteImagesAsync(List<string> imageIds);
+        public Task<IEnumerable<dynamic>> GetAlbumByPropertyID(string propertyID);
     }
 }

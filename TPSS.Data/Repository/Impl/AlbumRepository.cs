@@ -126,5 +126,24 @@ namespace TPSS.Data.Repository.Impl
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<dynamic>> GetAlbumByPropertyID(string propertyID)
+        {
+            try
+            {
+                var query = "SELECT ImageId, [Image], ImageDescription " +
+                    "FROM [dbo].[Album] " +
+                    "Where PropertyId = @PropertyId;";
+                var parameter = new DynamicParameters();
+                parameter.Add("PropertyId", propertyID, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<dynamic>(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }

@@ -26,17 +26,19 @@ namespace TPSS.Data.Repository
 
         public Task<IEnumerable<dynamic>> MyProperties(string userID);
         public Task<IEnumerable<dynamic>> MyPropertiesImages(string userID);
+        public Task<dynamic> GetPropertyByIdAsync(string id);
+        public Task<IEnumerable<dynamic>> GetRelatedPropertiesByCityAsync(string city);
+        public Task<IEnumerable<dynamic>> GetRelatedPropertiesByDistrictAsync(string District);
 
 
         public Task<IEnumerable<Property>> GetPropertiesByUserIDAsync(string UserID);
-        public Task<IEnumerable<Property>> GetRelatedPropertiesByCityAsync(string city);
-        public Task<IEnumerable<Property>> GetRelatedPropertiesByProvinceAsync(string province);
+        
         public Task<IEnumerable<Property>> GetRelatedPropertiesByProjectIDAsync(string projectID);
         public Task<IEnumerable<Project>> GetAllProjects();
         public Task<IEnumerable<Project>> GetLastestProject();
 
         public Task<UserDetail> GetOwnerByIdAsync(string ownerId);
-        public Task<PropertyDetail> GetPropertyByIdAsync(string id);
+        
         public Task<ProjectDetail> GetProjectDetail(string id);
 
         //public Task<int> CreateAlbumAsync(string propertyId, List<string> images);
