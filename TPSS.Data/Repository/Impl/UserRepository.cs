@@ -341,6 +341,25 @@ namespace TPSS.Data.Repository.Impl
             using var connection = CreateConnection();
             return await connection.QueryFirstOrDefaultAsync<User>(query, parameter);
         }
+        public async Task<int> UpdatePasswordAsync(string userId, string password)
+        {
+            try
+            {
+                var query = "UPDATE [User] " +
+                "SET Password = @passwordValue " +
+                "WHERE UserId = @userIdValue";
+                var parameter = new DynamicParameters();
+                parameter.Add("passwordValue", password);
+                parameter.Add("userIdValue", userId);
+                using var connection = CreateConnection();
+                return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
     }
 }
 //public async Task<string> GetUserNameAsync(string username)
