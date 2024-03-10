@@ -121,28 +121,28 @@ namespace TPSS.API.Controllers
 
 
 
-        //Project
+        //////Project
 
-        [HttpGet("Project")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
-        {
-            var result = await _propertyService.GetAllProjects();
-            return Ok(result);
-        }
+        ////[HttpGet("Project")]
+        ////public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
+        ////{
+        ////    var result = await _propertyService.GetAllProjects();
+        ////    return Ok(result);
+        ////}
 
-        [HttpGet("ProjectDetail")]
-        public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
-        {
-            var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
-            return Ok(result);
-        }
+        ////[HttpGet("ProjectDetail")]
+        ////public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
+        ////{
+        ////    var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
+        ////    return Ok(result);
+        ////}
 
-        [HttpGet("LastestProject")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetLastestProject()
-        {
-            var result = await _propertyService.GetLastestProject();
-            return Ok(result);
-        }
+        ////[HttpGet("LastestProject")]
+        ////public async Task<ActionResult<IEnumerable<Project>>> GetLastestProject()
+        ////{
+        ////    var result = await _propertyService.GetLastestProject();
+        ////    return Ok(result);
+        ////}
 
 
 
