@@ -21,6 +21,8 @@ using TPSS.Business.Exceptions.ErrorHandler;
 using TPSS.Data.Models.DTO;
 using TPSS.Data.Models.Entities;
 using TPSS.Data.Repository;
+using Microsoft.AspNetCore.Http;
+using Microsoft.SqlServer.Server;
 
 namespace TPSS.Business.Service.Impl
 {
@@ -50,21 +52,21 @@ namespace TPSS.Business.Service.Impl
 
                 errors.AddRange(
                     string.IsNullOrEmpty(registerDTO.Firstname)
-                    ? new Error[] { RegisterErrors.FirstNameIsEmpty }
+                    ? new Error[] { RegisterErrors.FirstNameIsEmpty }//User.FirstNameIsEmpty
                     : !Validator.IsValidName(registerDTO.Firstname)
-                        ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Firstname) }
+                        ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Firstname) }//User.UsernameIsInvalid
                         : Enumerable.Empty<Error>()
                     );
                 errors.AddRange(
                     string.IsNullOrEmpty(registerDTO.Lastname)
-                    ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Lastname) }
+                    ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Lastname) } //User.UsernameIsInvalid
                     : !Validator.IsValidUsername(registerDTO.Lastname)
                         ? new Error[] { RegisterErrors.UsernameIsInvalid(registerDTO.Lastname) }
                         : Enumerable.Empty<Error>()
                     );
                 errors.AddRange(
                     string.IsNullOrEmpty(registerDTO.Email)
-                    ? new Error[] { RegisterErrors.EmailIsInvalid(registerDTO.Email) }
+                    ? new Error[] { RegisterErrors.EmailIsEmpty }
                     : !Validator.IsValidEmail(registerDTO.Email)
                       ? new Error[] { RegisterErrors.EmailIsInvalid(registerDTO.Email) }
                       : await CheckEmailExistAsync(registerDTO.Email)
@@ -342,129 +344,129 @@ namespace TPSS.Business.Service.Impl
                 List<Error> errors = new List<Error>();
                 var user = new User();
                 var userDetail = new UserDetail();
-                if (!string.IsNullOrEmpty(updateUser.Firstname))
+                if (currentUser.Firstname != updateUser.Firstname)
                 {
-                    if (Validator.IsValidName(updateUser.Firstname))
-                    {
-                        user.Firstname = updateUser.Firstname;
-                    }
-                    else
-                    {
-                        errors.Add(UpdateUserErrors.FirstNameIsInvalid(updateUser.Firstname));
-                    }                   
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Lastname)
+                        ? new Error[] { RegisterErrors.UsernameIsInvalid(updateUser.Lastname) } //User.UsernameIsInvalid
+                        : !Validator.IsValidUsername(updateUser.Lastname)
+                            ? new Error[] { RegisterErrors.UsernameIsInvalid(updateUser.Lastname) }
+                            : Enumerable.Empty<Error>()
+                        );
                 }
-                else { user.Firstname=currentUser.Firstname;}
-                if (!string.IsNullOrEmpty(updateUser.Lastname))
+                if(currentUser.Lastname != updateUser.Lastname)
                 {
-                    if (Validator.IsValidName(updateUser.Lastname))
-                    {
-                        user.Lastname = updateUser.Lastname;
-                    }
-                    else
-                    {
-                        errors.Add(UpdateUserErrors.LastNameIsInvalid(updateUser.Lastname));
-                    }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Lastname)
+                        ? new Error[] { RegisterErrors.UsernameIsInvalid(updateUser.Lastname) } //User.UsernameIsInvalid
+                        : !Validator.IsValidUsername(updateUser.Lastname)
+                            ? new Error[] { RegisterErrors.UsernameIsInvalid(updateUser.Lastname) }
+                            : Enumerable.Empty<Error>()
+                                   );
                 }
-                else
+                if(currentUser.Email != updateUser.Email)
                 {
-                    user.Lastname=currentUser.Lastname;
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Email)
+                        ? new Error[] { RegisterErrors.EmailIsInvalid(updateUser.Email) }
+                        : !Validator.IsValidEmail(updateUser.Email)
+                          ? new Error[] { RegisterErrors.EmailIsInvalid(updateUser.Email) }
+                          : await CheckEmailExistAsync(updateUser.Email)
+                            ? new Error[] { RegisterErrors.EmailAlreadyUsed(updateUser.Email) }
+                            : string.IsNullOrEmpty(updateUser.ConfirmCode)
+                              ? new Error[] { new Error("User.CodeIsEmpty", "Verify code should not be empty") }
+                              : !updateUser.ConfirmCode.Equals(TemporaryDataStorage.GetConfirmationCode(updateUser.Email))
+                                 ? new Error[] { new Error("User.InvalidConfirmCode", "Your verify code is wrong!!!") }
+                                 : Enumerable.Empty<Error>()
+                        );
                 }
-                if (!string.IsNullOrEmpty(updateUser.Email))
+                if(currentUser.Phone != updateUser.Phone)
                 {
-                    if(Validator.IsValidEmail(updateUser.Email))
-                    {
-                        if(!await CheckEmailExistAsync(updateUser.Email))
-                        {
-                            user.Email = updateUser.Email;
-                        }
-                        else
-                        {
-                            errors.Add(UpdateUserErrors.EmailAlreadyUsed(updateUser.Email));
-                        }                        
-                    }
-                    else
-                    {
-                        errors.Add(UpdateUserErrors.EmailIsInvalid(updateUser.Email));
-                    }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Phone)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : !Validator.IsValidPhone(updateUser.Phone)
+                          ? new Error[] { UpdateUserErrors.PhoneIsInvalid(updateUser.Phone) }
+                          : await CheckPhoneExistAsync(updateUser.Phone)
+                            ? new Error[] { UpdateUserErrors.PhoneAlreadyUsed(updateUser.Phone) }
+                            : Enumerable.Empty<Error>()
+                    );
                 }
-                else
+                if (currentUser.PersonalId != updateUser.PersonalId)
                 {
-                    user.Email=currentUser.Email;
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.PersonalId)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : !Validator.IsValidPersonalId(updateUser.PersonalId)
+                           ? new Error[] { UpdateUserErrors.PersonalIdIsInvalid(updateUser.PersonalId) }
+                           : await CheckPersonalIdExistAsync(updateUser.PersonalId)
+                             ? new Error[] { UpdateUserErrors.PersonalIdAlreadyUsed(updateUser.PersonalId) }
+                             : Enumerable.Empty<Error>()
+                        );
                 }
-                if(!string.IsNullOrEmpty(updateUser.Phone))
+                if(currentUser.Avatar != updateUser.Avatar)
                 {
-                    if (Validator.IsValidPhone(updateUser.Phone))
-                    {
-                        if(!await CheckPhoneExistAsync(updateUser.Phone))
-                        {
-                            userDetail.Phone = updateUser.Phone;
-                        }
-                        else
-                        {
-                            errors.Add(UpdateUserErrors.PhoneAlreadyUsed(updateUser.Phone));
-                        }                        
-                    }
-                    else
-                    {
-                        errors.Add(UpdateUserErrors.PhoneIsInvalid(updateUser.Phone));
-                    }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Avatar)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : Enumerable.Empty<Error>()
+                        );
                 }
-                else
+                // avatar luu 1 folder tren firebase
+                if (currentUser.Address != updateUser.Address)
                 {
-                    userDetail.Phone=currentUser.Phone;
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Address)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : Enumerable.Empty<Error>()
+                        );
                 }
-                if(!string.IsNullOrEmpty(updateUser.PersonalId))
+                if (currentUser.Address != updateUser.TaxIdentificationNumber)
                 {
-                    if (!string.IsNullOrEmpty(updateUser.PersonalId))
-                    {
-                        if (Validator.IsValidPersonalId(updateUser.PersonalId))
-                        {
-                            if(!await CheckPersonalIdExistAsync(updateUser.PersonalId))
-                            {
-                                userDetail.PersonalId = updateUser.PersonalId;
-                            }
-                            else
-                            {
-                                errors.Add(UpdateUserErrors.PersonalIdAlreadyUsed(updateUser.PersonalId));
-                            }
-                        }
-                        else
-                        {
-                            errors.Add(UpdateUserErrors.PersonalIdIsInvalid(updateUser.PersonalId));
-                        }
-                    }
-                    else
-                    {
-                        userDetail.PersonalId = currentUser.PersonalId;
-                    }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.TaxIdentificationNumber)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : Enumerable.Empty<Error>()
+                        );
                 }
-                userDetail.Avatar = !string.IsNullOrEmpty(updateUser.Avatar) ? updateUser.Avatar : currentUser.Avatar;// avatar luu 1 folder tren firebase
-                userDetail.Address = !string.IsNullOrEmpty(updateUser.Address) ? updateUser.Address : currentUser.Address;
-                userDetail.Gender = !string.IsNullOrEmpty(updateUser.Gender) ? updateUser.Gender : currentUser.Gender;
-                userDetail.TaxIdentificationNumber = !string.IsNullOrEmpty(updateUser.TaxIdentificationNumber) ? updateUser.TaxIdentificationNumber : currentUser.TaxIdentificationNumber;
-                if (!string.IsNullOrEmpty(updateUser.DateOfBirth))
+                if (currentUser.Gender != updateUser.Gender)
                 {
-                    if (DateTime.TryParseExact(updateUser.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dob))
-                    {
-                        userDetail.DateOfBirth = new DateOnly(dob.Year, dob.Month, dob.Day);
-                    }
-                    else
-                    {
-                        errors.Add(new Error("User.InvalidFormat", "Invalid date format. Expected format: dd-MM-yyyy"));
-                    }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.Gender)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : Enumerable.Empty<Error>()
+                        );
                 }
-                else
-                {
-                    userDetail.DateOfBirth = currentUser.DateOfBirth;
-                }
+                    errors.AddRange(
+                        string.IsNullOrEmpty(updateUser.DateOfBirth)
+                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                        : !DateTime.TryParseExact(updateUser.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dob)
+                          ? new Error[] { new Error("User.InvalidFormat", "Invalid date format. Expected format: dd/MM/yyyy") }
+                          : Enumerable.Empty<Error>()
+                        );
+                
 
-                if (errors.All(error => error == null))
+                if (errors == null || !errors.Any())
                 {
                     user.UserId = updateUser.UserId;
+                    user.Firstname = updateUser.Firstname;
+                    user.Lastname = updateUser.Lastname;
+                    user.Email = updateUser.Email;
+                    
                     userDetail.UserId = updateUser.UserId;
+                    userDetail.Address = updateUser.Address;
+                    userDetail.Avatar = updateUser.Avatar;//add anh
+                    userDetail.Phone = updateUser.Phone;
+                    userDetail.Gender = updateUser.Gender;
+                    userDetail.TaxIdentificationNumber = updateUser.TaxIdentificationNumber;
+                    userDetail.PersonalId = updateUser.PersonalId;
+                    userDetail.DateOfBirth = DateOnly.ParseExact(updateUser.DateOfBirth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    
+                    TemporaryDataStorage.RemoveConfirmationCode(updateUser.Email);
                     var result =await _userDetailRepository.UpdateUserDetailAsync(user,userDetail);
-                    var result1 =  UpdateIsActive(user.UserId);
-                    return result1 + result;
+                    var result1 = await UpdateIsActive(user.UserId);
+                    return result;
+                        
                     // 2 => isActive
                     // 1 update success
                     
@@ -944,3 +946,18 @@ namespace TPSS.Business.Service.Impl
 //    errors.Add(RegisterErrors.ConfirmPasswordIsEmpty);
 //    errors.Add(null);
 //}
+                //if (!string.IsNullOrEmpty(updateUser.DateOfBirth))
+                //{
+                //    if (DateTime.TryParseExact(updateUser.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dob))
+                //    {
+                //        userDetail.DateOfBirth = new DateOnly(dob.Year, dob.Month, dob.Day);
+                //    }
+                //    else
+                //    {
+                //        errors.Add(new Error("User.InvalidFormat", "Invalid date format. Expected format: dd-MM-yyyy"));
+                //    }
+                //}
+                //else
+                //{
+                //    userDetail.DateOfBirth = currentUser.DateOfBirth;
+                //}

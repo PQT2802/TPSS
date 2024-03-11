@@ -25,5 +25,7 @@ namespace TPSS.Business.Exceptions.ErrorHandler
      "User.PersonalIdIsInvalid", $"The personalID number:'{personalId}' is invalid!!");
         public static Error PersonalIdAlreadyUsed(string personalId) => new(
      "User.PersonalIdAlreadyUsed", $"The personalID number:'{personalId}' already used!!");
+        public static Error IsEmptyField() => new(
+            "User.IsEmptyField",$"This field should not be empty");
     }
 }

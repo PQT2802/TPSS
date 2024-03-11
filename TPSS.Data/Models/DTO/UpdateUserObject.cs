@@ -12,6 +12,7 @@ namespace TPSS.Data.Models.DTO
         public string? Firstname { get; set; } 
         public string? Lastname { get; set; } 
         public string? Email { get; set; } 
+        public string? ConfirmCode { get; set; } 
         public string? Phone { get; set; }
         public string? PersonalId { get; set; }
         public string? Avatar { get; set; }
