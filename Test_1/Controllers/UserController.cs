@@ -24,7 +24,7 @@ namespace TPSS.API.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
  
-        [HttpGet]
+        [HttpGet("GetInForUser")]
         
         public async Task<IActionResult> GetUserdAsync()
         {

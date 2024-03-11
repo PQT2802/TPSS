@@ -168,25 +168,6 @@ namespace TPSS.Data.Repository.Impl
             }
         }
 
-        public async Task<int> CreateUserAsync2(Object newUser)
-        {
-            try
-            {
-                var query = "BEGIN TRANSACTION; " +
-                    "INSERT INTO [User] (UserId, Email, Password, Firstname, Lastname, RoleId, IsActive, IsDelete) " +
-                    "VALUES(@UserId, @Email, @Password, @Firstname, @Lastname, @RoleId, @IsActive, @IsDelete); " +
-                    "INSERT INTO UserDetail (Phone, PersonalId, Avatar, UserId, DateOfBirth, Address, Gender, CreateDate, UpdateDate, CreateBy, UpdateBy, TaxIdentificationNumber, UserDetailId) " +
-            "VALUES (@Phone, @PersonalId, @Avatar, @UserId, @DateOfBirth, @Address, @Gender, @CreateDate, @UpdateDate, @CreateBy, @UpdateBy, @TaxIdentificationNumber, @UserDetailId); " +
-            "COMMIT";
-                return 0;
-
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception(e.Message, e);
-            }
-        }
         public async Task<string> GetColumnString(string columnName, string value)
         {
             try
@@ -218,26 +199,6 @@ namespace TPSS.Data.Repository.Impl
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message, e);
-            }
-        }
-        public async Task<dynamic> GetLastNameAndFirstName(string lastName, string firstname)
-        {
-            try
-            {
-                var query = "SELECT Lastname, Firstname " +
-                    "FROM [User] " +
-                    "WHERE Lastname = @LastnameValue AND Firstname = @FirstnameValue ";
-                var parameter = new DynamicParameters();
-                parameter.Add("LastnameValue", lastName, DbType.String);
-                parameter.Add("FirstnameValue", firstname, DbType.String);
-                using var connection = CreateConnection();
-                return await connection.QuerySingleOrDefaultAsync<dynamic>(query, parameter);
-
-            }
-            catch (Exception e)
-            {
-
                 throw new Exception(e.Message, e);
             }
         }
