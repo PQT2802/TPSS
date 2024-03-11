@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TPSS.Business.Service;
 using TPSS.Data.Models.DTO;
+using TPSS.Data.Models.Entities;
 
 namespace TPSS.API.Controllers
 {
@@ -26,6 +28,13 @@ namespace TPSS.API.Controllers
         public async Task<IActionResult> DeleteUserAsynce(string userId)
         {
             var result = await _userService.DeleteUserAsync(userId);
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllUser")]
+        public async Task<IActionResult> GetAllUserAsync()
+        {
+            var result = await _userService.GetAllUserAsync();
             return Ok(result);
         }
     }

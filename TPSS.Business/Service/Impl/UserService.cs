@@ -221,7 +221,7 @@ namespace TPSS.Business.Service.Impl
                             //new Claim("Firstname",result.Firstname),
                             //new Claim("Lastname",result.Lastname),
                             new Claim(ClaimTypes.Email,result.Email),
-                            new Claim("Role",result.RoleName),
+                            new Claim(ClaimTypes.Role,result.RoleName),
                       };
                         var token = Common.TokenHepler.Instance.CreateToken(authClaims, _configuration);
                         var responseObject = new ResponseObject() {
@@ -229,6 +229,7 @@ namespace TPSS.Business.Service.Impl
                             Avatar = result.Avatar,
                             Email = result.Email,
                             FullName = result.Lastname + " " + result.Firstname,
+                            Role = result.RoleName,
                             Token = token
                         };
                         return responseObject;
@@ -283,6 +284,7 @@ namespace TPSS.Business.Service.Impl
                     Avatar = ImageUrl,
                     Email = email,
                     FullName = lastName,
+                    Role ="Customer",
                     Token = token
                 };
                 return responseObject;
@@ -436,7 +438,7 @@ namespace TPSS.Business.Service.Impl
                         userDetail.PersonalId = currentUser.PersonalId;
                     }
                 }
-                userDetail.Avatar = !string.IsNullOrEmpty(updateUser.Avatar) ? updateUser.Avatar : currentUser.Avatar;
+                userDetail.Avatar = !string.IsNullOrEmpty(updateUser.Avatar) ? updateUser.Avatar : currentUser.Avatar;// avatar luu 1 folder tren firebase
                 userDetail.Address = !string.IsNullOrEmpty(updateUser.Address) ? updateUser.Address : currentUser.Address;
                 userDetail.Gender = !string.IsNullOrEmpty(updateUser.Gender) ? updateUser.Gender : currentUser.Gender;
                 userDetail.TaxIdentificationNumber = !string.IsNullOrEmpty(updateUser.TaxIdentificationNumber) ? updateUser.TaxIdentificationNumber : currentUser.TaxIdentificationNumber;
@@ -599,6 +601,11 @@ namespace TPSS.Business.Service.Impl
             {
                 throw new Exception(e.Message, e);
             }
+        }
+        public Task<IEnumerable<User>> GetAllUserAsync()
+        {
+            var result =_userRepository.GetAllUserAsync();
+            return result;
         }
     }
 
