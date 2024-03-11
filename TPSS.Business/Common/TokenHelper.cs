@@ -42,7 +42,7 @@ namespace TPSS.Business.Common
             if (checkUser != null)
             {
                 currentUser.UserId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
-                currentUser.RoleName = httpContext.User.Claims.FirstOrDefault(c => c.Type == "Role").Value;
+                currentUser.RoleName = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
                 currentUser.Email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
             }
             else

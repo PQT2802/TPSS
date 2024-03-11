@@ -18,8 +18,6 @@ namespace TPSS.Data.Repository
         public Task<string> GetColumnString(string columnName,string value);
         public Task<string> GetRoleName(string roleId);
         public Task<dynamic> GetUserAccountAsync2(string email, string password);
-        public Task<int> CreateUserAsync2(Object newUser);
-        public Task<dynamic> GetLastNameAndFirstName(string lastName,string firstname);
         public Task<string> GetExistEmailAsync(string email);
         public Task<string> GetExistPhoneAsync(string phone);
         public Task<string> GetExistPersonalIdAsync(string personalId);
