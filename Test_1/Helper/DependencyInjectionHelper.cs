@@ -17,6 +17,7 @@ namespace TPSS.API.Helper
             services.AddTransient<IReservationRepository, ReservationRepository>();
             services.AddTransient<IContractRepository, ContractRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<IAlbumRepository, AlbumRepository>();
             //Service
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReservationService, ReservationService>();
@@ -25,8 +26,7 @@ namespace TPSS.API.Helper
             services.AddTransient<IContractService, ContractService>();
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IImageService, ImageService>();
-            
-    
+            services.AddTransient<IPropertyService, PropertyService>();
             //Exception Handler
             ////
             ///

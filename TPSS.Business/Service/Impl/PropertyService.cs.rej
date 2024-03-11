@@ -1,0 +1,37 @@
+diff a/TPSS.Business/Service/Impl/PropertyService.cs b/TPSS.Business/Service/Impl/PropertyService.cs	(rejected hunks)
+@@ -96,35 +96,6 @@
+             }
+         }
+ 
+-<<<<<<< HEAD
+-        //public async Task<Property> GetPropertyByIdAsync(string id)
+-        //{
+-        //    try
+-        //    {
+-        //        Property result = await _propertyRepository.GetPropertyByIdAsync(id);
+-        //        return result;
+-        //    }
+-        //    catch (Exception e)
+-        //    {
+-        //        throw new Exception(e.Message, e);
+-        //    }
+-        //}
+-=======
+-        public async Task<Property> GetPropertyByIdAsync(string id)
+-        {
+-            try
+-            {
+-                //Property result = await _propertyRepository.GetPropertyByIdAsync(id);
+-                //return result;
+-                return null;
+-            }
+-            catch (Exception e)
+-            {
+-                throw new Exception(e.Message, e);
+-            }
+-        }
+->>>>>>> a8d861c84f7d8328af825b5759d9fa11e2b48057
+-
+         public async Task<dynamic> UpdatePropertyAsync(PropertyDTO property)
+         {
+             //update soon

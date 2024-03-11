@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TPSS.Data.Models.DTO;
 
 namespace TPSS.Business.Service
 {
     public interface IImageService
     {
-        public Task<string> UploadImageToFirebaseStorage(IFormFile image, string folderName);
-        public Task<string> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName);
-        public Task<string> UploadImagesForProperty(IFormFileCollection images, string propertyID);
-        public Task<string> LinkFolderCheck(IFormFileCollection images, string propertyID);
+        public Task<List<string>> UploadImagesAsync(IFormFileCollection images, string folderName, string typeID);
+        public Task<List<string>> DeleteImagesAsync(List<string> URLs);
+        
+
     }
 }
