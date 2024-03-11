@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using TPSS.Business.Service;
 using TPSS.Data.Models.DTO;
+using TPSS.Business.Common;
 
 namespace TPSS.API.Controllers
 {
@@ -14,10 +15,12 @@ namespace TPSS.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("Regist")]
@@ -47,9 +50,10 @@ namespace TPSS.API.Controllers
             return Ok("Verify code is sending to your email");
         }
         [HttpPut("ChangingPassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(string userId, ChangingPasswordDTO changingPasswordDTO)
+        public async Task<IActionResult> UpdatePasswordAsync(ChangingPasswordDTO changingPasswordDTO)
         {
-            var result = await _userService.UpdatePasswordAsync(userId, changingPasswordDTO);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _userService.UpdatePasswordAsync(c.UserId, changingPasswordDTO);
             return Ok(result);
             //return ve errors neu co loi
             // return 1 neu thang cong

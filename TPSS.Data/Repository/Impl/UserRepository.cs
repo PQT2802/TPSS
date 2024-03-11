@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata;
@@ -353,6 +354,20 @@ namespace TPSS.Data.Repository.Impl
                 parameter.Add("userIdValue", userId);
                 using var connection = CreateConnection();
                 return await connection.ExecuteAsync(query, parameter);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message, e);
+            }
+        }
+        public async Task<IEnumerable<User>> GetAllUserAsync()
+        {
+            try
+            {
+                var query = "SELECT * FROM [User]";
+                using var connection = CreateConnection();
+                return await connection.QueryAsync<User>(query);
             }
             catch (Exception e)
             {

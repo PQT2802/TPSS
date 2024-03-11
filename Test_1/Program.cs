@@ -91,7 +91,7 @@ namespace Test_1
 
 
             //app.UseCors("CorsPolicy");
-
+            app.UseRouting();
             app.UseCors(builder =>
             {
                 builder
@@ -100,10 +100,10 @@ namespace Test_1
                 .AllowAnyHeader();
             });
             app.UseHttpsRedirection();
-
             
             app.UseAuthorization();
             app.UseAuthentication();
+            
 
             app.UseExceptionHandler();
 

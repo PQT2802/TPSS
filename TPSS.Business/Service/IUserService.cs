@@ -18,5 +18,6 @@ namespace TPSS.Business.Service
         public Task<ResponseObject> GetTokenFirebase(string firebaseToken);
         public Task SendConfirmationEmail(string toEmailAddress);
         public Task<dynamic> UpdatePasswordAsync(string userId, ChangingPasswordDTO changingPasswordDTO);
+        public Task<IEnumerable<User>> GetAllUserAsync();
     }
 }
