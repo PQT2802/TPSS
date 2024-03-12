@@ -139,7 +139,40 @@ namespace TPSS.Business.Service.Impl
         }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<string> UploadAvatarAsync(IFormFile image, string folderName, string typeID)
+        {
+            try
+            {
+                var tokenDescriptor = new Dictionary<string, object>()
+                {
+                     { "permission", "allow" }
+                };
+
+                var auth = new FirebaseAuthProvider(new FirebaseConfig(_firebaseSetting.ApiKey));
+                var token = await auth.SignInWithEmailAndPasswordAsync(_firebaseSetting.Email, _firebaseSetting.Password);
+
+                var storage = new FirebaseStorage(
+                  _firebaseSetting.Bucket,
+                  new FirebaseStorageOptions
+                  {
+                      AuthTokenAsyncFactory = () => Task.FromResult(token.FirebaseToken),
+                      ThrowOnCancel = true
+                  });
+
+                var uploadTask = storage.Child("Images").Child(folderName).Child(typeID).Child(typeID).PutAsync(image.OpenReadStream());
+                var downloadUrl = await uploadTask;
+
+                return downloadUrl.ToString();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace, ex);
+                throw;
+            }
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     }

@@ -12,7 +12,7 @@ namespace TPSS.Business.Service
     {
         public Task<List<string>> UploadImagesAsync(IFormFileCollection images, string folderName, string typeID);
         public Task<List<string>> DeleteImagesAsync(List<string> URLs);
-        
+        public Task<string> UploadAvatarAsync(IFormFile image, string folderName, string typeID);
 
     }
 }

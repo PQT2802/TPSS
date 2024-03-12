@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace TPSS.Data.Models.DTO
         public string? ConfirmCode { get; set; } 
         public string? Phone { get; set; }
         public string? PersonalId { get; set; }
-        public string? Avatar { get; set; }
+        public IFormFile? Avatar { get; set; }
         public string? DateOfBirth { get; set; }
         public string? Address { get; set; }
 

@@ -32,13 +32,15 @@ namespace TPSS.Business.Service.Impl
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IUserDetailRepository _userDetailRepository;
+        private readonly IImageService _imageService;
 
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration, IUserDetailRepository userDetailRepository )
+        public UserService(IUserRepository userRepository, IConfiguration configuration, IUserDetailRepository userDetailRepository, IImageService imageService)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _userDetailRepository = userDetailRepository;
+            _imageService = imageService;
 
         }
 
@@ -404,14 +406,14 @@ namespace TPSS.Business.Service.Impl
                              : Enumerable.Empty<Error>()
                         );
                 }
-                if(currentUser.Avatar != updateUser.Avatar)
-                {
-                    errors.AddRange(
-                        string.IsNullOrEmpty(updateUser.Avatar)
-                        ? new Error[] { UpdateUserErrors.IsEmptyField() }
-                        : Enumerable.Empty<Error>()
-                        );
-                }
+                //if(currentUser.Avatar != updateUser.Avatar)
+                //{
+                //    errors.AddRange(
+                //        string.IsNullOrEmpty(updateUser.Avatar)
+                //        ? new Error[] { UpdateUserErrors.IsEmptyField() }
+                //        : Enumerable.Empty<Error>()
+                //        );
+                //}
                 // avatar luu 1 folder tren firebase
                 if (currentUser.Address != updateUser.Address)
                 {
@@ -455,7 +457,7 @@ namespace TPSS.Business.Service.Impl
                     
                     userDetail.UserId = updateUser.UserId;
                     userDetail.Address = updateUser.Address;
-                    userDetail.Avatar = updateUser.Avatar;//add anh
+                    userDetail.Avatar = await _imageService.UploadAvatarAsync(updateUser.Avatar, "Avatar", updateUser.UserId);
                     userDetail.Phone = updateUser.Phone;
                     userDetail.Gender = updateUser.Gender;
                     userDetail.TaxIdentificationNumber = updateUser.TaxIdentificationNumber;
