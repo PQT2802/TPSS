@@ -115,7 +115,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
@@ -216,7 +216,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, PD.Verify, PD.Status, PD.Service " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
@@ -274,7 +274,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT TOP 10 P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
@@ -297,7 +297,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT TOP 10 P.*, proj.ProjectName, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar, PD.Description, A.Image " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN [User] AS U ON PD.OwnerID = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
@@ -444,7 +444,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
                     "WHERE A.ImageDescription = 'HomePage' AND PD.OwnerID =@OwnerID;";
@@ -466,7 +466,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
                     "WHERE A.ImageDescription = 'HomePage' AND PD.Verify = 'False';";
@@ -486,7 +486,7 @@ namespace TPSS.Data.Repository.Impl
             {
                 var query = "SELECT P.*, PD.*, A.Image AS HomePageImage " +
                     "FROM Property AS P " +
-                    "INNER JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN Project AS proj ON p.ProjectID = proj.ProjectID " +
                     "INNER JOIN PropertyDetail AS PD ON P.PropertyID = PD.PropertyID " +
                     "LEFT JOIN Album AS A ON P.PropertyID = A.PropertyId " +
                     "WHERE A.ImageDescription = 'HomePage' AND PD.Status = 'Waiting';";

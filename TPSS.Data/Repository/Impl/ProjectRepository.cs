@@ -82,7 +82,7 @@ namespace TPSS.Data.Repository.Impl
                     "INNER JOIN ProjectDetail AS proj ON p.ProjectID = proj.ProjectID " +
                     "LEFT JOIN [User] AS U ON proj.CreateBy = U.UserId " +
                     "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
-                    "WHERE proj.Verify =' True'  AND P.IsDelete = 0 AND P.Status = 'Accepted';";
+                    "WHERE proj.Verify =' False'  AND P.IsDelete = 0 AND P.Status = 'Waiting';";
 
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<dynamic>(query);
