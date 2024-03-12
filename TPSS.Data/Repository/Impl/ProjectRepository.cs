@@ -77,7 +77,7 @@ namespace TPSS.Data.Repository.Impl
         {
             try
             {
-                var query = @"SELECT P.*, proj.ProjectDescription, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar " +
+                var query = "SELECT P.*, proj.ProjectDescription, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar " +
                     "FROM Project AS P " +
                     "INNER JOIN ProjectDetail AS proj ON p.ProjectID = proj.ProjectID " +
                     "LEFT JOIN [User] AS U ON proj.CreateBy = U.UserId " +
@@ -128,6 +128,34 @@ namespace TPSS.Data.Repository.Impl
             catch (Exception e)
             {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public Task<IEnumerable<dynamic>> GetRelatedPropertiesWithProject(string projectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<dynamic> ProjectDetailByIdAsync(string projectId)
+        {
+            try
+            {
+                var query = "SELECT P.*, proj.ProjectDescription, U.Firstname + ' ' + U.Lastname AS FullName, UD.Phone, UD.Avatar " +
+                    "FROM Project AS P " +
+                    "INNER JOIN ProjectDetail AS proj ON p.ProjectID = proj.ProjectID " +
+                    "LEFT JOIN [User] AS U ON proj.CreateBy = U.UserId " +
+                    "LEFT JOIN UserDetail AS UD ON U.UserId = UD.UserID " +
+                    "WHERE P.ProjectID ='@ProjectID';";
+
+                var parameter = new DynamicParameters();
+                parameter.Add("ProjectID", projectId, DbType.String);
+                using var connection = CreateConnection();
+                return await connection.QuerySingleAsync<dynamic>(query, parameter);
+
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message, e);
             }
         }

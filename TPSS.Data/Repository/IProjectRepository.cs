@@ -18,5 +18,8 @@ namespace TPSS.Data.Repository
 
         public Task<string> GetLatestProjectIdAsync();
         public Task<string> GetLatestProjectDetailIdAsync();
+
+        public Task<dynamic> ProjectDetailByIdAsync(string projectId);
+        public Task<IEnumerable<dynamic>> GetRelatedPropertiesWithProject(string projectId);
     }
 }

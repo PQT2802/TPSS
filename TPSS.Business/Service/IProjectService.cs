@@ -11,5 +11,6 @@ namespace TPSS.Business.Service
     {
         public Task<IEnumerable<dynamic>> GetAllProjects();
         public Task<dynamic> CreateProjectAsync(ProjectDTO projectDTO, string userID);
+        public Task<dynamic> ProjectDetailByIdAsync(string projectId);
     }
 }

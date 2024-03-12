@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -156,6 +157,31 @@ namespace TPSS.Business.Service.Impl
             catch (Exception e)
             {
 
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<dynamic> ProjectDetailByIdAsync(string projectId)
+        {
+            try
+            {
+
+                var projectDetail = await _projectRepository.ProjectDetailByIdAsync(projectId);
+
+
+                IEnumerable<dynamic> relatedProperties = await _projectRepository.GetRelatedPropertiesWithProject(projectId); ;
+
+                var result = new
+                {
+                    ProjectDetail = projectDetail,
+                    RelatedProperties = relatedProperties
+                };
+
+                return result;
+
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message, e);
             }
         }

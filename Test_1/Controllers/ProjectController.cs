@@ -38,5 +38,12 @@ namespace TPSS.API.Controllers
             var result = await _projectService.GetAllProjects();
             return Ok(result);
         }
+
+        [HttpGet("ProjectDetail")]
+        public async Task<ActionResult<dynamic>> ProjectDetailByIdAsync(string projectId)
+        {
+            var result = await _projectService.ProjectDetailByIdAsync(projectId);
+            return Ok(result);
+        }
     }
 }
