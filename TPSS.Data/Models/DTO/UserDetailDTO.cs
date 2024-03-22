@@ -9,12 +9,6 @@ namespace TPSS.Data.Models.DTO
 {
     public class UserDetailDTO
     {
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public string? Email { get; set; }
-
         public string? Phone { get; set; }
 
         public string? PersonalId { get; set; }
@@ -39,6 +33,8 @@ namespace TPSS.Data.Models.DTO
 
         public string? TaxIdentificationNumber { get; set; }
 
-        
+        public string UserDetailId { get; set; } = null!;
+
+
     }
 }

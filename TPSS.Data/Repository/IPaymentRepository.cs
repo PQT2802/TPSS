@@ -9,12 +9,10 @@ namespace TPSS.Data.Repository
 {
     public interface IPaymentRepository
     {
-        public Task<Payment> GetPaymentByIdAsync(string PaymentID);
-
         public Task<int> CreatePaymentAsync(Payment newPayment);
-
-        public Task<int> UpdatePaymentAsync(Payment updatePayment);
-
-        public Task<int> DeletePaymentAsync(string PaymentId);
+        public Task<IEnumerable<dynamic>> GetPaymentForSellerAsync(string contractId, string userId);
+        public Task<IEnumerable<dynamic>> GetPaymentForBuyerAsync(string contractId, string userId);
+        public Task<dynamic> GetPaymentDetailAsync(string paymentId);
+        public Task<string> GetLatestPaymentIdAsync();
     }
 }

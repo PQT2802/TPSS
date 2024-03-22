@@ -9,12 +9,15 @@ namespace TPSS.Data.Repository
 {
     public interface IReservationRepository
     {
-        public Task<Reservation> GetReservationByIdAsync(string reservationId);
+        public Task<int> CreateReservationAsync(Reservation reservation);
+        public Task<string> GetColumnData(string columnName, string baseOnData);
+        public Task<string> GetLatestReservationIdAsync();
+        public Task<IEnumerable<dynamic>> GetReservationForBuyerAsync(string userId);
+        public Task<IEnumerable<dynamic>> GetReservationForSellerAsync(string userId,string propertyId);
+        public Task<Reservation> GetReservation(string userId, string properetyId);
+        public Task<int> DeleteReservation(string reservationId);
+        public Task<int> AccpectReservation(string reservationId);
+        public Task<int> RejectReservation(string reservationId);
 
-        public Task<int> CreateReservationAsync(Reservation newReservation);
-
-        public Task<int> UpdateReservationAsync(Reservation updateReservation);
-
-        public Task<int> DeleteReservationAsync(string reservationId);
     }
 }

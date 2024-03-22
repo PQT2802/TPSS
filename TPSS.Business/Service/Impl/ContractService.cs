@@ -1,64 +1,99 @@
-﻿
-
-using TPSS.Data.Models.DTO;
-using TPSS.Data.Models.Entities;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TPSS.Data.Repository;
+using TPSS.Data.Repository.Impl;
 
 namespace TPSS.Business.Service.Impl
 {
-     public class ContractService : IContractService
+    public class ContractService : IContractService
     {
-        public readonly IContractRepository _contractRepository;
-
+        private readonly IContractRepository _contractRepository;
         public ContractService(IContractRepository contractRepository)
         {
             _contractRepository = contractRepository;
         }
-        
-        public async Task<Contract> GetContractByIdAsync(string id)
+        public async Task<int> CreateContractAsync(string reservationId)
         {
             try
             {
-                User result = await _contractRepository.GetContractByIdAsync(id);
+                var contractId = await AutoGenerateContractId();
+                var result = await _contractRepository.CreateContractAsync(contractId, reservationId);
                 return result;
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message, e);
             }
         }
-
-        public async Task<int> CreateContractAsync(ContractDTO contractDTO)
-        {
-             try
-            {
-                Contract contract = new Contract();
-                contract.ContractId = AutoGenerateUserId();
-                contract.ContractTerms = contractDTO.ContractTerms;
-                contract.Transactions = contractDTO.Con;
-                contract.Password = contractDTO.Password;
-                contract.Phone = contractDTO.Phone;
-                int result = await _contractRepository.CreateContractAsync(contract);
-                return result;
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception(e.Message, e);
-            }
-        }
-
-        public async Task<int> UpdateContractAsync(ContractDTO user)
+        public Task<IEnumerable<dynamic>> GetAllContractAsync()
         {
             try
             {
-                User user = new User();
-                user.Username = userdto.Username;
-                user.Email = userdto.Email;
-                user.Password = userdto.Password;
-                user.Phone = userdto.Phone;
-                int result = await _contractRepository.UpdateUserAsync(user);
+                var result = _contractRepository.GetAllContractAsync();
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public Task<IEnumerable<dynamic>> GetAllContractForSellerAsync(string userId)
+        {
+            try
+            {
+                var result = _contractRepository.GetAllContractForSellerAsync(userId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public Task<IEnumerable<dynamic>> GetAllContractForBuyerAsync(string userId)
+        {
+            try
+            {
+                var result = _contractRepository.GetAllContractForBuyerAsync(userId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public Task<int> UpdateContractStatusAsync(string contractId, string status)
+        {
+            try
+            {
+                var result = _contractRepository.UpdateContractStatusAsync(contractId, status);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public Task<dynamic> GetContractDetailAsync(string contractId)
+        {
+            try
+            {
+                var result = _contractRepository.GetContractDetailAsync(contractId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
+        public Task<int> AddContractAsync(string contractId, string contract, string userId)
+        {
+            try
+            {
+                var result = _contractRepository.AddContractAsync(contractId,contract,userId);
                 return result;
             }
             catch (Exception e)
@@ -67,32 +102,21 @@ namespace TPSS.Business.Service.Impl
             }
         }
 
-        public async Task<int> DeleteContractAsync(string id)
+        private async Task<string> AutoGenerateContractId()
         {
-             try
+            string newContractId = "";
+            string latestContractId = await _contractRepository.GetLatestContractIdAsync();
+            if (latestContractId.IsNullOrEmpty())
             {
-                int result = await _contractRepository.DeleteUserByIdAsync(id);
-                return result;
+                newContractId = "CT00000000";
             }
-            catch (Exception e)
+            else
             {
-                throw new Exception(e.Message, e);
+                int numericpart = int.Parse(latestContractId.Substring(2));
+                int newnumericpart = numericpart + 1;
+                newContractId = $"CT{newnumericpart:d8}";
             }
+            return newContractId;
         }
-         private async string AutoGenerateUserId()
-        {
-            string latestUserId = _contractRepository.GetLatestUserIdAsync().Result;
-            // giả sử định dạng user id của bạn là "USxxxxxxx"
-            // trích xuất phần số và tăng giá trị lên 1, loại bỏ "US" lấy xxxxxxxx
-            int numericpart = int.Parse(latestUserId.Substring(2));
-            int newnumericpart = numericpart + 1;
-
-            // tạo ra user id mới
-            //us + "xxxxxxxx" | nếu số không đủ thì thay thế = 0 (d8)| 123 => 00000123
-            string newuserid = $"US{newnumericpart:d8}";
-            return newuserid;
-        }
-
     }
-}
 }

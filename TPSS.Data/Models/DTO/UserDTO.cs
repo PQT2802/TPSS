@@ -14,10 +14,14 @@ namespace TPSS.Data.Models.DTO
 
         public string Password { get; set; } = null!;
 
-        public string Username { get; set; } = null!;
-
-        public string Phone { get; set; } = null!;
-
         public bool? IsDelete { get; set; }
+
+        public string RoleId { get; set; } = null!;
+
+        public bool? IsActive { get; set; }
+
+        public string Firstname { get; set; } = null!;
+
+        public string Lastname { get; set; } = null!;
     }
 }

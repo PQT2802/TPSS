@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel;
+using TPSS.Business.Common;
 using TPSS.Business.Service;
+using TPSS.Business.Service.Impl;
 using TPSS.Data.Models.DTO;
+using TPSS.Data.Models.Entities;
 
 namespace TPSS.API.Controllers
 {
@@ -12,29 +16,154 @@ namespace TPSS.API.Controllers
     public class PropertyController : ControllerBase
     {
         public readonly IPropertyService _propertyService;
-        public PropertyController(IPropertyService propertyService) 
+        private readonly IImageService _imageService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public PropertyController(IPropertyService propertyService, IHttpContextAccessor httpContextAccessor, IImageService imageService) 
         {
             _propertyService = propertyService;
+            _httpContextAccessor = httpContextAccessor;
+            _imageService = imageService;
         }
-        [HttpPost]
-        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO newProperty)
+
+        [HttpGet("HomePage")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetPropertyForHomePage()
         {
-            var result = await _propertyService.CreatePropertyAsync(newProperty);
+            var result = await _propertyService.GetPropertyForHomePage();
             return Ok(result);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUserAsync(String id)
+        [HttpGet("PropertyDetail")]
+        public async Task<ActionResult<dynamic>> GetPropertyByIdAsync(string propertyid)
         {
-            var result = await _propertyService.DeletePropertyAsync(id);
+            var result = await _propertyService.GetPropertyByIdAsync(propertyid);
             return Ok(result);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetUserByIdAsync(String id)
+
+        [HttpGet("MyProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> MyProperties()
         {
-            var result = await _propertyService.GetPropertyByIdAsync(id);
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.MyProperties(c.UserId);
             return Ok(result);
         }
+
+        [HttpGet("ListVerifyProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> ListVerifyPropertiesAsync()
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetVerifyPropertiesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ListWaitingProperties")]
+        public async Task<ActionResult<IEnumerable<dynamic>>> ListWaitingPropertiesAsync()
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.GetWaitingPropertiesAsync();
+            return Ok(result);
+        }
+
+
+        [HttpPost("VerifyProperties")]
+        public async Task<ActionResult<dynamic>> VerifyPropertiesAsync([FromForm] List<string> propertiesID)
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.VerifyPropertiesAsync(propertiesID);
+            return Ok(result);
+        }
+
+        [HttpPost("AcceptedProperties")]
+        public async Task<ActionResult<dynamic>> AcceptedPropertiesAsync([FromForm] List<string> propertiesID)
+        {
+            //CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.AcceptedPropertiesAsync(propertiesID);
+            return Ok(result);
+        }
+
+
+        [HttpPost("CreateProperty")]
+        public async Task<IActionResult> CreatePropertyAsync(PropertyDTO propertyDTO)
+        {
+            CurrentUserObject c = await TokenHepler.Instance.GetThisUserInfo(HttpContext);
+            var result = await _propertyService.CreatePropertyAsync(propertyDTO,c.UserId);
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteProperty")]
+        public async Task<IActionResult> DeletePropertyAsync(string propertyId)
+        {
+            var result = await _propertyService.DeletePropertyAsync(propertyId);
+            return Ok(result);
+        }
+
+        [HttpPost("UpdateProperty")]
+        public async Task<IActionResult> UpdatePropertyAsync([FromForm] PropertyDTO propertyDTO , [FromForm] List<string> URLs, string propertyId, string propertyDetailId, string uid)
+        {
+            var result = await _propertyService.UpdatePropertyAsync(propertyDTO, URLs, propertyId,propertyDetailId, uid);
+            return Ok(result);
+        }
+
+
+
+
+        // test add with no cockies
+        [HttpPost("CreatePropertyTEST")]
+        public async Task<IActionResult> CreatePropertyTESTAsync(PropertyDTO propertyDTO, string uid)
+        {
+            var result = await _propertyService.CreatePropertyTESTAsync(propertyDTO, uid);
+            return Ok(result);
+        }
+
+
+
+
+
+
+
+        //////Project
+
+        ////[HttpGet("Project")]
+        ////public async Task<ActionResult<IEnumerable<Project>>> GetAllProjects()
+        ////{
+        ////    var result = await _propertyService.GetAllProjects();
+        ////    return Ok(result);
+        ////}
+
+        ////[HttpGet("ProjectDetail")]
+        ////public async Task<ActionResult<ProjectDetailWithRelatedProperties>> GetProjectDetailWithRelatedProperties(string projectID)
+        ////{
+        ////    var result = await _propertyService.GetProjectDetailWithRelatedProperties(projectID);
+        ////    return Ok(result);
+        ////}
+
+        ////[HttpGet("LastestProject")]
+        ////public async Task<ActionResult<IEnumerable<Project>>> GetLastestProject()
+        ////{
+        ////    var result = await _propertyService.GetLastestProject();
+        ////    return Ok(result);
+        ////}
+
+
+
+        //[HttpPost("Images")]
+        //public async Task<IActionResult> UploadMultipleImagesToFirebaseStorage(IFormFileCollection thumbnails, string folderName)
+        //{
+
+        //    var result = await _imageService.UploadMultipleImagesToFirebaseStorage(thumbnails, folderName);
+
+        //    return Ok(result);
+        //}
+
+        //[HttpPost("ImagesProper")]
+        //public async Task<IActionResult> UploadImagesForPropertyDetail(IFormFileCollection thumbnails, string folderName)
+        //{
+
+        //    var result = await _imageService.UploadImagesForProperty(thumbnails, folderName);
+
+        //    return Ok(result);
+        //}
+
 
     }
 }
